@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SY Fashion Shop</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 10px;
+            background-color: #f0f2f5;
+        }
+        .header {
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr); /* ২টা কলাম পাশাপাশি */
+            gap: 15px;
+        }
+        .product-card {
+            background-color: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .product-card img {
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+        }
+        .info {
+            padding: 10px;
+            text-align: center;
+        }
+        .name {
+            font-size: 14px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        .price {
+            font-size: 15px;
+            color: #e67e22;
+            font-weight: bold;
+        }
+        /* বাটনটি ছবির সমান চওড়া এবং বড় সাইজের হবে */
+        .order-btn {
+            background-color: #2481cc;
+            color: white;
+            border: none;
+            padding: 12px;
+            width: 100%;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .order-btn:hover {
+            background-color: #1a6096;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">SY Fashion 2026 Collection</div>
+
+    <div class="grid-container" id="product-list">
+        </div>
+
+    <script>
+        const products = [
+            { id: 1, name: 'Premium Black', price: '৳৮৮০', img: 'image/tshirt1.jpg' },
+            { id: 2, name: 'Mint Green', price: '৳৮৮০', img: 'image/tshirt2.jpg' },
+            { id: 3, name: 'Classic Blue', price: '৳৯৫০', img: 'image/tshirt3.jpg' },
+            { id: 4, name: 'Pure White', price: '৳৮৫০', img: 'image/tshirt4.jpg' },
+            { id: 5, name: 'Navy Blue', price: '৳৯০০', img: 'image/tshirt5.jpg' },
+            { id: 6, name: 'Ash Grey', price: '৳৮৮০', img: 'image/tshirt6.jpg' }
+        ];
+
+        const list = document.getElementById('product-list');
+        const tg = window.Telegram.WebApp;
+
+        // অ্যাপটি ফুল স্ক্রিন করার জন্য
+        tg.expand();
+
+        products.forEach(p => {
+            const card = document.createElement('div');
+            card.className = 'product-card';
+            card.innerHTML = `
+                <img src="${p.img}" alt="${p.name}">
+                <div class="info">
+                    <div class="name">${p.name}</div>
+                    <div class="price">${p.price}</div>
+                </div>
+                <button class="order-btn" onclick="sendData('${p.id}')">🔍 View & Buy</button>
+            `;
+            list.appendChild(card);
+        });
+
+        // বটের কাছে ডাটা পাঠানোর ফাংশন
+        function sendData(id) {
+            tg.sendData(id); // বটের কাছে প্রোডাক্টের আইডি পাঠাবে
+        }
+    </script>
+</body>
+</html>
