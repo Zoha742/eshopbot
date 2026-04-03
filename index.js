@@ -1,10 +1,11 @@
 const TelegramBot = require('node-telegram-bot-api');
 const http = require('http');
 
-const token = 'YOUR_BOT_TOKEN_HERE';
+// আপনার দেওয়া টোকেন
+const token = '8624381226:AAEdlqEKTrzwIPuq1aSPIuPEfb-3GmI0nOI';
 const bot = new TelegramBot(token, {polling: true});
 
-// মেইন মেনু ফাংশন
+// মেইন মেনু ফাংশন (iOS Style)
 function mainMenu(chatId) {
     const options = {
         reply_markup: {
@@ -12,14 +13,14 @@ function mainMenu(chatId) {
                 [{ text: "🕌 PANJABI", callback_data: 'm_panjabi' }, { text: "👕 T-SHIRTS", callback_data: 'm_tshirt' }],
                 [{ text: "👔 SHIRTS", callback_data: 'm_shirt' }, { text: "🧒 JUNIOR", callback_data: 'm_junior' }],
                 [{ text: "👖 PANTS", callback_data: 'm_pant' }, { text: "⌚ ACCESSORIES", callback_data: 'm_acc' }],
-                [{ text: "👤 Profile", callback_data: 'user_profile' }, { text: "⚙️ Admin", callback_data: 'admin_panel' }]
+                [{ text: "👤 User Profile", callback_data: 'user_profile' }, { text: "⚙️ Admin Panel", callback_data: 'admin_panel' }]
             ]
         }
     };
-    bot.sendMessage(chatId, "🍎 *Premium eShop*\nনিচের ক্যাটাগরি থেকে আপনার পছন্দের সেকশনটি বেছে নিন:", { parse_mode: "Markdown", ...options });
+    bot.sendMessage(chatId, "🍎 *Welcome to Premium eShop*\nনিচের ক্যাটাগরি থেকে আপনার পছন্দের সেকশনটি বেছে নিন:", { parse_mode: "Markdown", ...options });
 }
 
-// বাটন ক্লিক হ্যান্ডলার (সব ক্যাটাগরি এখানে)
+// বাটন ক্লিক হ্যান্ডলার
 bot.on('callback_query', (query) => {
     const chatId = query.message.chat.id;
     const data = query.data;
@@ -49,18 +50,7 @@ bot.on('callback_query', (query) => {
             ]}
         });
     }
-    // 3. Shirts
-    else if (data === 'm_shirt') {
-        bot.sendMessage(chatId, "👔 *Shirt Collection*", {
-            reply_markup: { inline_keyboard: [
-                [{ text: "👕 Casual Shirt", callback_data: 's_casual' }],
-                [{ text: "👔 Formal Shirt", callback_data: 's_formal' }],
-                [{ text: "👕 Half Shirt", callback_data: 's_half' }],
-                backBtn
-            ]}
-        });
-    }
-    // 4. Junior
+    // 3. Junior Section
     else if (data === 'm_junior') {
         bot.sendMessage(chatId, "🧒 *Junior Collection*", {
             reply_markup: { inline_keyboard: [
@@ -72,7 +62,7 @@ bot.on('callback_query', (query) => {
             ]}
         });
     }
-    // 5. Pants
+    // 4. Pants Section
     else if (data === 'm_pant') {
         bot.sendMessage(chatId, "👖 *Pants Collection*", {
             reply_markup: { inline_keyboard: [
@@ -84,30 +74,23 @@ bot.on('callback_query', (query) => {
             ]}
         });
     }
-    // 6. Accessories
-    else if (data === 'm_acc') {
-        bot.sendMessage(chatId, "⌚ *Accessories*", {
-            reply_markup: { inline_keyboard: [
-                [{ text: "🎗️ Belt", callback_data: 'a_belt' }],
-                [{ text: "👔 Easy Tie", callback_data: 'a_tie' }],
-                [{ text: "🩲 Men's Underwear", callback_data: 'a_und' }],
-                backBtn
-            ]}
-        });
-    }
-    // 7. User Profile
+    // 5. User Profile
     else if (data === 'user_profile') {
-        bot.sendMessage(chatId, `👤 *User Profile*\n\nName: ${query.from.first_name}\nID: ${query.from.id}\n\nএখানে আপনার অর্ডার ও অ্যাড্রেস থাকবে।`, {
+        bot.sendMessage(chatId, `👤 *User Profile*\n\nName: ${query.from.first_name}\nUser ID: ${query.from.id}`, {
             reply_markup: { inline_keyboard: [
                 [{ text: "📦 Orders", callback_data: 'u_ord' }, { text: "🛒 Cart", callback_data: 'u_cart' }],
                 [{ text: "📍 Shipping Address", callback_data: 'u_ship' }],
+                [{ text: "⚙️ Account Details", callback_data: 'u_acc' }],
                 backBtn
             ]}
         });
     }
 });
 
-bot.onText(/\/start/, (msg) => mainMenu(msg.chat.id));
+// স্টার্ট কমান্ড
+bot.onText(/\/start/, (msg) => {
+    mainMenu(msg.chat.id);
+});
 
 // Render সার্ভার সচল রাখা
 http.createServer((req, res) => {
@@ -115,4 +98,4 @@ http.createServer((req, res) => {
   res.end('Bot is Live!');
 }).listen(process.env.PORT || 3000);
 
-console.log("Bot with all menus is running...");
+console.log("Bot is running perfectly...");
