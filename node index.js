@@ -2,5 +2,5 @@ const { Telegraf, Markup } = require('telegraf'); const bot = new Telegraf('8624
 const http = require('http');
 http.createServer((req, res) => {
   res.writeHead(200);
-  res.end('Bot is running!');
+  res.end('Bot is Live!');
 }).listen(process.env.PORT || 3000);
