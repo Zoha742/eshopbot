@@ -17,7 +17,7 @@ function mainMenu(chatId) {
             ]
         }
     };
-    bot.sendMessage(chatId, "🍎 *Welcome to Premium eShop*\nনিচের ক্যাটাগরি থেকে আপনার পছন্দের সেকশনটি বেছে নিন:", { parse_mode: "Markdown", ...options });
+    bot.sendMessage(chatId, "🍎 *Welcome to Premium eShop*", { parse_mode: "Markdown", ...options });
 }
 
 // বাটন ক্লিক হ্যান্ডলার
