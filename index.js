@@ -5,7 +5,9 @@ const token = '8624381226:AAEdlqEKTrzwIPuq1aSPIuPEfb-3GmI0nOI';
 const bot = new TelegramBot(token, {polling: true});
 const ADMIN_ID = 1391942702; 
 
-// আপনার দেওয়া পজিশন অনুযায়ী মেইন মেনু
+// আপনার GitHub এর ইমেজ লিঙ্কের বেস ইউআরএল
+const IMAGE_BASE = "https://raw.githubusercontent.com/Zoha742/eshopbot/main/products/";
+
 function mainMenu(chatId, userId) {
     const keyboard = [
         [{ text: "👕 T-SHIRTS", callback_data: 'm_tshirt' }, { text: "👔 SHIRTS", callback_data: 'm_shirt' }],
@@ -26,44 +28,54 @@ function mainMenu(chatId, userId) {
 
 bot.on('callback_query', (query) => {
     const chatId = query.message.chat.id;
-    const userId = query.from.id;
     const data = query.data;
     const backBtn = [{ text: "⬅️ Back", callback_data: 'main_menu' }];
 
     if (data === 'main_menu') {
-        mainMenu(chatId, userId);
+        mainMenu(chatId, query.from.id);
     } 
-    // ১. T-Shirts সাব-মেনু
+
+    // টি-শার্ট সেকশন (শুরুতে ২টি ছবি দেখাবে)
     else if (data === 'm_tshirt') {
-        bot.sendMessage(chatId, "👕 *T-SHIRT COLLECTION*", {
-            reply_markup: { inline_keyboard: [
-                [{ text: "🎨 Printed T-Shirt", callback_data: 't_print' }],
-                [{ text: "👕 Polo T-Shirt", callback_data: 't_polo' }],
-                backBtn
-            ]}
+        const media = [
+            { type: 'photo', media: IMAGE_BASE + "tshirts/tshirt1.jpg", caption: "🔥 *Our Featured T-Shirts*" },
+            { type: 'photo', media: IMAGE_BASE + "tshirts/tshirt2.jpg" }
+        ];
+        
+        bot.sendMediaGroup(chatId, media).then(() => {
+            bot.sendMessage(chatId, "সবগুলো আইটেম দেখতে নিচের বাটনে ক্লিক করুন:", {
+                parse_mode: "Markdown",
+                reply_markup: {
+                    inline_keyboard: [
+                        [{ text: "🖼 View All T-Shirts", callback_data: 'view_all_t' }],
+                        backBtn
+                    ]
+                }
+            });
         });
     }
-    // ২. Shirts সাব-মেনু
-    else if (data === 'm_shirt') {
-        bot.sendMessage(chatId, "👔 *SHIRT COLLECTION*", {
-            reply_markup: { inline_keyboard: [
-                [{ text: "👕 Casual Shirt", callback_data: 's_casual' }],
-                [{ text: "👔 Formal Shirt", callback_data: 's_formal' }],
-                [{ text: "👕 Half Shirt", callback_data: 's_half' }],
-                backBtn
-            ]}
-        });
+
+    // সব টি-শার্টের গ্যালারি (View All)
+    else if (data === 'view_all_t') {
+        const gallery = [
+            { type: 'photo', media: IMAGE_BASE + "tshirts/tshirt1.jpg" },
+            { type: 'photo', media: IMAGE_BASE + "tshirts/tshirt2.jpg" },
+            { type: 'photo', media: IMAGE_BASE + "tshirts/tshirt3.jpg" },
+            { type: 'photo', media: IMAGE_BASE + "tshirts/tshirt4.jpg" },
+            { type: 'photo', media: IMAGE_BASE + "tshirts/tshirt5.jpg" },
+            { type: 'photo', media: IMAGE_BASE + "tshirts/tshirt6.jpg" }
+        ];
+        bot.sendMediaGroup(chatId, gallery);
     }
-    // অন্যান্য সাব-মেনু (Pants, Panjabi, Junior, Accessories) আগের মতোই থাকবে...
+    
+    // বাকি সাব-মেনু লজিকগুলো এখানে একইভাবে যোগ হবে...
 });
 
-// মেনু বাটন কমান্ড ফিক্স (আপনার রিকোয়েস্ট অনুযায়ী)
 bot.onText(/\/start|\/shop/, (msg) => {
     mainMenu(msg.chat.id, msg.from.id);
 });
 
-// সার্ভার রান রাখা
 http.createServer((req, res) => {
   res.writeHead(200);
-  res.end('Bot is Active!');
+  res.end('Bot is Live!');
 }).listen(process.env.PORT || 3000);
