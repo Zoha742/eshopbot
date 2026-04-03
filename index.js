@@ -1,95 +1,81 @@
 const TelegramBot = require('node-telegram-bot-api');
 const http = require('http');
 
-// আপনার দেওয়া টোকেন
+// আপনার টোকেন এবং অ্যাডমিন আইডি
 const token = '8624381226:AAEdlqEKTrzwIPuq1aSPIuPEfb-3GmI0nOI';
 const bot = new TelegramBot(token, {polling: true});
+const ADMIN_ID = 1391942702; // আপনার ইউজার আইডি এখানে বসানো হয়েছে
 
-// মেইন মেনু ফাংশন (iOS Style)
-function mainMenu(chatId) {
-    const options = {
-        reply_markup: {
-            inline_keyboard: [
-                [{ text: "🕌 PANJABI", callback_data: 'm_panjabi' }, { text: "👕 T-SHIRTS", callback_data: 'm_tshirt' }],
-                [{ text: "👔 SHIRTS", callback_data: 'm_shirt' }, { text: "🧒 JUNIOR", callback_data: 'm_junior' }],
-                [{ text: "👖 PANTS", callback_data: 'm_pant' }, { text: "⌚ ACCESSORIES", callback_data: 'm_acc' }],
-                [{ text: "👤 User Profile", callback_data: 'user_profile' }, { text: "⚙️ Admin Panel", callback_data: 'admin_panel' }]
-            ]
-        }
-    };
-    bot.sendMessage(chatId, "🍎 *Welcome to Premium eShop*", { parse_mode: "Markdown", ...options });
+// মেইন মেনু ফাংশন (iOS Glass Look Style)
+function mainMenu(chatId, userId) {
+    const keyboard = [
+        [{ text: "⚪️ 𝗠𝗔𝗜𝗡 𝗦𝗛𝗢𝗣", callback_data: 'm_tshirt' }], // T-Shirts এর বদলে Shop All
+        [{ text: "🕌 𝗣𝗔𝗡𝗝𝗔𝗕𝗜", callback_data: 'm_panjabi' }, { text: "👔 𝗦𝗛𝗜𝗥𝗧𝗦", callback_data: 'm_shirt' }],
+        [{ text: "👖 𝗣𝗔𝗡𝗧𝗦", callback_data: 'm_pant' }, { text: "🧒 𝗝𝗨𝗡𝗜𝗢𝗥", callback_data: 'm_junior' }],
+        [{ text: "⌚ 𝗔𝗖𝗖𝗘𝗦𝗦𝗢𝗥𝗜𝗘𝗦", callback_data: 'm_acc' }, { text: "🔥 𝗛𝗢𝗧 𝗗𝗘𝗔𝗟𝗦", callback_data: 'hot_deals' }]
+    ];
+
+    // সিকিউরিটি: শুধুমাত্র আপনার আইডিতে অ্যাডমিন প্যানেল দেখাবে
+    if (userId === ADMIN_ID) {
+        keyboard.push([{ text: "🔐 𝗔𝗗𝗠𝗜𝗡 𝗣𝗔𝗡𝗘𝗟", callback_data: 'admin_panel' }]);
+    }
+
+    bot.sendMessage(chatId, " *Premium e-Store*\nSelect a category to explore:", {
+        parse_mode: "Markdown",
+        reply_markup: { inline_keyboard: keyboard }
+    });
 }
 
-// বাটন ক্লিক হ্যান্ডলার
 bot.on('callback_query', (query) => {
     const chatId = query.message.chat.id;
+    const userId = query.from.id;
     const data = query.data;
-    const backBtn = [{ text: "⬅️ Back to Main Menu", callback_data: 'main_menu' }];
+    const backBtn = [{ text: "🔙 Back to Menu", callback_data: 'main_menu' }];
 
     if (data === 'main_menu') {
-        mainMenu(chatId);
+        mainMenu(chatId, userId);
     } 
-    // 1. Panjabi
-    else if (data === 'm_panjabi') {
-        bot.sendMessage(chatId, "🕌 *Panjabi Collection*", {
+    
+    // Shirts সাব-মেনু (আপনার দেওয়া লিস্ট অনুযায়ী)
+    else if (data === 'm_shirt') {
+        bot.sendMessage(chatId, "👔 *SHIRT COLLECTION*", {
             reply_markup: { inline_keyboard: [
-                [{ text: "✨ Easy Design Panjabi", callback_data: 'p_easy' }],
-                [{ text: "💎 Easy Karchupi Panjabi", callback_data: 'p_kar' }],
-                [{ text: "🕌 Kabli Panjabi Set", callback_data: 'p_kabli' }],
+                [{ text: "🔹 Casual Shirt", callback_data: 's_casual' }],
+                [{ text: "🔹 Formal Shirt", callback_data: 's_formal' }],
+                [{ text: "🔹 Half Shirt", callback_data: 's_half' }],
                 backBtn
             ]}
         });
     }
-    // 2. T-Shirts
-    else if (data === 'm_tshirt') {
-        bot.sendMessage(chatId, "👕 *T-Shirt Collection*", {
+
+    // Accessories সাব-মেনু
+    else if (data === 'm_acc') {
+        bot.sendMessage(chatId, "⌚ *ACCESSORIES*", {
             reply_markup: { inline_keyboard: [
-                [{ text: "🎨 Printed T-Shirt", callback_data: 't_print' }],
-                [{ text: "👕 Polo T-Shirt", callback_data: 't_polo' }],
+                [{ text: "▫️ Belt", callback_data: 'a_belt' }],
+                [{ text: "▫️ Easy Tie", callback_data: 'a_tie' }],
+                [{ text: "▫️ Men's Underwear", callback_data: 'a_und' }],
                 backBtn
             ]}
         });
     }
-    // 3. Junior Section
-    else if (data === 'm_junior') {
-        bot.sendMessage(chatId, "🧒 *Junior Collection*", {
-            reply_markup: { inline_keyboard: [
-                [{ text: "👦 Boys Full Shirt", callback_data: 'j_bfull' }, { text: "👦 Boys Half Shirt", callback_data: 'j_bhalf' }],
-                [{ text: "👕 Boys Polo", callback_data: 'j_bpolo' }, { text: "👕 Boys T-Shirt", callback_data: 'j_bt' }],
-                [{ text: "🕌 Boys Panjabi", callback_data: 'j_bp' }],
-                [{ text: "👧 Girls T-Shirt", callback_data: 'j_gt' }, { text: "👗 Girls Frock", callback_data: 'j_gf' }],
-                backBtn
-            ]}
-        });
-    }
-    // 4. Pants Section
-    else if (data === 'm_pant') {
-        bot.sendMessage(chatId, "👖 *Pants Collection*", {
-            reply_markup: { inline_keyboard: [
-                [{ text: "👖 Gabardine Pants", callback_data: 'pn_gab' }],
-                [{ text: "👖 Jeans", callback_data: 'pn_jean' }],
-                [{ text: "👔 Formal Pants", callback_data: 'pn_formal' }],
-                [{ text: "🩳 Pajama / Shorts / Trousers", callback_data: 'pn_others' }],
-                backBtn
-            ]}
-        });
-    }
-    // 5. User Profile
-    else if (data === 'user_profile') {
-        bot.sendMessage(chatId, `👤 *User Profile*\n\nName: ${query.from.first_name}\nUser ID: ${query.from.id}`, {
-            reply_markup: { inline_keyboard: [
-                [{ text: "📦 Orders", callback_data: 'u_ord' }, { text: "🛒 Cart", callback_data: 'u_cart' }],
-                [{ text: "📍 Shipping Address", callback_data: 'u_ship' }],
-                [{ text: "⚙️ Account Details", callback_data: 'u_acc' }],
-                backBtn
-            ]}
-        });
+
+    // অ্যাডমিন প্যানেল সিকিউরিটি ফিক্স
+    else if (data === 'admin_panel') {
+        if (userId === ADMIN_ID) {
+            bot.sendMessage(chatId, "🔓 *Welcome Master!* অ্যাডমিন কন্ট্রোল প্যানেলে আপনাকে স্বাগতম।");
+        } else {
+            // অন্য কেউ ক্লিক করলে এই মেসেজটি পপ-আপ হবে
+            bot.answerCallbackQuery(query.id, { 
+                text: "⚠️ Access Denied! This section is for the owner only.", 
+                show_alert: true 
+            });
+        }
     }
 });
 
-// স্টার্ট কমান্ড
 bot.onText(/\/start/, (msg) => {
-    mainMenu(msg.chat.id);
+    mainMenu(msg.chat.id, msg.from.id);
 });
 
 // Render সার্ভার সচল রাখা
@@ -97,5 +83,3 @@ http.createServer((req, res) => {
   res.writeHead(200);
   res.end('Bot is Live!');
 }).listen(process.env.PORT || 3000);
-
-console.log("Bot is running perfectly...");
