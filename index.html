@@ -3,114 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SY Fashion Shop</title>
+    <title>Premium eShop Mini App</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="https://unpkg.com/@tonconnect/sdk@latest/dist/tonconnect-sdk.min.js"></script>
     <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 10px;
-            background-color: #f0f2f5;
-        }
-        .header {
-            text-align: center;
-            font-size: 20px;
-            font-weight: bold;
-            margin-bottom: 20px;
-            color: #333;
-        }
-        .grid-container {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr); /* ২টা কলাম পাশাপাশি */
-            gap: 15px;
-        }
-        .product-card {
-            background-color: white;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-        .product-card img {
-            width: 100%;
-            height: auto;
-            object-fit: cover;
-        }
-        .info {
-            padding: 10px;
-            text-align: center;
-        }
-        .name {
-            font-size: 14px;
-            font-weight: bold;
-            color: #2c3e50;
-            margin-bottom: 5px;
-        }
-        .price {
-            font-size: 15px;
-            color: #e67e22;
-            font-weight: bold;
-        }
-        /* বাটনটি ছবির সমান চওড়া এবং বড় সাইজের হবে */
-        .order-btn {
-            background-color: #2481cc;
-            color: white;
-            border: none;
-            padding: 12px;
-            width: 100%;
-            font-size: 14px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-        .order-btn:hover {
-            background-color: #1a6096;
-        }
+        body { font-family: Arial, sans-serif; background: #f4f4f9; padding: 20px; text-align: center; }
+        .card { background: white; padding: 15px; border-radius: 10px; margin-bottom: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .btn { background: #0088cc; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; width: 100%; margin-top: 10px; }
+        .profile { display: none; margin-top: 20px; text-align: left; background: #eee; padding: 10px; border-radius: 5px; }
     </style>
 </head>
 <body>
+    <h2>💎 Premium eShop</h2>
+    
+    <div class="card">
+        <h3>Payment Method</h3>
+        <button class="btn" id="ton-connect">Connect TON Wallet</button>
+        <button class="btn" style="background: #28a745;" onclick="localPayment()">Local Payment (Bkash/Rocket)</button>
+    </div>
 
-    <div class="header">SY Fashion 2026 Collection</div>
-
-    <div class="grid-container" id="product-list">
-        </div>
+    <div id="user-info" class="card">
+        <h3>User Profile</h3>
+        <p id="username">Loading...</p>
+        <hr>
+        <h4>My Orders (Receipts)</h4>
+        <div id="order-list">No orders yet.</div>
+    </div>
 
     <script>
-        const products = [
-    { id: 1, name: 'Premium Black', price: '৳৮৮০', img: 'tshirt1.jpg' }, // image/ মুছে ফেলা হয়েছে
-    { id: 2, name: 'Mint Green', price: '৳৮৮০', img: 'tshirt2.jpg' },
-    { id: 3, name: 'Classic Blue', price: '৳৯৫০', img: 'tshirt3.jpg' },
-    { id: 4, name: 'Pure White', price: '৳৮৫০', img: 'tshirt4.jpg' },
-    { id: 5, name: 'Navy Blue', price: '৳৯০০', img: 'tshirt5.jpg' },
-    { id: 6, name: 'Ash Grey', price: '৳৮৮০', img: 'tshirt6.jpg' }
-];
-
-        const list = document.getElementById('product-list');
         const tg = window.Telegram.WebApp;
-
-        // অ্যাপটি ফুল স্ক্রিন করার জন্য
         tg.expand();
 
-        products.forEach(p => {
-            const card = document.createElement('div');
-            card.className = 'product-card';
-            card.innerHTML = `
-                <img src="${p.img}" alt="${p.name}">
-                <div class="info">
-                    <div class="name">${p.name}</div>
-                    <div class="price">${p.price}</div>
-                </div>
-                <button class="order-btn" onclick="sendData('${p.id}')">🔍 View & Buy</button>
-            `;
-            list.appendChild(card);
-        });
+        document.getElementById('username').innerText = "User: " + (tg.initDataUnsafe.user ? tg.initDataUnsafe.user.first_name : "Guest");
 
-        // বটের কাছে ডাটা পাঠানোর ফাংশন
-        function sendData(id) {
-            tg.sendData(id); // বটের কাছে প্রোডাক্টের আইডি পাঠাবে
+        function localPayment() {
+            alert("Please send the amount to our local number and provide the transaction ID in the bot.");
+            tg.close(); // বটের চ্যাটে ফিরিয়ে নিয়ে যাবে পেমেন্ট ডিটেইলস দিতে
         }
+
+        // TON Connect Logic (Simple Placeholder)
+        document.getElementById('ton-connect').onclick = function() {
+            alert("Connecting to TON Wallet...");
+            // এখানে TON Connect API ইন্টিগ্রেট হবে
+        };
     </script>
 </body>
 </html>
