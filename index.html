@@ -1,51 +1,53 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Premium eShop</title>
+    <title>eShop365 Mini App</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        body { font-family: sans-serif; background: #1a1a1a; color: white; margin: 0; padding: 15px; }
-        .tab-container { display: flex; justify-content: space-around; margin-bottom: 20px; border-bottom: 1px solid #333; }
-        .tab { padding: 10px; cursor: pointer; color: #888; }
-        .tab.active { color: #0088cc; border-bottom: 2px solid #0088cc; }
-        .section { display: none; }
-        .section.active { display: block; }
-        .item-card { background: #2a2a2a; padding: 10px; border-radius: 10px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
-        .btn-pay { background: #28a745; color: white; border: none; padding: 8px 15px; border-radius: 5px; width: 100%; margin-top: 10px; }
-        .profile-header { text-align: center; margin-bottom: 20px; }
-        .profile-header img { width: 60px; border-radius: 50%; border: 2px solid #0088cc; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #0f172a; color: white; margin: 0; padding: 15px; }
+        .tab-nav { display: flex; justify-content: space-around; border-bottom: 2px solid #1e293b; margin-bottom: 20px; position: sticky; top: 0; background: #0f172a; z-index: 10; }
+        .tab { padding: 12px; cursor: pointer; color: #94a3b8; font-weight: 600; }
+        .tab.active { color: #38bdf8; border-bottom: 3px solid #38bdf8; }
+        .content { display: none; }
+        .content.active { display: block; }
+        .card { background: #1e293b; border-radius: 12px; padding: 15px; margin-bottom: 15px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+        .btn { width: 100%; padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; transition: 0.3s; }
+        .btn-ton { background: #0088cc; color: white; }
+        .btn-local { background: #22c55e; color: white; }
+        .user-id { background: #334155; padding: 5px 10px; border-radius: 5px; font-family: monospace; color: #38bdf8; }
     </style>
 </head>
 <body>
-    <div class="tab-container">
-        <div class="tab active" onclick="openTab('store')">🏪 Shop</div>
-        <div class="tab" onclick="openTab('profile')">👤 Profile</div>
+    <div class="tab-nav">
+        <div class="tab active" onclick="showTab('shop')">🛒 Shop</div>
+        <div class="tab" onclick="showTab('profile')">👤 Profile</div>
     </div>
 
-    <div id="store" class="section active">
-        <h3>Premium Collection</h3>
-        <div id="product-list">
-            <p style="color:#aaa; font-size: 14px;">Select items from the bot to see them in your cart.</p>
+    <div id="shop" class="content active">
+        <h2>Premium Collection</h2>
+        <div class="card">
+            <p>Select items from the bot to see them here.</p>
         </div>
     </div>
 
-    <div id="profile" class="section">
-        <div class="profile-header">
-            <img id="user-pic" src="https://via.placeholder.com/60" alt="User">
-            <h3 id="user-name">User: ZOZO</h3>
+    <div id="profile" class="content">
+        <div class="card">
+            <h3>User Information</h3>
+            <p>User: <span id="display-name">Guest</span></p>
+            <p>User ID: <span id="uid" class="user-id">#000000</span></p>
         </div>
         
-        <div style="background:#2a2a2a; padding:15px; border-radius:10px;">
-            <h4>💳 Payment Methods</h4>
-            <button class="btn-pay" style="background:#0088cc;" onclick="pay('TON')">Connect TON Wallet</button>
-            <button class="btn-pay" onclick="pay('Local')">Local Payment (Bkash/Rocket)</button>
+        <div class="card">
+            <h3>💳 Wallet & Payment</h3>
+            <button class="btn btn-ton" onclick="showPayPopup('TON')">Connect TON Wallet</button>
+            <button class="btn btn-local" onclick="showPayPopup('Bkash/Nagad')">Local Payment</button>
         </div>
 
-        <div style="margin-top:20px;">
-            <h4>🛒 My Cart / Favorites</h4>
-            <div id="cart-items" style="font-size:14px; color:#ccc;">No items added yet.</div>
+        <div class="card">
+            <h3>📦 My Orders</h3>
+            <button class="btn" style="background: #6366f1; color: white;" onclick="showOrderPopup()">Check Recent Orders</button>
         </div>
     </div>
 
@@ -53,19 +55,28 @@
         const tg = window.Telegram.WebApp;
         tg.expand();
 
-        function openTab(tabName) {
-            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        function showTab(name) {
+            document.querySelectorAll('.content').forEach(c => c.classList.remove('active'));
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            document.getElementById(tabName).classList.add('active');
+            document.getElementById(name).classList.add('active');
             event.currentTarget.classList.add('active');
         }
 
-        function pay(method) {
-            tg.showPopup({ title: 'Payment', message: 'Proceed with ' + method + ' payment?', buttons: [{text: 'Pay Now', type: 'ok'}] });
+        // পেমেন্ট এবং অর্ডার পপআপ
+        function showPayPopup(method) {
+            tg.showPopup({ title: 'Payment Status', message: `Proceed with ${method} payment system?`, buttons: [{text: 'Proceed', type: 'ok'}, {text: 'Cancel', type: 'destructive'}] });
         }
-        
+
+        function showOrderPopup() {
+            tg.showPopup({ title: 'Order Details', message: 'Generating payment invoice for your cart items...', buttons: [{text: 'Pay Now', type: 'ok'}] });
+        }
+
+        // ইউজার আইডি এবং নাম জেনারেশন
         const user = tg.initDataUnsafe.user;
-        if(user) document.getElementById('user-name').innerText = "User: " + user.first_name;
+        if(user) {
+            document.getElementById('display-name').innerText = user.first_name;
+            document.getElementById('uid').innerText = "#" + (user.id).toString().slice(-6);
+        }
     </script>
 </body>
 </html>
