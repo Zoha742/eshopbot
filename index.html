@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>eShop365 Premium</title>
+    <title>eShop365 Premium App</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         body { font-family: 'Segoe UI', sans-serif; background: #0f172a; color: white; margin: 0; padding: 0; }
@@ -12,78 +12,91 @@
         .tab.active { color: #38bdf8; border-bottom: 3px solid #38bdf8; background: #1e293b; }
         .content { display: none; padding: 15px; }
         .content.active { display: block; }
+        
+        /* Grid for Categories */
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
         .card { background: #1e293b; padding: 20px; border-radius: 12px; text-align: center; border: 1px solid #334155; cursor: pointer; }
+        
+        /* Gallery */
         .prod-card { background: #1e293b; border-radius: 10px; overflow: hidden; border: 1px solid #334155; margin-bottom: 10px; cursor: pointer; }
         .prod-card img { width: 100%; height: 160px; object-fit: cover; }
-        .details-page { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0f172a; z-index: 200; display: none; padding: 20px; overflow-y: auto; }
+        
+        /* Details Page */
+        .details-page { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0f172a; z-index: 200; display: none; padding: 20px; overflow-y: auto; box-sizing: border-box; }
         .btn-full { width: 100%; padding: 12px; border: none; border-radius: 8px; font-weight: bold; margin-top: 15px; cursor: pointer; color: white; }
         .select-box { background: #1e293b; border: 1px solid #334155; color: white; padding: 10px; border-radius: 5px; width: 100%; margin-top: 5px; }
+        
+        /* Cart & Bill */
         .cart-item { background: #1e293b; padding: 12px; border-radius: 8px; margin-bottom: 10px; border-left: 4px solid #38bdf8; }
-        .bill-row { display: flex; justify-content: space-between; margin-bottom: 5px; color: #94a3b8; }
-        .total-row { display: flex; justify-content: space-between; font-weight: bold; font-size: 18px; margin-top: 10px; border-top: 1px solid #334155; padding-top: 10px; }
+        .bill-box { margin-top: 20px; background: #1e293b; padding: 15px; border-radius: 10px; border: 1px solid #334155; }
+        .row { display: flex; justify-content: space-between; margin-bottom: 5px; color: #94a3b8; }
+        .total { display: flex; justify-content: space-between; font-weight: bold; font-size: 18px; border-top: 1px solid #334155; padding-top: 10px; margin-top: 10px; }
     </style>
 </head>
 <body>
 
     <div class="tabs">
-        <div id="tab-shop" class="tab active" onclick="openTab('store')">🏪 STORE</div>
-        <div id="tab-profile" class="tab" onclick="openTab('profile')">👤 PROFILE</div>
+        <div id="t-store" class="tab active" onclick="switchTab('store')">🏪 STORE</div>
+        <div id="t-profile" class="tab" onclick="switchTab('profile')">👤 PROFILE</div>
     </div>
 
     <div id="store" class="content active">
-        <div id="cat-menu" class="grid">
-            <div class="card" onclick="loadGal('tshirts/printed/', 'T-Shirts')">👕 T-Shirts</div>
-            <div class="card" onclick="loadGal('shirt/casual/', 'Shirts')">👔 Shirts</div>
-            <div class="card" onclick="loadGal('shirt/formal/', 'Formal')">💼 Formal</div>
-            <div class="card" onclick="loadGal('pants/jeans/', 'Pants')">👖 Pants</div>
-            <div class="card" onclick="loadGal('panjabi/easy/', 'Panjabi')">🕌 Panjabi</div>
-            <div class="card" onclick="loadGal('accessories/belt/', 'Acc')">⌚ Accessories</div>
+        <div id="menu-main" class="grid">
+            <div class="card" onclick="openGal('tshirts/printed/', 'Printed T-Shirts')">👕 T-Shirts</div>
+            <div class="card" onclick="openGal('shirt/casual/', 'Casual Shirts')">👔 Shirts</div>
+            <div class="card" onclick="openGal('shirt/formal/', 'Formal Shirts')">💼 Formal</div>
+            <div class="card" onclick="openGal('pants/jeans/', 'Jeans Pants')">👖 Pants</div>
+            <div class="card" onclick="openGal('panjabi/easy/', 'Easy Panjabi')">🕌 Panjabi</div>
+            <div class="card" onclick="openGal('accessories/belt/', 'Acc')">⌚ Accessories</div>
         </div>
+        
         <div id="gallery" style="display:none;">
-            <button onclick="backToMenu()" style="color:#38bdf8; background:none; border:none; cursor:pointer; margin-bottom:15px;">⬅️ Back to Menu</button>
-            <div class="grid" id="g-container"></div>
+            <button onclick="goBack()" style="color:#38bdf8; background:none; border:none; margin-bottom:15px;">⬅️ Back</button>
+            <div class="grid" id="gal-container"></div>
         </div>
     </div>
 
     <div id="profile" class="content">
-        <div style="background:#1e293b; padding:15px; border-radius:10px; margin-bottom:15px; border: 1px solid #334155;">
+        <div style="background:#1e293b; padding:15px; border-radius:10px; border: 1px solid #334155; margin-bottom:15px;">
             <h3 id="u-name">Guest</h3>
-            <p id="u-id" style="color:#38bdf8; font-family: monospace;">#000000</p>
+            <p id="u-id" style="color:#38bdf8;">#000000</p>
         </div>
 
-        <h4>🛒 Shopping Cart & Bill</h4>
-        <div id="cart-list">
-            <p style="color:#64748b; text-align: center;">Your cart is empty.</p>
+        <a href="https://www.fiverr.com/users/mr_zoha" target="_blank" style="text-decoration:none;">
+            <button class="btn-full" style="background:#ff9800; margin-bottom:20px;">🎮 Play Game (Fiverr)</button>
+        </a>
+
+        <h4>🛒 Order Summary</h4>
+        <div id="cart-items">
+            <p style="text-align:center; color:#64748b;">No items added.</p>
         </div>
 
-        <div id="bill-details" style="display:none; margin-top: 20px; background: #1e293b; padding: 15px; border-radius: 10px;">
-            <div class="bill-row"><span>Sub-total:</span> <span id="sub-total">$0</span></div>
-            <div class="bill-row"><span>Delivery:</span> <span id="del-charge">$2</span></div>
-            <div class="total-row"><span>Total Bill:</span> <span id="total-bill">$0</span></div>
-            <button class="btn-full" style="background:#22c55e;" onclick="checkout()">Checkout with TON / Bkash</button>
+        <div id="bill-card" style="display:none;" class="bill-box">
+            <div class="row"><span>Items:</span> <span id="b-sub">$0</span></div>
+            <div class="row"><span>Delivery:</span> <span>$2</span></div>
+            <div class="total"><span>Total Bill:</span> <span id="b-total">$0</span></div>
+            <button class="btn-full" style="background:#22c55e;" onclick="checkout()">Confirm Order</button>
         </div>
     </div>
 
-    <div id="details-page" class="details-page">
-        <button onclick="closeDetails()" style="color:#38bdf8; background:none; border:none; margin-bottom:15px; font-size: 18px;">❌ Close</button>
-        <img id="det-img" src="" style="width:100%; border-radius:12px; height: 300px; object-fit: cover;">
-        <h2 id="det-title" style="margin: 15px 0 5px 0;">Product Name</h2>
-        <p style="color:#38bdf8; font-size: 22px; font-weight: bold; margin: 5px 0;">$15.00</p>
-        
-        <div style="margin-top: 20px;">
-            <label>Select Size:</label>
-            <select id="size-sel" class="select-box">
-                <option>M</option><option>L</option><option>XL</option><option>XXL</option>
-            </select>
+    <div id="details" class="details-page">
+        <button onclick="closeDetails()" style="color:#38bdf8; background:none; border:none; margin-bottom:10px;">❌ Close</button>
+        <img id="d-img" src="" style="width:100%; border-radius:10px; height:250px; object-fit:cover;">
+        <h2 id="d-title">Product</h2>
+        <p style="color:#38bdf8; font-size:24px; font-weight:bold;">$15.00</p>
+        <p style="font-size:12px; color:#94a3b8;">🚚 Delivery: $2.00 (Inside City)</p>
 
-            <label style="display:block; margin-top:15px;">Select Color:</label>
-            <select id="color-sel" class="select-box">
-                <option>Black</option><option>White</option><option>Navy Blue</option><option>Olive</option>
-            </select>
-        </div>
+        <label>Size:</label>
+        <select id="s-size" class="select-box">
+            <option>M</option><option>L</option><option>XL</option><option>XXL</option>
+        </select>
 
-        <button class="btn-full" style="background:#38bdf8;" onclick="addToCart()">🛒 Add to Cart</button>
+        <label style="display:block; margin-top:10px;">Color:</label>
+        <select id="s-color" class="select-box">
+            <option>Black</option><option>White</option><option>Navy</option>
+        </select>
+
+        <button class="btn-full" style="background:#38bdf8;" onclick="add()">🛒 Add to Cart</button>
     </div>
 
     <script>
@@ -91,97 +104,79 @@
         tg.expand();
         const IMG_URL = "https://raw.githubusercontent.com/Zoha742/eshopbot/main/products/";
         let cart = [];
-        let currentItem = {};
+        let temp = {};
 
-        function openTab(id) {
+        function switchTab(id) {
             document.querySelectorAll('.content').forEach(c => c.classList.remove('active'));
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
             document.getElementById(id).classList.add('active');
-            document.getElementById('tab-' + id).classList.add('active');
-            if(id === 'profile') renderCart();
+            document.getElementById('t-' + id).classList.add('active');
+            if(id === 'profile') showCart();
         }
 
-        function loadGal(path, title) {
-            document.getElementById('cat-menu').style.display = 'none';
+        function openGal(path, title) {
+            document.getElementById('menu-main').style.display = 'none';
             document.getElementById('gallery').style.display = 'block';
-            const container = document.getElementById('g-container');
-            container.innerHTML = '⌛ Loading...';
-            
-            setTimeout(() => {
-                container.innerHTML = '';
-                for(let i=1; i<=6; i++) {
-                    const img = `${IMG_URL}${path}${i}.jpg`;
-                    container.innerHTML += `
-                    <div class="prod-card" onclick="openDetails('${img}', '${title} - Item #${i}')">
-                        <img src="${img}" onerror="this.src='https://via.placeholder.com/150?text=No+Image'">
-                        <div style="padding:10px; text-align:center; font-weight:bold;">$15.00</div>
-                    </div>`;
-                }
-            }, 300);
+            const con = document.getElementById('gal-container');
+            con.innerHTML = '';
+            for(let i=1; i<=6; i++) {
+                const img = `${IMG_URL}${path}${i}.jpg`;
+                con.innerHTML += `<div class="prod-card" onclick="openDet('${img}', '${title} #${i}')">
+                    <img src="${img}" onerror="this.src='https://via.placeholder.com/150'">
+                    <div style="padding:10px; text-align:center;">$15.00</div>
+                </div>`;
+            }
         }
 
-        function openDetails(img, title) {
-            currentItem = { img, title, price: 15 };
-            document.getElementById('det-img').src = img;
-            document.getElementById('det-title').innerText = title;
-            document.getElementById('details-page').style.display = 'block';
+        function openDet(img, title) {
+            temp = { img, title, price: 15 };
+            document.getElementById('d-img').src = img;
+            document.getElementById('d-title').innerText = title;
+            document.getElementById('details').style.display = 'block';
         }
 
-        function closeDetails() { document.getElementById('details-page').style.display = 'none'; }
+        function closeDetails() { document.getElementById('details').style.display = 'none'; }
 
-        function addToCart() {
-            const size = document.getElementById('size-sel').value;
-            const color = document.getElementById('color-sel').value;
-            cart.push({ ...currentItem, size, color });
-            tg.showPopup({ message: "Added to cart!" });
+        function add() {
+            const size = document.getElementById('s-size').value;
+            const color = document.getElementById('s-color').value;
+            cart.push({...temp, size, color});
+            tg.showPopup({ message: "Item added to profile cart!" });
             closeDetails();
         }
 
-        function renderCart() {
-            const list = document.getElementById('cart-list');
-            const bill = document.getElementById('bill-details');
+        function showCart() {
+            const list = document.getElementById('cart-items');
+            const bill = document.getElementById('bill-card');
             if(cart.length === 0) {
-                list.innerHTML = '<p style="color:#64748b; text-align:center;">Your cart is empty.</p>';
+                list.innerHTML = '<p style="text-align:center; color:#64748b;">Cart is empty.</p>';
                 bill.style.display = 'none';
                 return;
             }
-            list.innerHTML = cart.map((item, index) => `
+            list.innerHTML = cart.map((item, i) => `
                 <div class="cart-item">
-                    <div style="display:flex; justify-content:space-between;">
-                        <b>${item.title}</b>
-                        <span style="color:#ef4444;" onclick="removeItem(${index})">🗑️</span>
-                    </div>
-                    <div style="font-size:12px; color:#94a3b8; margin-top:5px;">Size: ${item.size} | Color: ${item.color} | Price: $${item.price}</div>
+                    <b>${item.title}</b><br>
+                    <small>Size: ${item.size} | Color: ${item.color} | $15</small>
                 </div>
             `).join('');
-
-            const sub = cart.reduce((acc, item) => acc + item.price, 0);
-            document.getElementById('sub-total').innerText = '$' + sub;
-            document.getElementById('total-bill').innerText = '$' + (sub + 2);
+            const sub = cart.length * 15;
+            document.getElementById('b-sub').innerText = '$' + sub;
+            document.getElementById('b-total').innerText = '$' + (sub + 2);
             bill.style.display = 'block';
         }
 
-        function removeItem(idx) {
-            cart.splice(idx, 1);
-            renderCart();
-        }
-
-        function backToMenu() {
-            document.getElementById('cat-menu').style.display = 'grid';
+        function goBack() {
+            document.getElementById('menu-main').style.display = 'grid';
             document.getElementById('gallery').style.display = 'none';
         }
 
         function checkout() {
-            tg.showPopup({
-                title: 'Confirm Payment',
-                message: 'Total: ' + document.getElementById('total-bill').innerText + '\nProceed to pay?',
-                buttons: [{text: 'Yes', type: 'ok'}, {text: 'No', type: 'destructive'}]
-            });
+            tg.showPopup({ title: 'Order Success', message: 'Your order has been recorded. Pay now?', buttons: [{text: 'Pay TON', type: 'ok'}, {text: 'Close', type: 'close'}] });
         }
 
         const user = tg.initDataUnsafe.user;
         if(user) {
-            document.getElementById('u-name').innerText = user.first_name + ' ' + (user.last_name || '');
+            document.getElementById('u-name').innerText = user.first_name;
             document.getElementById('u-id').innerText = "#" + user.id;
         }
     </script>
