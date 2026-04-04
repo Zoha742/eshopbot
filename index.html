@@ -7,117 +7,143 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { font-family: 'Segoe UI', sans-serif; background: #0f172a; color: white; margin: 0; padding: 0; overflow-x: hidden; }
-        .tabs { display: flex; background: #1e293b; position: sticky; top: 0; z-index: 100; border-bottom: 1px solid #334155; }
+        :root { --primary: #38bdf8; --bg: #0f172a; --card: #1e293b; --text: #f8fafc; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 0; }
+        .tabs { display: flex; background: var(--card); position: sticky; top: 0; z-index: 100; border-bottom: 1px solid #334155; }
         .tab { flex: 1; padding: 15px; text-align: center; cursor: pointer; font-weight: bold; color: #94a3b8; }
-        .tab.active { color: #38bdf8; border-bottom: 3px solid #38bdf8; }
+        .tab.active { color: var(--primary); border-bottom: 3px solid var(--primary); }
         .content { display: none; padding: 15px; }
         .content.active { display: block; }
-        .section-title { color: #38bdf8; margin: 15px 0 10px 0; font-size: 13px; font-weight: bold; text-transform: uppercase; border-left: 3px solid #38bdf8; padding-left: 10px; }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .card { background: #1e293b; padding: 12px; border-radius: 10px; text-align: center; border: 1px solid #334155; cursor: pointer; font-size: 12px; }
-        .prod-card { background: #1e293b; border-radius: 12px; border: 1px solid #334155; overflow: hidden; position: relative; }
-        .prod-card img { width: 100%; height: 140px; object-fit: cover; }
-        .fav-btn { position: absolute; top: 8px; right: 8px; background: rgba(0,0,0,0.5); padding: 5px; border-radius: 50%; color: #94a3b8; cursor: pointer; }
-        .fav-btn.active { color: #ef4444; }
-        .input { width: 100%; padding: 10px; background: #0f172a; color: white; border: 1px solid #334155; border-radius: 8px; margin-top: 8px; box-sizing: border-box; }
-        .btn { width: 100%; padding: 14px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; margin-top: 10px; color: white; }
-        #gallery-view { position: fixed; top: 48px; left: 0; width: 100%; height: calc(100% - 48px); background: #0f172a; z-index: 200; display: none; padding: 15px; box-sizing: border-box; overflow-y: auto; }
-        .sub-sec { display: none; background: #1e293b; padding: 15px; border-radius: 12px; margin-top: 15px; }
+        
+        /* Store Grid & Titles */
+        .section-title { color: var(--primary); margin: 20px 0 10px 0; font-size: 14px; font-weight: bold; text-transform: uppercase; border-left: 4px solid var(--primary); padding-left: 10px; }
+        .main-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+        .category-card { background: var(--card); padding: 15px; border-radius: 12px; text-align: center; border: 1px solid #334155; cursor: pointer; transition: 0.3s; }
+        .category-card:active { transform: scale(0.95); background: #334155; }
+
+        /* Product Gallery */
+        #gallery-view { position: fixed; top: 48px; left: 0; width: 100%; height: calc(100% - 48px); background: var(--bg); z-index: 200; display: none; padding: 15px; box-sizing: border-box; overflow-y: auto; }
+        .product-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .prod-card { background: var(--card); border-radius: 15px; border: 1px solid #334155; overflow: hidden; position: relative; }
+        .prod-card img { width: 100%; height: 160px; object-fit: cover; }
+        .fav-heart { position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.6); width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; cursor: pointer; }
+        .fav-heart.active { color: #ef4444; }
+        
+        /* Modals & Buttons */
+        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 300; display: none; padding: 20px; box-sizing: border-box; overflow-y: auto; }
+        .input { width: 100%; padding: 12px; background: #0f172a; color: white; border: 1px solid #334155; border-radius: 10px; margin-top: 10px; box-sizing: border-box; }
+        .btn { width: 100%; padding: 15px; border-radius: 12px; border: none; font-weight: bold; cursor: pointer; margin-top: 15px; color: white; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .sub-sec { background: var(--card); padding: 15px; border-radius: 15px; margin-top: 15px; display: none; }
     </style>
 </head>
 <body>
 
     <div class="tabs">
-        <div id="t-store" class="tab active" onclick="switchTab('store')">🏪 STORE</div>
-        <div id="t-profile" class="tab" onclick="switchTab('profile')">👤 PROFILE</div>
+        <div id="t-store" class="tab active" onclick="switchTab('store')"><i class="fas fa-store"></i> STORE</div>
+        <div id="t-profile" class="tab" onclick="switchTab('profile')"><i class="fas fa-user"></i> PROFILE</div>
     </div>
 
     <div id="store" class="content active">
         <div class="section-title">👕 T-Shirts</div>
-        <div class="grid">
-            <div class="card" onclick="loadGal('tshirts/printed/', 'Printed T-shirt')">Printed T-shirt</div>
-            <div class="card" onclick="loadGal('tshirts/polo/', 'Polo T-shirt')">Polo T-shirt</div>
+        <div class="main-grid">
+            <div class="category-card" onclick="loadProducts('tshirts/printed/', 'Printed T-shirt')">Printed T-shirt</div>
+            <div class="category-card" onclick="loadProducts('tshirts/polo/', 'Polo T-shirt')">Polo T-shirt</div>
         </div>
 
         <div class="section-title">👔 Shirts</div>
-        <div class="grid">
-            <div class="card" onclick="loadGal('shirt/casual/', 'Casual shirt')">Casual</div>
-            <div class="card" onclick="loadGal('shirt/formal/', 'Formal shirt')">Formal</div>
-            <div class="card" onclick="loadGal('shirt/half/', 'Half Shirt')">Half</div>
+        <div class="main-grid">
+            <div class="category-card" onclick="loadProducts('shirt/casual/', 'Casual shirt')">Casual shirt</div>
+            <div class="category-card" onclick="loadProducts('shirt/formal/', 'Formal shirt')">Formal shirt</div>
+            <div class="category-card" onclick="loadProducts('shirt/half/', 'Half Shirt')">Half Shirt</div>
         </div>
 
         <div class="section-title">👖 Pants</div>
-        <div class="grid">
-            <div class="card" onclick="loadGal('pants/formal/', 'Formal Pant')">Formal</div>
-            <div class="card" onclick="loadGal('pants/jeans/', 'Jeans Pant')">Jeans</div>
+        <div class="main-grid">
+            <div class="category-card" onclick="loadProducts('pants/formal/', 'Formal Pant')">Formal</div>
+            <div class="category-card" onclick="loadProducts('pants/jeans/', 'Jeans Pant')">Jeans</div>
+            <div class="category-card" onclick="loadProducts('pants/gabardine/', 'Gabardine')">Gabardine</div>
         </div>
 
-        <div class="section-title">🕌 Panjabi</div>
-        <div class="grid">
-            <div class="card" onclick="loadGal('panjabi/easy/', 'Easy Panjabi')">Easy</div>
-            <div class="card" onclick="loadGal('panjabi/kabli/', 'Kabli Panjabi')">Kabli</div>
+        <div class="section-title">👶 Junior & Deals</div>
+        <div class="main-grid">
+            <div class="category-card" onclick="loadProducts('junior/boy/', 'Junior Boy')">Boy</div>
+            <div class="category-card" onclick="loadProducts('junior/girls/', 'Junior Girls')">Girls</div>
+            <div class="category-card" onclick="loadProducts('hotdeals/offer/', 'Offer')">Offer</div>
+            <div class="category-card" onclick="loadProducts('hotdeals/summer/', 'Summer')">Summer</div>
+        </div>
+
+        <div class="section-title">🎒 Accessories</div>
+        <div class="main-grid">
+            <div class="category-card" onclick="loadProducts('acc/belt/', 'Belt')">Belt</div>
+            <div class="category-card" onclick="loadProducts('acc/tie/', 'Tie')">Tie</div>
+            <div class="category-card" onclick="loadProducts('acc/under/', 'Underwear')">Underwear</div>
         </div>
 
         <div id="gallery-view">
-            <button onclick="hideGal()" style="color:#38bdf8; background:none; border:none; margin-bottom:15px; font-weight:bold;">⬅️ BACK</button>
-            <div class="grid" id="gal-container"></div>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                <h3 id="gal-title" style="margin:0; color:var(--primary);">Items</h3>
+                <button onclick="hideGal()" style="background:none; border:none; color:white; font-size:18px;"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="product-grid" id="product-container"></div>
         </div>
     </div>
 
     <div id="profile" class="content">
-        <div style="background:#1e293b; padding:15px; border-radius:12px; text-align:center;">
-            <h3 id="u-name">User</h3>
-            <p id="u-id" style="color:#38bdf8;">#000000</p>
+        <div style="background:var(--card); padding:20px; border-radius:15px; text-align:center; border:1px solid #334155;">
+            <h3 id="u-name" style="margin:0;">User</h3>
+            <p id="u-id" style="color:var(--primary); font-size:12px; margin:5px 0 0 0;">#000000</p>
         </div>
 
-        <div class="grid" style="margin-top:15px;">
-            <div class="card" onclick="showSub('cart')"><i class="fas fa-shopping-cart"></i><br>AddCart</div>
-            <div class="card" onclick="showSub('record')"><i class="fas fa-history"></i><br>Order Record</div>
-            <div class="card" onclick="showSub('love')"><i class="fas fa-heart"></i><br>Love</div>
+        <div class="main-grid" style="margin-top:20px;">
+            <div class="category-card" onclick="showSub('cart')"><i class="fas fa-shopping-basket"></i><br>AddCart</div>
+            <div class="category-card" onclick="showSub('record')"><i class="fas fa-receipt"></i><br>Order Record</div>
+            <div class="category-card" onclick="showSub('love')"><i class="fas fa-heart"></i><br>Love</div>
         </div>
 
-        <div class="sub-sec" id="sub-cart" style="display:block;">
-            <h4>📍 Shipping Address</h4>
-            <div id="addr-ui">
-                <input type="text" id="ship-name" class="input" placeholder="Full Name">
-                <textarea id="ship-addr" class="input" placeholder="Address..." style="height:50px;"></textarea>
-                <button class="btn" style="background:#38bdf8;" onclick="saveAddr()">Save Address</button>
-            </div>
-            <div id="addr-saved" style="display:none; font-size:13px; color:#38bdf8; margin-top:5px;">
-                ✅ Address Saved! <span onclick="editAddr()" style="text-decoration:underline; cursor:pointer;">Edit</span>
-            </div>
-            <h4 style="margin-top:20px;">🛒 My Items</h4>
-            <div id="cart-list"></div>
-            <div id="checkout-btn" style="display:none; border-top:1px solid #334155; margin-top:10px; padding-top:10px;">
-                <p>Total: <span id="total-usd">$0</span></p>
-                <button class="btn" style="background:#22c55e;" onclick="sendOrder()">Confirm Order</button>
+        <div id="sub-cart" class="sub-sec" style="display:block;">
+            <h4 style="margin:0 0 10px 0;">🛒 My Cart</h4>
+            <div id="cart-items-list"></div>
+            <div id="checkout-box" style="display:none; margin-top:15px; border-top:1px solid #334155; padding-top:10px;">
+                <div style="display:flex; justify-content:space-between;"><span>Total:</span> <span id="total-val" style="font-weight:bold; color:var(--primary);">$0</span></div>
+                <button class="btn" style="background:#22c55e;" onclick="sendOrder()"><i class="fas fa-check-circle"></i> Confirm & Send Order</button>
             </div>
         </div>
 
-        <div class="sub-sec" id="sub-record">
-            <h4>📜 Past Orders</h4>
-            <div id="history-list" style="font-size:12px;">No orders yet.</div>
+        <div id="sub-love" class="sub-sec">
+            <h4 style="margin:0 0 10px 0;">❤️ My Favorites</h4>
+            <div id="love-list" class="product-grid"></div>
+        </div>
+
+        <div id="sub-record" class="sub-sec">
+            <h4 style="margin:0 0 10px 0;">📜 Past Orders</h4>
+            <div id="order-history-list"></div>
         </div>
     </div>
 
-    <div id="details-modal" style="position:fixed; top:0; left:0; width:100%; height:100%; background:#0f172a; z-index:300; display:none; padding:20px; box-sizing:border-box;">
-        <button onclick="closeDet()" style="color:#38bdf8; background:none; border:none; font-size:18px;">❌ Close</button>
-        <img id="d-img" src="" style="width:100%; border-radius:12px; margin-top:10px;">
-        <h2 id="d-title">Product</h2>
-        <p style="font-size:22px; color:#38bdf8; font-weight:bold;">$15.00</p>
-        <label>Size:</label>
-        <select id="d-size" class="input"><option>M</option><option>L</option><option>XL</option><option>XXL</option></select>
-        <label style="display:block; margin-top:10px;">Color:</label>
-        <select id="d-color" class="input"><option>Black</option><option>White</option><option>Navy</option></select>
-        <button class="btn" style="background:#38bdf8;" onclick="addToCart()">Add to Cart</button>
+    <div id="details-modal" class="modal">
+        <button onclick="closeModal()" style="color:white; background:none; border:none; font-size:20px;"><i class="fas fa-arrow-left"></i></button>
+        <img id="m-img" src="" style="width:100%; border-radius:20px; margin-top:15px; border:1px solid #334155;">
+        <h2 id="m-title" style="margin:15px 0 5px 0;">Product Title</h2>
+        <p style="font-size:24px; color:var(--primary); font-weight:bold; margin:0;">$15.00</p>
+        
+        <div style="margin-top:20px; background:var(--card); padding:15px; border-radius:15px;">
+            <label>Select Size:</label>
+            <select id="m-size" class="input">
+                <option>M</option><option>L</option><option>XL</option><option>XXL</option>
+            </select>
+            <label style="display:block; margin-top:15px;">Select Color:</label>
+            <select id="m-color" class="input"><option>Black</option><option>Navy</option><option>White</option></select>
+            <button class="btn" style="background:var(--primary);" onclick="addToCart()"><i class="fas fa-cart-plus"></i> Add to AddCart</button>
+        </div>
     </div>
 
     <script>
         const tg = window.Telegram.WebApp;
         tg.expand();
-        const IMG_URL = "https://raw.githubusercontent.com/Zoha742/eshopbot/main/products/";
+        const IMG_BASE = "https://raw.githubusercontent.com/Zoha742/eshopbot/main/products/";
         let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        let favs = JSON.parse(localStorage.getItem('favs')) || [];
+        let currentItem = {};
 
         function switchTab(id) {
             document.querySelectorAll('.content').forEach(c => c.classList.remove('active'));
@@ -127,94 +153,111 @@
             if(id === 'profile') renderCart();
         }
 
-        function loadGal(path, title) {
-            const con = document.getElementById('gal-container');
-            con.innerHTML = '';
+        function loadProducts(path, name) {
+            const container = document.getElementById('product-container');
+            document.getElementById('gal-title').innerText = name;
+            container.innerHTML = '';
             document.getElementById('gallery-view').style.display = 'block';
-            for(let i=1; i<=4; i++) {
-                const img = `${IMG_URL}${path}${i}.jpg`;
-                con.innerHTML += `<div class="prod-card">
-                    <i class="fas fa-heart fav-btn"></i>
-                    <img src="${img}" onclick="openDet('${img}', '${title} #${i}')" onerror="this.src='https://via.placeholder.com/150'">
-                    <div style="padding:10px; font-weight:bold;">$15.00</div>
-                </div>`;
+
+            for(let i=1; i<=6; i++) {
+                const imgUrl = `${IMG_BASE}${path}${i}.jpg`;
+                const isFav = favs.some(f => f.img === imgUrl);
+                container.innerHTML += `
+                    <div class="prod-card">
+                        <div class="fav-heart ${isFav?'active':''}" onclick="toggleFav('${imgUrl}', '${name} #${i}', this)">
+                            <i class="fas fa-heart"></i>
+                        </div>
+                        <img src="${imgUrl}" onclick="openModal('${imgUrl}', '${name} #${i}')" onerror="this.src='https://via.placeholder.com/150?text=No+Image'">
+                        <div style="padding:10px; text-align:center;"><b>$15.00</b></div>
+                    </div>`;
             }
         }
 
         function hideGal() { document.getElementById('gallery-view').style.display = 'none'; }
-        function openDet(img, title) {
-            document.getElementById('d-img').src = img;
-            document.getElementById('d-title').innerText = title;
+
+        function openModal(img, title) {
+            currentItem = { img, title, price: 15 };
+            document.getElementById('m-img').src = img;
+            document.getElementById('m-title').innerText = title;
             document.getElementById('details-modal').style.display = 'block';
         }
-        function closeDet() { document.getElementById('details-modal').style.display = 'none'; }
+
+        function closeModal() { document.getElementById('details-modal').style.display = 'none'; }
 
         function addToCart() {
-            const item = { 
-                title: document.getElementById('d-title').innerText, 
-                size: document.getElementById('d-size').value, 
-                color: document.getElementById('d-color').value, 
-                price: 15 
-            };
-            cart.push(item);
+            const size = document.getElementById('m-size').value;
+            const color = document.getElementById('m-color').value;
+            cart.push({...currentItem, size, color});
             localStorage.setItem('cart', JSON.stringify(cart));
-            tg.showPopup({ message: "Added to Cart!" });
-            closeDet();
+            tg.showPopup({ message: "Item added to AddCart!" });
+            closeModal();
+        }
+
+        function toggleFav(img, title, el) {
+            const index = favs.findIndex(f => f.img === img);
+            if(index > -1) {
+                favs.splice(index, 1);
+                el.classList.remove('active');
+            } else {
+                favs.push({img, title});
+                el.classList.add('active');
+            }
+            localStorage.setItem('favs', JSON.stringify(favs));
         }
 
         function renderCart() {
-            const list = document.getElementById('cart-list');
-            if(cart.length === 0) { list.innerHTML = "Cart is empty."; document.getElementById('checkout-btn').style.display = 'none'; return; }
+            const list = document.getElementById('cart-items-list');
+            const box = document.getElementById('checkout-box');
+            if(cart.length === 0) {
+                list.innerHTML = '<p style="text-align:center; color:#64748b;">Your cart is empty.</p>';
+                box.style.display = 'none';
+                return;
+            }
             list.innerHTML = cart.map((i, idx) => `
-                <div style="background:#0f172a; padding:10px; border-radius:10px; margin-bottom:5px;">
-                    ${i.title} (${i.size}/${i.color}) - $${i.price}
-                    <span onclick="remove(${idx})" style="color:#ef4444; float:right;">🗑️</span>
+                <div style="background:#0f172a; padding:10px; border-radius:10px; margin-bottom:8px; border:1px solid #334155; position:relative;">
+                    <b>${i.title}</b><br><small>Size: ${i.size} | Color: ${i.color}</small><br><b>$15.00</b>
+                    <button onclick="removeCart(${idx})" style="position:absolute; right:10px; top:10px; background:none; border:none; color:#ef4444;"><i class="fas fa-trash"></i></button>
                 </div>`).join('');
-            document.getElementById('total-usd').innerText = '$' + (cart.length * 15);
-            document.getElementById('checkout-btn').style.display = 'block';
+            document.getElementById('total-val').innerText = '$' + (cart.length * 15);
+            box.style.display = 'block';
         }
 
-        function remove(idx) { cart.splice(idx, 1); localStorage.setItem('cart', JSON.stringify(cart)); renderCart(); }
-
-        function saveAddr() {
-            const n = document.getElementById('ship-name').value;
-            const a = document.getElementById('ship-addr').value;
-            if(!n || !a) return;
-            localStorage.setItem('name', n); localStorage.setItem('addr', a);
-            document.getElementById('addr-ui').style.display = 'none';
-            document.getElementById('addr-saved').style.display = 'block';
-        }
-
-        function editAddr() { document.getElementById('addr-ui').style.display = 'block'; document.getElementById('addr-saved').style.display = 'none'; }
+        function removeCart(idx) { cart.splice(idx, 1); localStorage.setItem('cart', JSON.stringify(cart)); renderCart(); }
 
         function showSub(id) {
             document.querySelectorAll('.sub-sec').forEach(s => s.style.display = 'none');
             document.getElementById('sub-' + id).style.display = 'block';
-            if(id === 'record') renderHistory();
+            if(id === 'love') renderLove();
+        }
+
+        function renderLove() {
+            const list = document.getElementById('love-list');
+            if(favs.length === 0) { list.innerHTML = '<p style="grid-column: 1 / span 2; text-align:center; color:#64748b;">No favorites yet.</p>'; return; }
+            list.innerHTML = favs.map(f => `
+                <div class="prod-card">
+                    <img src="${f.img}" onclick="openModal('${f.img}', '${f.title}')">
+                    <div style="padding:10px; text-align:center; font-size:11px;">${f.title}</div>
+                </div>`).join('');
         }
 
         function sendOrder() {
             const n = localStorage.getItem('name');
             const a = localStorage.getItem('addr');
-            if(!n) return tg.showAlert("Save address first!");
-            const orderData = { user: tg.initDataUnsafe.user, items: cart, addr: {name: n, a: a}, total: cart.length*15 };
+            if(!n || !a) { tg.showAlert("Please save address in profile first!"); return; }
             
-            // রেকর্ড সেভ করা
-            let history = JSON.parse(localStorage.getItem('history')) || [];
-            history.push({date: new Date().toLocaleDateString(), total: orderData.total});
-            localStorage.setItem('history', JSON.stringify(history));
+            const order = { user: tg.initDataUnsafe.user, items: cart, addr: {name: n, a: a}, total: cart.length*15 };
+            
+            // Save to Local History
+            let history = JSON.parse(localStorage.getItem('orderHistory')) || [];
+            history.push({ date: new Date().toLocaleString(), total: order.total, items: cart.length });
+            localStorage.setItem('orderHistory', JSON.stringify(history));
 
-            tg.sendData(JSON.stringify(orderData));
+            tg.sendData(JSON.stringify(order));
             cart = []; localStorage.removeItem('cart');
             tg.close();
         }
 
-        function renderHistory() {
-            const h = JSON.parse(localStorage.getItem('history')) || [];
-            document.getElementById('history-list').innerHTML = h.map(o => `<div>📅 ${o.date} - Total: $${o.total}</div>`).join('');
-        }
-
-        if(localStorage.getItem('name')) { document.getElementById('addr-ui').style.display = 'none'; document.getElementById('addr-saved').style.display = 'block'; }
+        // Initialize User Info
         const u = tg.initDataUnsafe.user;
         if(u) { document.getElementById('u-name').innerText = u.first_name; document.getElementById('u-id').innerText = "#" + u.id; }
     </script>
