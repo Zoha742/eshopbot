@@ -1,51 +1,71 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Premium eShop Mini App</title>
+    <title>Premium eShop</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <script src="https://unpkg.com/@tonconnect/sdk@latest/dist/tonconnect-sdk.min.js"></script>
     <style>
-        body { font-family: Arial, sans-serif; background: #f4f4f9; padding: 20px; text-align: center; }
-        .card { background: white; padding: 15px; border-radius: 10px; margin-bottom: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        .btn { background: #0088cc; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; width: 100%; margin-top: 10px; }
-        .profile { display: none; margin-top: 20px; text-align: left; background: #eee; padding: 10px; border-radius: 5px; }
+        body { font-family: sans-serif; background: #1a1a1a; color: white; margin: 0; padding: 15px; }
+        .tab-container { display: flex; justify-content: space-around; margin-bottom: 20px; border-bottom: 1px solid #333; }
+        .tab { padding: 10px; cursor: pointer; color: #888; }
+        .tab.active { color: #0088cc; border-bottom: 2px solid #0088cc; }
+        .section { display: none; }
+        .section.active { display: block; }
+        .item-card { background: #2a2a2a; padding: 10px; border-radius: 10px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+        .btn-pay { background: #28a745; color: white; border: none; padding: 8px 15px; border-radius: 5px; width: 100%; margin-top: 10px; }
+        .profile-header { text-align: center; margin-bottom: 20px; }
+        .profile-header img { width: 60px; border-radius: 50%; border: 2px solid #0088cc; }
     </style>
 </head>
 <body>
-    <h2>💎 Premium eShop</h2>
-    
-    <div class="card">
-        <h3>Payment Method</h3>
-        <button class="btn" id="ton-connect">Connect TON Wallet</button>
-        <button class="btn" style="background: #28a745;" onclick="localPayment()">Local Payment (Bkash/Rocket)</button>
+    <div class="tab-container">
+        <div class="tab active" onclick="openTab('store')">🏪 Shop</div>
+        <div class="tab" onclick="openTab('profile')">👤 Profile</div>
     </div>
 
-    <div id="user-info" class="card">
-        <h3>User Profile</h3>
-        <p id="username">Loading...</p>
-        <hr>
-        <h4>My Orders (Receipts)</h4>
-        <div id="order-list">No orders yet.</div>
+    <div id="store" class="section active">
+        <h3>Premium Collection</h3>
+        <div id="product-list">
+            <p style="color:#aaa; font-size: 14px;">Select items from the bot to see them in your cart.</p>
+        </div>
+    </div>
+
+    <div id="profile" class="section">
+        <div class="profile-header">
+            <img id="user-pic" src="https://via.placeholder.com/60" alt="User">
+            <h3 id="user-name">User: ZOZO</h3>
+        </div>
+        
+        <div style="background:#2a2a2a; padding:15px; border-radius:10px;">
+            <h4>💳 Payment Methods</h4>
+            <button class="btn-pay" style="background:#0088cc;" onclick="pay('TON')">Connect TON Wallet</button>
+            <button class="btn-pay" onclick="pay('Local')">Local Payment (Bkash/Rocket)</button>
+        </div>
+
+        <div style="margin-top:20px;">
+            <h4>🛒 My Cart / Favorites</h4>
+            <div id="cart-items" style="font-size:14px; color:#ccc;">No items added yet.</div>
+        </div>
     </div>
 
     <script>
         const tg = window.Telegram.WebApp;
         tg.expand();
 
-        document.getElementById('username').innerText = "User: " + (tg.initDataUnsafe.user ? tg.initDataUnsafe.user.first_name : "Guest");
-
-        function localPayment() {
-            alert("Please send the amount to our local number and provide the transaction ID in the bot.");
-            tg.close(); // বটের চ্যাটে ফিরিয়ে নিয়ে যাবে পেমেন্ট ডিটেইলস দিতে
+        function openTab(tabName) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.getElementById(tabName).classList.add('active');
+            event.currentTarget.classList.add('active');
         }
 
-        // TON Connect Logic (Simple Placeholder)
-        document.getElementById('ton-connect').onclick = function() {
-            alert("Connecting to TON Wallet...");
-            // এখানে TON Connect API ইন্টিগ্রেট হবে
-        };
+        function pay(method) {
+            tg.showPopup({ title: 'Payment', message: 'Proceed with ' + method + ' payment?', buttons: [{text: 'Pay Now', type: 'ok'}] });
+        }
+        
+        const user = tg.initDataUnsafe.user;
+        if(user) document.getElementById('user-name').innerText = "User: " + user.first_name;
     </script>
 </body>
 </html>
