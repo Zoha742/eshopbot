@@ -6,29 +6,26 @@
     <title>eShop365 Premium</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; background: #0f172a; color: white; margin: 0; padding: 0; overflow-x: hidden; }
+        body { font-family: 'Segoe UI', sans-serif; background: #0f172a; color: white; margin: 0; padding: 0; }
         .tabs { display: flex; background: #1e293b; position: sticky; top: 0; z-index: 100; border-bottom: 1px solid #334155; }
         .tab { flex: 1; padding: 15px; text-align: center; cursor: pointer; font-weight: bold; color: #94a3b8; }
         .tab.active { color: #38bdf8; border-bottom: 3px solid #38bdf8; }
         .content { display: none; padding: 15px; }
         .content.active { display: block; }
-
-        /* Store UI */
-        .section-title { color: #38bdf8; margin: 15px 0 10px 0; font-size: 14px; text-transform: uppercase; font-weight: bold; border-left: 3px solid #38bdf8; padding-left: 8px; }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
-        .card { background: #1e293b; padding: 12px; border-radius: 10px; text-align: center; border: 1px solid #334155; cursor: pointer; font-size: 13px; }
-        .card:active { background: #334155; transform: scale(0.98); }
-
-        /* Gallery & Cart */
-        #gallery-view { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0f172a; z-index: 200; display: none; padding: 15px; box-sizing: border-box; overflow-y: auto; }
-        .prod-card { background: #1e293b; border-radius: 10px; border: 1px solid #334155; overflow: hidden; }
-        .prod-card img { width: 100%; height: 160px; object-fit: cover; }
-        .cart-item { background: #1e293b; padding: 12px; border-radius: 10px; margin-bottom: 10px; border: 1px solid #334155; display: flex; justify-content: space-between; align-items: center; }
         
-        /* Address Form */
-        .form-box { background: #1e293b; padding: 15px; border-radius: 12px; border: 1px solid #334155; margin-top: 15px; }
-        .input { width: 100%; padding: 10px; background: #0f172a; color: white; border: 1px solid #334155; border-radius: 8px; margin-top: 8px; box-sizing: border-box; }
-        .btn { width: 100%; padding: 12px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; margin-top: 10px; color: white; }
+        .section-title { color: #38bdf8; margin: 15px 0 10px 0; font-size: 14px; text-transform: uppercase; border-left: 3px solid #38bdf8; padding-left: 10px; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
+        .card { background: #1e293b; padding: 15px; border-radius: 12px; text-align: center; border: 1px solid #334155; cursor: pointer; }
+        
+        .prod-card { background: #1e293b; border-radius: 12px; border: 1px solid #334155; overflow: hidden; margin-bottom: 10px; }
+        .prod-card img { width: 100%; height: 160px; object-fit: cover; }
+        
+        .details-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0f172a; z-index: 300; display: none; padding: 20px; box-sizing: border-box; overflow-y: auto; }
+        .input { width: 100%; padding: 12px; background: #1e293b; color: white; border: 1px solid #334155; border-radius: 8px; margin-top: 10px; box-sizing: border-box; }
+        .btn { width: 100%; padding: 14px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; margin-top: 10px; color: white; }
+        
+        .cart-item { background: #1e293b; padding: 12px; border-radius: 10px; border: 1px solid #334155; margin-bottom: 10px; position: relative; }
+        #gallery-view { position: fixed; top: 45px; left: 0; width: 100%; height: calc(100% - 45px); background: #0f172a; z-index: 200; display: none; padding: 15px; box-sizing: border-box; overflow-y: auto; }
     </style>
 </head>
 <body>
@@ -39,64 +36,70 @@
     </div>
 
     <div id="store" class="content active">
-        
         <div class="section-title">👕 T-Shirts</div>
         <div class="grid">
-            <div class="card" onclick="loadGal('tshirts/printed/', 'Printed')">Printed</div>
-            <div class="card" onclick="loadGal('tshirts/polo/', 'Polo')">Polo</div>
+            <div class="card" onclick="loadGal('tshirts/printed/', 'Printed T-Shirt')">Printed</div>
+            <div class="card" onclick="loadGal('tshirts/polo/', 'Polo T-Shirt')">Polo</div>
         </div>
 
         <div class="section-title">👔 Shirts</div>
         <div class="grid">
-            <div class="card" onclick="loadGal('shirt/formal/', 'Formal')">Formal</div>
-            <div class="card" onclick="loadGal('shirt/casual/', 'Casual')">Casual</div>
+            <div class="card" onclick="loadGal('shirt/formal/', 'Formal Shirt')">Formal</div>
+            <div class="card" onclick="loadGal('shirt/casual/', 'Casual Shirt')">Casual</div>
         </div>
 
-        <div class="section-title">👖 Pants</div>
+        <div class="section-title">👶 Junior Collection</div>
         <div class="grid">
-            <div class="card" onclick="loadGal('pants/jeans/', 'Jeans')">Jeans</div>
-            <div class="card" onclick="loadGal('pants/chino/', 'Chino')">Chino</div>
-        </div>
-
-        <div class="section-title">👶 Junior</div>
-        <div class="grid">
-            <div class="card" onclick="loadGal('junior/boys/', 'Boys')">Boys</div>
-            <div class="card" onclick="loadGal('junior/girls/', 'Girls')">Girls</div>
+            <div class="card" onclick="loadGal('junior/boys/', 'Junior Boys')">Boys</div>
+            <div class="card" onclick="loadGal('junior/girls/', 'Junior Girls')">Girls</div>
         </div>
 
         <div class="section-title">🔥 Hot Deals</div>
         <div class="grid">
-            <div class="card" onclick="loadGal('hotdeals/flash/', 'Flash Sale')">Flash Sale</div>
-            <div class="card" onclick="loadGal('hotdeals/combo/', 'Combo Offer')">Combo</div>
+            <div class="card" onclick="loadGal('hotdeals/flash/', 'Flash Sale')">Flash</div>
+            <div class="card" onclick="loadGal('hotdeals/combo/', 'Combo Pack')">Combo</div>
         </div>
 
         <div id="gallery-view">
-            <button onclick="hideGal()" style="color:#38bdf8; background:none; border:none; margin-bottom:15px; font-weight:bold;">⬅️ BACK</button>
+            <button onclick="hideGal()" style="color:#38bdf8; background:none; border:none; margin-bottom:15px; font-weight:bold; cursor:pointer;">⬅️ BACK</button>
             <div class="grid" id="gal-container"></div>
         </div>
     </div>
 
     <div id="profile" class="content">
-        <div style="background:#1e293b; padding:15px; border-radius:12px; border:1px solid #334155; margin-bottom:15px;">
-            <h3 id="u-name">Guest</h3>
+        <div style="background:#1e293b; padding:15px; border-radius:12px; border:1px solid #334155; text-align:center;">
+            <h3 id="u-name">User</h3>
             <p id="u-id" style="color:#38bdf8;">#000000</p>
         </div>
 
-        <div class="form-box">
+        <div id="addr-box" style="background:#1e293b; padding:15px; border-radius:12px; border:1px solid #334155; margin-top:15px;">
             <h4 style="margin:0;">📍 Shipping Address</h4>
-            <input type="text" id="ship-name" class="input" placeholder="Full Name">
-            <textarea id="ship-addr" class="input" placeholder="House, Road, Area, City" style="height:60px;"></textarea>
-            <button class="btn" style="background:#38bdf8;" onclick="saveAddr()">Save Address</button>
+            <input type="text" id="ship-name" class="input" placeholder="Your Name">
+            <textarea id="ship-addr" class="input" placeholder="House, Road, City..." style="height:60px;"></textarea>
+            <button class="btn" style="background:#38bdf8;" onclick="saveAddr()">Save & Close</button>
+        </div>
+        <div id="addr-saved" style="display:none; background:#064e3b; padding:10px; border-radius:10px; margin-top:15px; text-align:center;">
+            ✅ Address Saved! <button onclick="editAddr()" style="background:none; border:none; color:#38bdf8; cursor:pointer; text-decoration:underline;">Edit</button>
         </div>
 
-        <h4 style="margin-top:20px;">🛒 My Cart (Record)</h4>
-        <div id="cart-record">
-            <p style="text-align:center; color:#64748b;">No products recorded.</p>
-        </div>
+        <h4 style="margin-top:20px;">🛒 Recorded Orders</h4>
+        <div id="cart-record"></div>
 
-        <div id="bill-area" style="display:none; margin-top:15px; border-top:1px solid #334155; padding-top:10px;">
-            <div style="display:flex; justify-content:space-between;"><b>Total:</b> <span id="total-val">$0</span></div>
-            <button class="btn" style="background:#22c55e;" onclick="checkout()">Confirm Order</button>
+        <div id="bill-card" style="display:none; background:#1e293b; padding:15px; border-radius:12px; margin-top:15px;">
+            <div style="display:flex; justify-content:space-between;"><span>Total USD:</span> <span id="total-usd" style="font-weight:bold; color:#38bdf8;">$0</span></div>
+            <button class="btn" style="background:#22c55e;" onclick="sendToBot()">Confirm & Send Order</button>
+        </div>
+    </div>
+
+    <div id="details-modal" class="details-modal">
+        <button onclick="closeDet()" style="color:#38bdf8; background:none; border:none; font-size:18px;">❌ Close</button>
+        <img id="d-img" src="" style="width:100%; border-radius:12px; margin-top:15px;">
+        <h2 id="d-title" style="margin:10px 0;">Product</h2>
+        <p style="font-size:24px; color:#38bdf8; font-weight:bold;">$15.00</p>
+        <div style="background:#1e293b; padding:15px; border-radius:12px;">
+            <label>Select Color:</label>
+            <select id="d-color" class="input"><option>Black</option><option>Blue</option><option>White</option></select>
+            <button class="btn" style="background:#38bdf8;" onclick="confirmAdd()">Add to Record</button>
         </div>
     </div>
 
@@ -105,77 +108,100 @@
         tg.expand();
         const IMG_URL = "https://raw.githubusercontent.com/Zoha742/eshopbot/main/products/";
         let cart = [];
+        let tempItem = {};
+        let address = null;
 
         function switchTab(id) {
             document.querySelectorAll('.content').forEach(c => c.classList.remove('active'));
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
             document.getElementById(id).classList.add('active');
             document.getElementById('t-' + id).classList.add('active');
-            if(id === 'profile') updateCartUI();
+            if(id === 'profile') renderCart();
         }
 
-        // Gallery Load with 6 pics (1.jpg to 6.jpg)
         function loadGal(path, title) {
             const con = document.getElementById('gal-container');
             con.innerHTML = '';
             document.getElementById('gallery-view').style.display = 'block';
             for(let i=1; i<=6; i++) {
                 const img = `${IMG_URL}${path}${i}.jpg`;
-                con.innerHTML += `
-                    <div class="prod-card">
-                        <img src="${img}" onerror="this.src='https://via.placeholder.com/150?text=No+Image'">
-                        <div style="padding:8px; text-align:center;">
-                            <b>$15.00</b><br>
-                            <button onclick="addToRecord('${img}', '${title} # ${i}')" style="background:#38bdf8; border:none; color:white; padding:5px 10px; border-radius:5px; margin-top:5px;">🛒 Add</button>
-                        </div>
-                    </div>`;
+                con.innerHTML += `<div class="prod-card" onclick="openDet('${img}', '${title} # ${i}')">
+                    <img src="${img}" onerror="this.src='https://via.placeholder.com/150'">
+                    <div style="padding:10px; text-align:center; font-weight:bold;">$15.00</div>
+                </div>`;
             }
         }
 
         function hideGal() { document.getElementById('gallery-view').style.display = 'none'; }
-
-        // Product Record Logic (Fixing Record Issue)
-        function addToRecord(img, title) {
-            cart.push({img, title, price: 15});
-            tg.showPopup({ message: title + " recorded in profile!" });
+        
+        function openDet(img, title) {
+            tempItem = { img, title, price: 15 };
+            document.getElementById('d-img').src = img;
+            document.getElementById('d-title').innerText = title;
+            document.getElementById('details-modal').style.display = 'block';
         }
 
-        function updateCartUI() {
+        function closeDet() { document.getElementById('details-modal').style.display = 'none'; }
+
+        function confirmAdd() {
+            const color = document.getElementById('d-color').value;
+            cart.push({...tempItem, color});
+            tg.showPopup({ message: "Product recorded in profile!" });
+            closeDet();
+        }
+
+        function renderCart() {
             const list = document.getElementById('cart-record');
-            const bill = document.getElementById('bill-area');
+            const bill = document.getElementById('bill-card');
             if(cart.length === 0) {
-                list.innerHTML = '<p style="text-align:center; color:#64748b;">No products recorded.</p>';
+                list.innerHTML = '<p style="text-align:center; color:#64748b;">No items recorded.</p>';
                 bill.style.display = 'none';
                 return;
             }
             list.innerHTML = cart.map((item, idx) => `
                 <div class="cart-item">
-                    <span>${item.title} - $15</span>
-                    <button style="background:none; border:none; color:#ef4444;" onclick="removeItem(${idx})">🗑️</button>
+                    <b>${item.title}</b><br>
+                    <small>Color: ${item.color} | Price: $15.00</small>
+                    <button onclick="remove(${idx})" style="position:absolute; right:10px; top:10px; background:none; border:none; color:#ef4444;">🗑️</button>
                 </div>
             `).join('');
-            document.getElementById('total-val').innerText = '$' + (cart.length * 15);
+            document.getElementById('total-usd').innerText = '$' + (cart.length * 15);
             bill.style.display = 'block';
         }
 
-        function removeItem(idx) { cart.splice(idx, 1); updateCartUI(); }
+        function remove(idx) { cart.splice(idx, 1); renderCart(); }
 
         function saveAddr() {
             const name = document.getElementById('ship-name').value;
             const addr = document.getElementById('ship-addr').value;
-            if(!name || !addr) { tg.showAlert("Please fill name and address!"); return; }
-            tg.showPopup({ message: "Address saved for " + name });
+            if(!name || !addr) { tg.showAlert("Complete address first!"); return; }
+            address = { name, addr };
+            document.getElementById('addr-box').style.display = 'none';
+            document.getElementById('addr-saved').style.display = 'block';
         }
 
-        function checkout() {
-            tg.showPopup({ title: 'Order Success', message: 'Order of $' + (cart.length*15) + ' has been placed!', buttons: [{text: 'OK', type: 'ok'}] });
-            cart = []; updateCartUI();
+        function editAddr() {
+            document.getElementById('addr-box').style.display = 'block';
+            document.getElementById('addr-saved').style.display = 'none';
         }
 
-        const user = tg.initDataUnsafe.user;
-        if(user) {
-            document.getElementById('u-name').innerText = user.first_name;
-            document.getElementById('u-id').innerText = "#" + user.id;
+        // এটি আপনার অর্ডার বটের কাছে পাঠিয়ে দিবে
+        function sendToBot() {
+            if(!address) { tg.showAlert("Please save address first!"); return; }
+            const orderData = {
+                user: tg.initDataUnsafe.user,
+                items: cart,
+                shipping: address,
+                total: cart.length * 15
+            };
+            tg.sendData(JSON.stringify(orderData));
+            tg.close();
+        }
+
+        const u = tg.initDataUnsafe.user;
+        if(u) {
+            document.getElementById('u-name').innerText = u.first_name;
+            document.getElementById('u-id').innerText = "#" + u.id;
         }
     </script>
 </body>
