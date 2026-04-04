@@ -3,7 +3,7 @@ const express = require('express'); // Render-এ পোর্ট বাইন�
 
 const app = express();
 const token = '8624381226:AAEdlqEKTrzwIPuq1aSPIuPEfb-3GmI0nOI';
-const ADMIN_CHAT_ID = 'আপনার_চ্যাট_আইডি_এখানে_দিন'; // @userinfobot থেকে নিয়ে বসান
+const ADMIN_CHAT_ID = '22446688'; // @userinfobot থেকে নিয়ে বসান
 
 const bot = new TelegramBot(token, { polling: true });
 
