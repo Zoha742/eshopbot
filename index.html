@@ -3,51 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>eShop365 Mini App</title>
+    <title>eShop365 Premium Store</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #0f172a; color: white; margin: 0; padding: 15px; }
-        .tab-nav { display: flex; justify-content: space-around; border-bottom: 2px solid #1e293b; margin-bottom: 20px; position: sticky; top: 0; background: #0f172a; z-index: 10; }
-        .tab { padding: 12px; cursor: pointer; color: #94a3b8; font-weight: 600; }
+        body { font-family: 'Inter', sans-serif; background: #0f172a; color: white; margin: 0; padding: 0; }
+        .header { background: #1e293b; padding: 15px; text-align: center; border-bottom: 1px solid #334155; }
+        .tab-nav { display: flex; justify-content: space-around; background: #1e293b; position: sticky; top: 0; z-index: 100; }
+        .tab { padding: 15px; cursor: pointer; color: #94a3b8; font-weight: bold; flex: 1; text-align: center; }
         .tab.active { color: #38bdf8; border-bottom: 3px solid #38bdf8; }
-        .content { display: none; }
+        .content { padding: 15px; display: none; }
         .content.active { display: block; }
-        .card { background: #1e293b; border-radius: 12px; padding: 15px; margin-bottom: 15px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
-        .btn { width: 100%; padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; transition: 0.3s; }
-        .btn-ton { background: #0088cc; color: white; }
-        .btn-local { background: #22c55e; color: white; }
-        .user-id { background: #334155; padding: 5px 10px; border-radius: 5px; font-family: monospace; color: #38bdf8; }
+        
+        /* Grid for Categories */
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 10px; }
+        .cat-card { background: #1e293b; padding: 20px; border-radius: 12px; text-align: center; border: 1px solid #334155; }
+        .cat-card i { font-size: 24px; display: block; margin-bottom: 10px; }
+        
+        /* Profile Styling */
+        .profile-card { background: #1e293b; border-radius: 15px; padding: 20px; margin-bottom: 15px; }
+        .user-id { background: #334155; padding: 4px 8px; border-radius: 6px; color: #38bdf8; font-size: 14px; }
+        .btn { width: 100%; padding: 12px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        .btn-pay { background: #0ea5e9; color: white; }
     </style>
 </head>
 <body>
+
+    <div class="header">
+        <h3>🛍️ Premium eShop365</h3>
+    </div>
+
     <div class="tab-nav">
-        <div class="tab active" onclick="showTab('shop')">🛒 Shop</div>
-        <div class="tab" onclick="showTab('profile')">👤 Profile</div>
+        <div class="tab active" onclick="showTab('shop')">STORE</div>
+        <div class="tab" onclick="showTab('profile')">MY PROFILE</div>
     </div>
 
     <div id="shop" class="content active">
-        <h2>Premium Collection</h2>
-        <div class="card">
-            <p>Select items from the bot to see them here.</p>
+        <h4>All Categories</h4>
+        <div class="grid">
+            <div class="cat-card">👕<br><b>T-SHIRTS</b><br><small>Printed / Polo</small></div>
+            <div class="cat-card">👔<br><b>SHIRTS</b><br><small>Casual / Formal</small></div>
+            <div class="cat-card">👖<br><b>PANTS</b><br><small>Jeans / Gabardine</small></div>
+            <div class="cat-card">🕌<br><b>PANJABI</b><br><small>Silk / Cotton</small></div>
+            <div class="cat-card">🧒<br><b>JUNIOR</b><br><small>Kids Wear</small></div>
+            <div class="cat-card">⌚<br><b>ACCESSORIES</b><br><small>Belts / Watches</small></div>
         </div>
     </div>
 
     <div id="profile" class="content">
-        <div class="card">
-            <h3>User Information</h3>
-            <p>User: <span id="display-name">Guest</span></p>
-            <p>User ID: <span id="uid" class="user-id">#000000</span></p>
-        </div>
-        
-        <div class="card">
-            <h3>💳 Wallet & Payment</h3>
-            <button class="btn btn-ton" onclick="showPayPopup('TON')">Connect TON Wallet</button>
-            <button class="btn btn-local" onclick="showPayPopup('Bkash/Nagad')">Local Payment</button>
+        <div class="profile-card">
+            <h4>👤 My Information</h4>
+            <p>Name: <span id="user-name">Loading...</span></p>
+            <p>Account ID: <span id="user-id" class="user-id">#000000</span></p>
         </div>
 
-        <div class="card">
-            <h3>📦 My Orders</h3>
-            <button class="btn" style="background: #6366f1; color: white;" onclick="showOrderPopup()">Check Recent Orders</button>
+        <div class="profile-card">
+            <h4>💳 Wallet & Payments</h4>
+            <button class="btn btn-pay" onclick="payPopup('TON Wallet')">Connect TON Wallet</button>
+            <button class="btn" style="background:#22c55e; color:white;" onclick="payPopup('Bkash/Nagad')">Bkash / Nagad</button>
+        </div>
+
+        <div class="profile-card">
+            <h4>📦 Orders History</h4>
+            <p style="color:#94a3b8; font-size:14px;">No recent orders found.</p>
+            <button class="btn" style="background:#6366f1; color:white;" onclick="orderPopup()">Generate Receipt</button>
         </div>
     </div>
 
@@ -55,27 +73,35 @@
         const tg = window.Telegram.WebApp;
         tg.expand();
 
-        function showTab(name) {
+        function showTab(tabId) {
             document.querySelectorAll('.content').forEach(c => c.classList.remove('active'));
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            document.getElementById(name).classList.add('active');
+            document.getElementById(tabId).classList.add('active');
             event.currentTarget.classList.add('active');
         }
 
-        // পেমেন্ট এবং অর্ডার পপআপ
-        function showPayPopup(method) {
-            tg.showPopup({ title: 'Payment Status', message: `Proceed with ${method} payment system?`, buttons: [{text: 'Proceed', type: 'ok'}, {text: 'Cancel', type: 'destructive'}] });
+        // পপআপ লজিক
+        function payPopup(method) {
+            tg.showPopup({ 
+                title: 'Payment Gateway', 
+                message: `Confirm to proceed with ${method}?`, 
+                buttons: [{text: 'Proceed', type: 'ok'}, {text: 'Cancel', type: 'destructive'}] 
+            });
         }
 
-        function showOrderPopup() {
-            tg.showPopup({ title: 'Order Details', message: 'Generating payment invoice for your cart items...', buttons: [{text: 'Pay Now', type: 'ok'}] });
+        function orderPopup() {
+            tg.showPopup({ 
+                title: 'Order Status', 
+                message: 'Processing your order... Please check your wallet for confirmation.', 
+                buttons: [{text: 'Pay Now', type: 'ok'}] 
+            });
         }
 
-        // ইউজার আইডি এবং নাম জেনারেশন
+        // ইউজার তথ্য সেট করা
         const user = tg.initDataUnsafe.user;
         if(user) {
-            document.getElementById('display-name').innerText = user.first_name;
-            document.getElementById('uid').innerText = "#" + (user.id).toString().slice(-6);
+            document.getElementById('user-name').innerText = user.first_name + " " + (user.last_name || "");
+            document.getElementById('user-id').innerText = "#" + (user.id).toString().slice(-6);
         }
     </script>
 </body>
