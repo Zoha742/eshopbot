@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>eShop365 Premium</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         body { font-family: 'Segoe UI', sans-serif; background: #0f172a; color: white; margin: 0; padding: 0; }
         .tabs { display: flex; background: #1e293b; position: sticky; top: 0; z-index: 100; border-bottom: 1px solid #334155; }
@@ -15,17 +16,21 @@
         
         .section-title { color: #38bdf8; margin: 15px 0 10px 0; font-size: 13px; text-transform: uppercase; font-weight: bold; border-left: 3px solid #38bdf8; padding-left: 10px; }
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
-        .card { background: #1e293b; padding: 12px; border-radius: 10px; text-align: center; border: 1px solid #334155; cursor: pointer; font-size: 13px; }
-        
+        .card { background: #1e293b; padding: 12px; border-radius: 10px; text-align: center; border: 1px solid #334155; cursor: pointer; font-size: 12px; transition: 0.2s; }
+        .card:active { transform: scale(0.95); background: #334155; }
+
+        /* Gallery & Product Card */
         #gallery-view { position: fixed; top: 48px; left: 0; width: 100%; height: calc(100% - 48px); background: #0f172a; z-index: 200; display: none; padding: 15px; box-sizing: border-box; overflow-y: auto; }
-        .prod-card { background: #1e293b; border-radius: 12px; border: 1px solid #334155; overflow: hidden; }
+        .prod-card { background: #1e293b; border-radius: 12px; border: 1px solid #334155; overflow: hidden; position: relative; }
         .prod-card img { width: 100%; height: 150px; object-fit: cover; }
-        
-        .details-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0f172a; z-index: 300; display: none; padding: 20px; box-sizing: border-box; overflow-y: auto; }
-        .input { width: 100%; padding: 10px; background: #1e293b; color: white; border: 1px solid #334155; border-radius: 8px; margin-top: 8px; box-sizing: border-box; }
+        .fav-icon { position: absolute; top: 8px; right: 8px; color: #94a3b8; background: rgba(0,0,0,0.5); padding: 5px; border-radius: 50%; cursor: pointer; }
+        .fav-icon.active { color: #ef4444; }
+
+        /* Profile & Forms */
+        .u-box { background: #1e293b; padding: 15px; border-radius: 12px; border: 1px solid #334155; margin-bottom: 15px; }
+        .input { width: 100%; padding: 10px; background: #0f172a; color: white; border: 1px solid #334155; border-radius: 8px; margin-top: 8px; box-sizing: border-box; }
         .btn { width: 100%; padding: 14px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; margin-top: 10px; color: white; }
-        
-        .cart-item { background: #1e293b; padding: 10px; border-radius: 10px; border: 1px solid #334155; margin-bottom: 10px; position: relative; font-size: 13px; }
+        .cart-item { background: #1e293b; padding: 10px; border-radius: 10px; border: 1px solid #334155; margin-bottom: 8px; font-size: 13px; position: relative; }
     </style>
 </head>
 <body>
@@ -82,51 +87,57 @@
         </div>
 
         <div id="gallery-view">
-            <button onclick="hideGal()" style="color:#38bdf8; background:none; border:none; margin-bottom:15px; font-weight:bold; cursor:pointer;">⬅️ BACK</button>
+            <button onclick="hideGal()" style="color:#38bdf8; background:none; border:none; margin-bottom:15px; font-weight:bold;">⬅️ BACK</button>
             <div class="grid" id="gal-container"></div>
         </div>
     </div>
 
     <div id="profile" class="content">
-        <div style="background:#1e293b; padding:15px; border-radius:12px; border:1px solid #334155; text-align:center;">
+        <div class="u-box" style="text-align:center;">
             <h3 id="u-name">User</h3>
-            <p id="u-id" style="color:#38bdf8;">#000000</p>
+            <p id="u-id" style="color:#38bdf8; font-size:12px;">#000000</p>
         </div>
 
-        <div id="addr-box" style="background:#1e293b; padding:15px; border-radius:12px; border:1px solid #334155; margin-top:15px;">
+        <div class="grid">
+            <div class="card" onclick="showSubTab('cart')"><i class="fas fa-shopping-cart"></i><br>AddCart</div>
+            <div class="card" onclick="showSubTab('record')"><i class="fas fa-history"></i><br>Order Record</div>
+            <div class="card" onclick="showSubTab('fav')"><i class="fas fa-heart"></i><br>Favorite</div>
+        </div>
+
+        <div id="addr-section" class="u-box">
             <h4 style="margin:0;">📍 Shipping Address</h4>
-            <input type="text" id="ship-name" class="input" placeholder="Full Name">
-            <textarea id="ship-addr" class="input" placeholder="Address..." style="height:60px;"></textarea>
-            <button class="btn" style="background:#38bdf8;" onclick="saveAddr()">Save Address</button>
-        </div>
-        <div id="addr-display" style="display:none; background:#064e3b; padding:10px; border-radius:10px; margin-top:15px;">
-            <p id="saved-info" style="margin:0; font-size:12px;"></p>
-            <button onclick="editAddr()" style="background:none; border:none; color:#38bdf8; cursor:pointer; font-size:11px;">Change Address</button>
+            <div id="addr-form">
+                <input type="text" id="ship-name" class="input" placeholder="Full Name">
+                <textarea id="ship-addr" class="input" placeholder="City, Area, Road..." style="height:50px;"></textarea>
+                <button class="btn" style="background:#38bdf8;" onclick="saveAddr()">Save Address</button>
+            </div>
+            <div id="addr-saved" style="display:none; font-size:13px; margin-top:5px;">
+                <span id="saved-text"></span> 
+                <button onclick="editAddr()" style="color:#38bdf8; background:none; border:none; text-decoration:underline;">Edit</button>
+            </div>
         </div>
 
-        <h4 style="margin-top:20px;">🛒 Your Orders</h4>
-        <div id="cart-record"></div>
-
-        <div id="bill-card" style="display:none; background:#1e293b; padding:15px; border-radius:12px; margin-top:15px; border:1px solid #38bdf8;">
-            <div style="display:flex; justify-content:space-between;"><span>Total USD:</span> <span id="total-usd" style="font-weight:bold; color:#38bdf8;">$0</span></div>
-            <button class="btn" style="background:#22c55e;" onclick="sendOrder()">Confirm & Send Order</button>
+        <div id="sub-cart" class="u-box">
+            <h4>🛒 Current Cart</h4>
+            <div id="cart-list"></div>
+            <div id="bill-card" style="display:none; border-top:1px solid #334155; padding-top:10px; margin-top:10px;">
+                <div style="display:flex; justify-content:space-between;"><b>Total:</b> <span id="total-usd">$0</span></div>
+                <button class="btn" style="background:#22c55e;" onclick="sendOrder()">Confirm & Send Order</button>
+            </div>
         </div>
     </div>
 
-    <div id="details-modal" class="details-modal">
+    <div id="details-modal" style="position:fixed; top:0; left:0; width:100%; height:100%; background:#0f172a; z-index:300; display:none; padding:20px; box-sizing:border-box; overflow-y:auto;">
         <button onclick="closeDet()" style="color:#38bdf8; background:none; border:none; font-size:18px;">❌ Close</button>
         <img id="d-img" src="" style="width:100%; border-radius:12px; margin-top:15px;">
-        <h2 id="d-title" style="margin:10px 0;">Product</h2>
-        <p style="font-size:22px; color:#38bdf8; font-weight:bold;">$15.00</p>
-        
-        <div style="background:#1e293b; padding:15px; border-radius:12px;">
+        <h2 id="d-title">Product</h2>
+        <div class="u-box">
+            <p style="font-size:22px; color:#38bdf8; font-weight:bold;">$15.00</p>
             <label>Size:</label>
-            <select id="d-size" class="input">
-                <option>M</option><option>L</option><option>XL</option><option>XXL</option>
-            </select>
+            <select id="d-size" class="input"><option>M</option><option>L</option><option>XL</option><option>XXL</option></select>
             <label style="display:block; margin-top:10px;">Color:</label>
-            <select id="d-color" class="input"><option>Black</option><option>Navy</option><option>White</option></select>
-            <button class="btn" style="background:#38bdf8;" onclick="confirmAdd()">Add to Profile</button>
+            <select id="d-color" class="input"><option>Black</option><option>Blue</option><option>Navy</option></select>
+            <button class="btn" style="background:#38bdf8;" onclick="confirmAdd()">Add to Cart</button>
         </div>
     </div>
 
@@ -135,15 +146,12 @@
         tg.expand();
         const IMG_URL = "https://raw.githubusercontent.com/Zoha742/eshopbot/main/products/";
         let cart = JSON.parse(localStorage.getItem('cart')) || [];
-        let tempItem = {};
+        let favorites = JSON.parse(localStorage.getItem('favs')) || [];
 
-        // Load saved address
         window.onload = function() {
-            const savedName = localStorage.getItem('name');
-            const savedAddr = localStorage.getItem('addr');
-            if(savedName && savedAddr) {
-                showSavedAddr(savedName, savedAddr);
-            }
+            const n = localStorage.getItem('name');
+            const a = localStorage.getItem('addr');
+            if(n && a) showSavedAddr(n, a);
         };
 
         function switchTab(id) {
@@ -160,16 +168,17 @@
             document.getElementById('gallery-view').style.display = 'block';
             for(let i=1; i<=6; i++) {
                 const img = `${IMG_URL}${path}${i}.jpg`;
-                con.innerHTML += `<div class="prod-card" onclick="openDet('${img}', '${title} #${i}')">
-                    <img src="${img}" onerror="this.src='https://via.placeholder.com/150?text=No+Image'">
-                    <div style="padding:10px; text-align:center;"><b>$15.00</b></div>
-                </div>`;
+                con.innerHTML += `
+                    <div class="prod-card">
+                        <i class="fas fa-heart fav-icon" onclick="toggleFav('${img}', '${title} #${i}', this)"></i>
+                        <img src="${img}" onclick="openDet('${img}', '${title} #${i}')" onerror="this.src='https://via.placeholder.com/150?text=No+Image'">
+                        <div style="padding:10px; text-align:center;"><b>$15.00</b></div>
+                    </div>`;
             }
         }
 
         function hideGal() { document.getElementById('gallery-view').style.display = 'none'; }
         function openDet(img, title) {
-            tempItem = { img, title, price: 15 };
             document.getElementById('d-img').src = img;
             document.getElementById('d-title').innerText = title;
             document.getElementById('details-modal').style.display = 'block';
@@ -177,67 +186,69 @@
         function closeDet() { document.getElementById('details-modal').style.display = 'none'; }
 
         function confirmAdd() {
-            const size = document.getElementById('d-size').value;
-            const color = document.getElementById('d-color').value;
-            cart.push({...tempItem, size, color});
+            const item = { 
+                img: document.getElementById('d-img').src, 
+                title: document.getElementById('d-title').innerText, 
+                size: document.getElementById('d-size').value, 
+                color: document.getElementById('d-color').value, 
+                price: 15 
+            };
+            cart.push(item);
             localStorage.setItem('cart', JSON.stringify(cart));
-            tg.showPopup({ message: "Product Added to Profile Cart!" });
+            tg.showPopup({ message: "Recorded in AddCart!" });
             closeDet();
         }
 
+        function toggleFav(img, title, el) {
+            el.classList.toggle('active');
+            favorites.push({img, title});
+            localStorage.setItem('favs', JSON.stringify(favorites));
+        }
+
         function renderCart() {
-            const list = document.getElementById('cart-record');
+            const list = document.getElementById('cart-list');
             const bill = document.getElementById('bill-card');
             if(cart.length === 0) {
-                list.innerHTML = '<p style="text-align:center; color:#64748b;">No products in cart.</p>';
+                list.innerHTML = '<p style="text-align:center; color:#64748b; font-size:12px;">Cart empty.</p>';
                 bill.style.display = 'none';
                 return;
             }
-            list.innerHTML = cart.map((item, idx) => `
+            list.innerHTML = cart.map((i, idx) => `
                 <div class="cart-item">
-                    <b>${item.title}</b><br>
-                    <small>Size: ${item.size} | Color: ${item.color} | $15.00</small>
-                    <button onclick="remove(${idx})" style="position:absolute; right:10px; top:10px; background:none; border:none; color:#ef4444;">🗑️</button>
-                </div>
-            `).join('');
+                    <b>${i.title}</b> (${i.size}) - $${i.price}
+                    <button onclick="remove(${idx})" style="position:absolute; right:10px; top:10px; background:none; border:none; color:#ef4444;"><i class="fas fa-trash"></i></button>
+                </div>`).join('');
             document.getElementById('total-usd').innerText = '$' + (cart.length * 15);
             bill.style.display = 'block';
         }
 
-        function remove(idx) { 
-            cart.splice(idx, 1); 
-            localStorage.setItem('cart', JSON.stringify(cart));
-            renderCart(); 
-        }
+        function remove(idx) { cart.splice(idx,1); localStorage.setItem('cart', JSON.stringify(cart)); renderCart(); }
 
         function saveAddr() {
-            const name = document.getElementById('ship-name').value;
-            const addr = document.getElementById('ship-addr').value;
-            if(!name || !addr) { tg.showAlert("Please complete the address!"); return; }
-            localStorage.setItem('name', name);
-            localStorage.setItem('addr', addr);
-            showSavedAddr(name, addr);
+            const n = document.getElementById('ship-name').value;
+            const a = document.getElementById('ship-addr').value;
+            if(!n || !a) return tg.showAlert("Fill all fields");
+            localStorage.setItem('name', n); localStorage.setItem('addr', a);
+            showSavedAddr(n, a);
         }
 
-        function showSavedAddr(name, addr) {
-            document.getElementById('addr-box').style.display = 'none';
-            document.getElementById('addr-display').style.display = 'block';
-            document.getElementById('saved-info').innerText = "Name: " + name + "\nAddr: " + addr;
+        function showSavedAddr(n, a) {
+            document.getElementById('addr-form').style.display = 'none';
+            document.getElementById('addr-saved').style.display = 'block';
+            document.getElementById('saved-text').innerText = n + " - " + a;
         }
 
         function editAddr() {
-            document.getElementById('addr-box').style.display = 'block';
-            document.getElementById('addr-display').style.display = 'none';
+            document.getElementById('addr-form').style.display = 'block';
+            document.getElementById('addr-saved').style.display = 'none';
         }
 
         function sendOrder() {
             const name = localStorage.getItem('name');
-            const addr = localStorage.getItem('addr');
-            if(!name || !addr) { tg.showAlert("Save address first!"); return; }
-            const orderData = { user: tg.initDataUnsafe.user, items: cart, address: {name, addr}, total: cart.length * 15 };
-            tg.sendData(JSON.stringify(orderData));
-            cart = [];
-            localStorage.removeItem('cart');
+            if(!name) return tg.showAlert("Save address first!");
+            const data = { user: tg.initDataUnsafe.user, items: cart, addr: {name, a:localStorage.getItem('addr')}, total: cart.length*15 };
+            tg.sendData(JSON.stringify(data));
+            cart = []; localStorage.removeItem('cart');
             tg.close();
         }
 
