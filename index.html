@@ -13,19 +13,19 @@
         .content { display: none; padding: 15px; }
         .content.active { display: block; }
         
-        .section-title { color: #38bdf8; margin: 15px 0 10px 0; font-size: 14px; text-transform: uppercase; border-left: 3px solid #38bdf8; padding-left: 10px; }
+        .section-title { color: #38bdf8; margin: 15px 0 10px 0; font-size: 13px; text-transform: uppercase; font-weight: bold; border-left: 3px solid #38bdf8; padding-left: 10px; }
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
-        .card { background: #1e293b; padding: 15px; border-radius: 12px; text-align: center; border: 1px solid #334155; cursor: pointer; }
+        .card { background: #1e293b; padding: 12px; border-radius: 10px; text-align: center; border: 1px solid #334155; cursor: pointer; font-size: 13px; }
         
-        .prod-card { background: #1e293b; border-radius: 12px; border: 1px solid #334155; overflow: hidden; margin-bottom: 10px; }
-        .prod-card img { width: 100%; height: 160px; object-fit: cover; }
+        #gallery-view { position: fixed; top: 48px; left: 0; width: 100%; height: calc(100% - 48px); background: #0f172a; z-index: 200; display: none; padding: 15px; box-sizing: border-box; overflow-y: auto; }
+        .prod-card { background: #1e293b; border-radius: 12px; border: 1px solid #334155; overflow: hidden; }
+        .prod-card img { width: 100%; height: 150px; object-fit: cover; }
         
         .details-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0f172a; z-index: 300; display: none; padding: 20px; box-sizing: border-box; overflow-y: auto; }
-        .input { width: 100%; padding: 12px; background: #1e293b; color: white; border: 1px solid #334155; border-radius: 8px; margin-top: 10px; box-sizing: border-box; }
+        .input { width: 100%; padding: 10px; background: #1e293b; color: white; border: 1px solid #334155; border-radius: 8px; margin-top: 8px; box-sizing: border-box; }
         .btn { width: 100%; padding: 14px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; margin-top: 10px; color: white; }
         
-        .cart-item { background: #1e293b; padding: 12px; border-radius: 10px; border: 1px solid #334155; margin-bottom: 10px; position: relative; }
-        #gallery-view { position: fixed; top: 45px; left: 0; width: 100%; height: calc(100% - 45px); background: #0f172a; z-index: 200; display: none; padding: 15px; box-sizing: border-box; overflow-y: auto; }
+        .cart-item { background: #1e293b; padding: 10px; border-radius: 10px; border: 1px solid #334155; margin-bottom: 10px; position: relative; font-size: 13px; }
     </style>
 </head>
 <body>
@@ -38,26 +38,47 @@
     <div id="store" class="content active">
         <div class="section-title">👕 T-Shirts</div>
         <div class="grid">
-            <div class="card" onclick="loadGal('tshirts/printed/', 'Printed T-Shirt')">Printed</div>
-            <div class="card" onclick="loadGal('tshirts/polo/', 'Polo T-Shirt')">Polo</div>
+            <div class="card" onclick="loadGal('tshirts/printed/', 'Printed T-shirt')">Printed T-shirt</div>
+            <div class="card" onclick="loadGal('tshirts/polo/', 'Polo T-shirt')">Polo T-shirt</div>
         </div>
 
         <div class="section-title">👔 Shirts</div>
         <div class="grid">
-            <div class="card" onclick="loadGal('shirt/formal/', 'Formal Shirt')">Formal</div>
-            <div class="card" onclick="loadGal('shirt/casual/', 'Casual Shirt')">Casual</div>
+            <div class="card" onclick="loadGal('shirt/casual/', 'Casual shirt')">Casual shirt</div>
+            <div class="card" onclick="loadGal('shirt/formal/', 'Formal shirt')">Formal shirt</div>
+            <div class="card" onclick="loadGal('shirt/half/', 'Half Shirt')">Half Shirt</div>
         </div>
 
-        <div class="section-title">👶 Junior Collection</div>
+        <div class="section-title">👖 Pants</div>
         <div class="grid">
-            <div class="card" onclick="loadGal('junior/boys/', 'Junior Boys')">Boys</div>
-            <div class="card" onclick="loadGal('junior/girls/', 'Junior Girls')">Girls</div>
+            <div class="card" onclick="loadGal('pants/formal/', 'Formal Pant')">Formal</div>
+            <div class="card" onclick="loadGal('pants/jeans/', 'Jeans Pant')">Jeans</div>
+            <div class="card" onclick="loadGal('pants/gabardine/', 'Gabardine Pant')">Gabardine</div>
         </div>
 
-        <div class="section-title">🔥 Hot Deals</div>
+        <div class="section-title">🕌 Panjabi</div>
         <div class="grid">
-            <div class="card" onclick="loadGal('hotdeals/flash/', 'Flash Sale')">Flash</div>
-            <div class="card" onclick="loadGal('hotdeals/combo/', 'Combo Pack')">Combo</div>
+            <div class="card" onclick="loadGal('panjabi/easy/', 'Easy Panjabi')">Easy</div>
+            <div class="card" onclick="loadGal('panjabi/kabli/', 'Kabli Panjabi')">Kabli</div>
+        </div>
+
+        <div class="section-title">👶 Junior</div>
+        <div class="grid">
+            <div class="card" onclick="loadGal('junior/boy/', 'Boy Item')">Boy</div>
+            <div class="card" onclick="loadGal('junior/girls/', 'Girls Item')">Girls</div>
+        </div>
+
+        <div class="section-title">🔥 HotDeals</div>
+        <div class="grid">
+            <div class="card" onclick="loadGal('hotdeals/offer/', 'Special Offer')">Offer</div>
+            <div class="card" onclick="loadGal('hotdeals/summer/', 'Summer Collection')">Summer</div>
+        </div>
+
+        <div class="section-title">🎒 Accessories</div>
+        <div class="grid">
+            <div class="card" onclick="loadGal('acc/belt/', 'Belt')">Belt</div>
+            <div class="card" onclick="loadGal('acc/tie/', 'Tie')">Tie</div>
+            <div class="card" onclick="loadGal('acc/under/', 'Underware')">Underware</div>
         </div>
 
         <div id="gallery-view">
@@ -74,20 +95,21 @@
 
         <div id="addr-box" style="background:#1e293b; padding:15px; border-radius:12px; border:1px solid #334155; margin-top:15px;">
             <h4 style="margin:0;">📍 Shipping Address</h4>
-            <input type="text" id="ship-name" class="input" placeholder="Your Name">
-            <textarea id="ship-addr" class="input" placeholder="House, Road, City..." style="height:60px;"></textarea>
-            <button class="btn" style="background:#38bdf8;" onclick="saveAddr()">Save & Close</button>
+            <input type="text" id="ship-name" class="input" placeholder="Full Name">
+            <textarea id="ship-addr" class="input" placeholder="Address..." style="height:60px;"></textarea>
+            <button class="btn" style="background:#38bdf8;" onclick="saveAddr()">Save Address</button>
         </div>
-        <div id="addr-saved" style="display:none; background:#064e3b; padding:10px; border-radius:10px; margin-top:15px; text-align:center;">
-            ✅ Address Saved! <button onclick="editAddr()" style="background:none; border:none; color:#38bdf8; cursor:pointer; text-decoration:underline;">Edit</button>
+        <div id="addr-display" style="display:none; background:#064e3b; padding:10px; border-radius:10px; margin-top:15px;">
+            <p id="saved-info" style="margin:0; font-size:12px;"></p>
+            <button onclick="editAddr()" style="background:none; border:none; color:#38bdf8; cursor:pointer; font-size:11px;">Change Address</button>
         </div>
 
-        <h4 style="margin-top:20px;">🛒 Recorded Orders</h4>
+        <h4 style="margin-top:20px;">🛒 Your Orders</h4>
         <div id="cart-record"></div>
 
-        <div id="bill-card" style="display:none; background:#1e293b; padding:15px; border-radius:12px; margin-top:15px;">
+        <div id="bill-card" style="display:none; background:#1e293b; padding:15px; border-radius:12px; margin-top:15px; border:1px solid #38bdf8;">
             <div style="display:flex; justify-content:space-between;"><span>Total USD:</span> <span id="total-usd" style="font-weight:bold; color:#38bdf8;">$0</span></div>
-            <button class="btn" style="background:#22c55e;" onclick="sendToBot()">Confirm & Send Order</button>
+            <button class="btn" style="background:#22c55e;" onclick="sendOrder()">Confirm & Send Order</button>
         </div>
     </div>
 
@@ -95,11 +117,16 @@
         <button onclick="closeDet()" style="color:#38bdf8; background:none; border:none; font-size:18px;">❌ Close</button>
         <img id="d-img" src="" style="width:100%; border-radius:12px; margin-top:15px;">
         <h2 id="d-title" style="margin:10px 0;">Product</h2>
-        <p style="font-size:24px; color:#38bdf8; font-weight:bold;">$15.00</p>
+        <p style="font-size:22px; color:#38bdf8; font-weight:bold;">$15.00</p>
+        
         <div style="background:#1e293b; padding:15px; border-radius:12px;">
-            <label>Select Color:</label>
-            <select id="d-color" class="input"><option>Black</option><option>Blue</option><option>White</option></select>
-            <button class="btn" style="background:#38bdf8;" onclick="confirmAdd()">Add to Record</button>
+            <label>Size:</label>
+            <select id="d-size" class="input">
+                <option>M</option><option>L</option><option>XL</option><option>XXL</option>
+            </select>
+            <label style="display:block; margin-top:10px;">Color:</label>
+            <select id="d-color" class="input"><option>Black</option><option>Navy</option><option>White</option></select>
+            <button class="btn" style="background:#38bdf8;" onclick="confirmAdd()">Add to Profile</button>
         </div>
     </div>
 
@@ -107,9 +134,17 @@
         const tg = window.Telegram.WebApp;
         tg.expand();
         const IMG_URL = "https://raw.githubusercontent.com/Zoha742/eshopbot/main/products/";
-        let cart = [];
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
         let tempItem = {};
-        let address = null;
+
+        // Load saved address
+        window.onload = function() {
+            const savedName = localStorage.getItem('name');
+            const savedAddr = localStorage.getItem('addr');
+            if(savedName && savedAddr) {
+                showSavedAddr(savedName, savedAddr);
+            }
+        };
 
         function switchTab(id) {
             document.querySelectorAll('.content').forEach(c => c.classList.remove('active'));
@@ -125,28 +160,28 @@
             document.getElementById('gallery-view').style.display = 'block';
             for(let i=1; i<=6; i++) {
                 const img = `${IMG_URL}${path}${i}.jpg`;
-                con.innerHTML += `<div class="prod-card" onclick="openDet('${img}', '${title} # ${i}')">
-                    <img src="${img}" onerror="this.src='https://via.placeholder.com/150'">
-                    <div style="padding:10px; text-align:center; font-weight:bold;">$15.00</div>
+                con.innerHTML += `<div class="prod-card" onclick="openDet('${img}', '${title} #${i}')">
+                    <img src="${img}" onerror="this.src='https://via.placeholder.com/150?text=No+Image'">
+                    <div style="padding:10px; text-align:center;"><b>$15.00</b></div>
                 </div>`;
             }
         }
 
         function hideGal() { document.getElementById('gallery-view').style.display = 'none'; }
-        
         function openDet(img, title) {
             tempItem = { img, title, price: 15 };
             document.getElementById('d-img').src = img;
             document.getElementById('d-title').innerText = title;
             document.getElementById('details-modal').style.display = 'block';
         }
-
         function closeDet() { document.getElementById('details-modal').style.display = 'none'; }
 
         function confirmAdd() {
+            const size = document.getElementById('d-size').value;
             const color = document.getElementById('d-color').value;
-            cart.push({...tempItem, color});
-            tg.showPopup({ message: "Product recorded in profile!" });
+            cart.push({...tempItem, size, color});
+            localStorage.setItem('cart', JSON.stringify(cart));
+            tg.showPopup({ message: "Product Added to Profile Cart!" });
             closeDet();
         }
 
@@ -154,14 +189,14 @@
             const list = document.getElementById('cart-record');
             const bill = document.getElementById('bill-card');
             if(cart.length === 0) {
-                list.innerHTML = '<p style="text-align:center; color:#64748b;">No items recorded.</p>';
+                list.innerHTML = '<p style="text-align:center; color:#64748b;">No products in cart.</p>';
                 bill.style.display = 'none';
                 return;
             }
             list.innerHTML = cart.map((item, idx) => `
                 <div class="cart-item">
                     <b>${item.title}</b><br>
-                    <small>Color: ${item.color} | Price: $15.00</small>
+                    <small>Size: ${item.size} | Color: ${item.color} | $15.00</small>
                     <button onclick="remove(${idx})" style="position:absolute; right:10px; top:10px; background:none; border:none; color:#ef4444;">🗑️</button>
                 </div>
             `).join('');
@@ -169,40 +204,45 @@
             bill.style.display = 'block';
         }
 
-        function remove(idx) { cart.splice(idx, 1); renderCart(); }
+        function remove(idx) { 
+            cart.splice(idx, 1); 
+            localStorage.setItem('cart', JSON.stringify(cart));
+            renderCart(); 
+        }
 
         function saveAddr() {
             const name = document.getElementById('ship-name').value;
             const addr = document.getElementById('ship-addr').value;
-            if(!name || !addr) { tg.showAlert("Complete address first!"); return; }
-            address = { name, addr };
+            if(!name || !addr) { tg.showAlert("Please complete the address!"); return; }
+            localStorage.setItem('name', name);
+            localStorage.setItem('addr', addr);
+            showSavedAddr(name, addr);
+        }
+
+        function showSavedAddr(name, addr) {
             document.getElementById('addr-box').style.display = 'none';
-            document.getElementById('addr-saved').style.display = 'block';
+            document.getElementById('addr-display').style.display = 'block';
+            document.getElementById('saved-info').innerText = "Name: " + name + "\nAddr: " + addr;
         }
 
         function editAddr() {
             document.getElementById('addr-box').style.display = 'block';
-            document.getElementById('addr-saved').style.display = 'none';
+            document.getElementById('addr-display').style.display = 'none';
         }
 
-        // এটি আপনার অর্ডার বটের কাছে পাঠিয়ে দিবে
-        function sendToBot() {
-            if(!address) { tg.showAlert("Please save address first!"); return; }
-            const orderData = {
-                user: tg.initDataUnsafe.user,
-                items: cart,
-                shipping: address,
-                total: cart.length * 15
-            };
+        function sendOrder() {
+            const name = localStorage.getItem('name');
+            const addr = localStorage.getItem('addr');
+            if(!name || !addr) { tg.showAlert("Save address first!"); return; }
+            const orderData = { user: tg.initDataUnsafe.user, items: cart, address: {name, addr}, total: cart.length * 15 };
             tg.sendData(JSON.stringify(orderData));
+            cart = [];
+            localStorage.removeItem('cart');
             tg.close();
         }
 
         const u = tg.initDataUnsafe.user;
-        if(u) {
-            document.getElementById('u-name').innerText = u.first_name;
-            document.getElementById('u-id').innerText = "#" + u.id;
-        }
+        if(u) { document.getElementById('u-name').innerText = u.first_name; document.getElementById('u-id').innerText = "#" + u.id; }
     </script>
 </body>
 </html>
