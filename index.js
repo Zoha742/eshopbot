@@ -19,7 +19,7 @@ function mainMenu(chatId, userId) {
     ];
     if (userId === ADMIN_ID) keyboard.push([{ text: "⚙️ Admin Panel", callback_data: 'admin_panel' }]);
 
-    bot.sendMessage(chatId, "🍎 *Welcome to Premium eShop*\nনিচের মেনু থেকে ক্যাটাগরি বেছে নিন:", {
+    bot.sendMessage(chatId, "🍎 *Welcome to Premium eShop*", {
         parse_mode: "Markdown",
         reply_markup: { inline_keyboard: keyboard }
     });
