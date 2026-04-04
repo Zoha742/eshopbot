@@ -8,35 +8,32 @@ const bot = new TelegramBot(token, {polling: true});
 
 const WEB_URL = "https://eshopbot.onrender.com";
 
-function sendMenu(chatId) {
-    bot.sendMessage(chatId, "👋 **Welcome to eShop365**\n\nপ্রিমিয়াম প্রোডাক্ট কিনতে স্টোর ওপেন করুন। যেকোনো সমস্যায় আমাদের সাপোর্ট টিমের সাথে কথা বলুন।", {
+function sendStart(chatId) {
+    bot.sendMessage(chatId, "👋 **Welcome to eShop365**\nপ্রিমিয়াম স্টোর থেকে শপিং করতে নিচের বাটনে ক্লিক করুন।", {
         parse_mode: "Markdown",
         reply_markup: {
             inline_keyboard: [
                 [{ text: "🛍️ Open Premium Store", web_app: { url: WEB_URL } }],
-                [{ text: "👤 My Profile & Cart", web_app: { url: WEB_URL + "#profile" } }],
-                [{ text: "📞 Live Support", callback_data: 'support' }]
+                [{ text: "👤 User Profile & Cart", web_app: { url: WEB_URL + "#profile" } }],
+                [{ text: "👨‍💻 Customer Support", callback_data: 'support_call' }]
             ]
         }
     });
 }
 
-bot.onText(/\/start/, (msg) => sendMenu(msg.chat.id));
+bot.onText(/\/start/, (msg) => sendStart(msg.chat.id));
 
 bot.on('callback_query', (query) => {
-    if (query.data === 'support') {
-        bot.sendMessage(query.message.chat.id, "👨‍💻 **Customer Support**\n\nআমাদের সাপোর্ট এজেন্ট বর্তমানে অফলাইনে আছেন। আপনার সমস্যাটি এখানে লিখে জানান, আমরা দ্রুত যোগাযোগ করব। (শীঘ্রই AI Agent যুক্ত করা হচ্ছে!)");
-        bot.answerCallbackQuery(query.id);
+    if (query.data === 'support_call') {
+        bot.sendMessage(query.message.chat.id, "👨‍💻 **Customer Support**\nআপনার সমস্যার কথা এখানে লিখুন। শীঘ্রই আমাদের AI Agent আপনার সাথে যোগাযোগ করবে।");
     }
+    bot.answerCallbackQuery(query.id);
 });
 
-// SERVER Logic
 const server = http.createServer((req, res) => {
-    if (req.url === '/' || req.url === '/index.html') {
-        fs.readFile(path.join(__dirname, 'index.html'), (err, data) => {
-            res.writeHead(200, { 'Content-Type': 'text/html' });
-            res.end(data);
-        });
-    }
+    fs.readFile(path.join(__dirname, 'index.html'), (err, data) => {
+        res.writeHead(200, { 'Content-Type': 'text/html' });
+        res.end(data);
+    });
 });
 server.listen(process.env.PORT || 3000, '0.0.0.0');
