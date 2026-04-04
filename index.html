@@ -8,38 +8,44 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root { --primary: #38bdf8; --bg: #0f172a; --card: #1e293b; --text: #f8fafc; }
-        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); margin:0; padding:0; overflow-x:hidden; }
-        .container { padding:15px; padding-bottom:90px; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); margin:0; padding:0; }
+        .container { padding:15px; padding-bottom:100px; }
         .page { display:none; } .page.active { display:block; }
         
-        /* Headers */
-        .section-h { display:flex; align-items:center; gap:8px; color:var(--primary); font-size:12px; font-weight:800; margin:20px 0 10px; border-left:3px solid var(--primary); padding-left:8px; text-transform:uppercase; }
+        /* Category Grid */
+        .section-h { color:var(--primary); font-size:12px; font-weight:800; margin:20px 0 10px; border-left:3px solid var(--primary); padding-left:8px; text-transform:uppercase; }
         .grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
         .btn-cat { background:var(--card); padding:12px; border-radius:10px; text-align:center; border:1px solid #334155; font-size:12px; font-weight:600; cursor:pointer; }
 
-        /* Dashboard UI */
-        .profile-card { background:linear-gradient(180deg, #1e293b, #0f172a); border-radius:15px; padding:20px; text-align:center; border:1px solid #334155; }
-        .avatar { width:70px; height:70px; border-radius:50%; background:var(--primary); margin:0 auto 10px; display:flex; align-items:center; justify-content:center; font-size:30px; font-weight:bold; }
-        .stats { display:flex; justify-content:space-around; margin-top:15px; background:rgba(0,0,0,0.2); padding:10px; border-radius:10px; }
-        .box { background:var(--card); padding:15px; border-radius:12px; margin-top:15px; border:1px solid #334155; }
+        /* Premium Product View (White Card Style) */
+        .product-list-grid { display:grid; grid-template-columns: 1fr 1fr; gap:12px; padding:10px 0; }
+        .p-card-white { background: #ffffff; border-radius:12px; overflow:hidden; color: #333; position:relative; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .p-img-box { width:100%; height:160px; background:#f3f4f6; display:flex; align-items:center; justify-content:center; }
+        .p-img-box img { max-width:100%; max-height:100%; object-fit: cover; }
+        .p-details { padding:10px; text-align:center; }
+        .p-name { font-size:13px; font-weight:700; margin:5px 0; color: #1e293b; }
+        .p-price { font-size:14px; font-weight:800; color: #f59e0b; margin-bottom:8px; }
+        .btn-view { background: var(--primary); color: white; border: none; width: 100%; padding: 8px; border-radius: 6px; font-size: 11px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px; }
 
-        /* Bottom Nav */
-        .bottom-nav { position:fixed; bottom:0; left:0; width:100%; background:#1e293b; display:flex; border-top:1px solid #334155; height:70px; z-index:1000; }
-        .nav-item { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; font-size:11px; color:#94a3b8; }
+        /* Detail Modal Styling */
+        #modal { position:fixed; inset:0; background:rgba(0,0,0,0.9); z-index:2000; display:none; flex-direction:column; }
+        .modal-content { background: var(--card); margin-top: auto; padding: 25px; border-radius: 25px 25px 0 0; }
+        .status-tag { display:inline-block; padding:3px 10px; border-radius:20px; font-size:10px; font-weight:bold; margin-bottom:10px; }
+        .status-available { background: #22c55e; color: white; }
+        .status-sold { background: #ef4444; color: white; }
+        .size-box { display:flex; gap:10px; margin:15px 0; }
+        .size-btn { border: 1px solid #334155; padding: 8px 15px; border-radius: 8px; cursor: pointer; background: #0f172a; color: white; }
+        .size-btn.active { border-color: var(--primary); color: var(--primary); }
+
+        /* Profile Style */
+        .profile-list { background:var(--card); border-radius:12px; margin-top:15px; }
+        .list-item { display:flex; align-items:center; padding:15px; border-bottom:1px solid #334155; gap:15px; cursor:pointer; }
+        .list-item i { width: 20px; color: #94a3b8; }
+
+        /* Nav */
+        .bottom-nav { position:fixed; bottom:0; width:100%; background:#1e293b; display:flex; height:70px; border-top:1px solid #334155; z-index:1000; }
+        .nav-item { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; color:#94a3b8; font-size:11px; }
         .nav-item.active { color:var(--primary); }
-        .nav-item i { font-size:20px; margin-bottom:3px; }
-
-        /* Product List View */
-        .product-card { background:var(--card); border-radius:12px; overflow:hidden; border:1px solid #334155; margin-bottom:15px; }
-        .p-img { width:100%; height:200px; object-fit:cover; }
-        .p-info { padding:12px; }
-        .btn-buy { width:100%; padding:10px; background:var(--primary); color:white; border:none; border-radius:8px; font-weight:bold; margin-top:8px; }
-
-        /* Order Card & Cancel */
-        .order-card { background:#0f172a; padding:12px; border-radius:8px; border:1px solid #334155; margin-top:10px; position:relative; }
-        .btn-cancel { color:#ef4444; font-size:11px; border:1px solid #ef4444; padding:2px 8px; border-radius:5px; margin-top:10px; background:transparent; cursor:pointer; }
-        
-        #modal { position:fixed; inset:0; background:var(--bg); z-index:2000; display:none; flex-direction:column; }
     </style>
 </head>
 <body>
@@ -57,238 +63,131 @@
                 <div class="btn-cat" onclick="openList('tshirts/printed/', 'Printed T-shirt')">Printed</div>
                 <div class="btn-cat" onclick="openList('tshirts/polo/', 'Polo T-shirt')">Polo</div>
             </div>
-
-            <div class="section-h"><i class="fas fa-user-tie"></i> SHIRTS</div>
-            <div class="grid">
-                <div class="btn-cat" onclick="openList('shirt/formal/', 'Formal Shirt')">Formal</div>
-                <div class="btn-cat" onclick="openList('shirt/casual/', 'Casual Shirt')">Casual</div>
-                <div class="btn-cat" onclick="openList('shirt/half/', 'Half Shirt')">Half Shirt</div>
-            </div>
-
-            <div class="section-h"><i class="fas fa-vest"></i> PANTS</div>
-            <div class="grid">
-                <div class="btn-cat" onclick="openList('pants/jeans/', 'Jeans Pant')">Jeans</div>
-                <div class="btn-cat" onclick="openList('pants/formal/', 'Formal Pant')">Formal</div>
-                <div class="btn-cat" onclick="openList('pants/gabardine/', 'Gabardine')">Gabardine</div>
-            </div>
-
-            <div class="section-h"><i class="fas fa-mosque"></i> PANJABI (SEPARATE)</div>
-            <div class="grid">
-                <div class="btn-cat" onclick="openList('panjabi/easy/', 'Easy Panjabi')">Easy</div>
-                <div class="btn-cat" onclick="openList('panjabi/kabli/', 'Kabli Set')">Kabli</div>
-            </div>
-
-            <div class="section-h"><i class="fas fa-child"></i> JUNIOR (KIDS)</div>
-            <div class="grid">
-                <div class="btn-cat" onclick="openList('junior/boys/', 'Boys Collection')">Boys</div>
-                <div class="btn-cat" onclick="openList('junior/girls/', 'Girls Collection')">Girls</div>
-            </div>
-
-            <div class="section-h"><i class="fas fa-belt"></i> ACCESSORIES</div>
-            <div class="grid">
-                <div class="btn-cat" onclick="openList('accessories/belt/', 'Leather Belt')">Belts</div>
-                <div class="btn-cat" onclick="openList('accessories/tie/', 'Premium Tie')">Ties</div>
-                <div class="btn-cat" onclick="openList('accessories/underwear/', 'Inner Wear')">Inner Wear</div>
-            </div>
         </div>
 
         <div id="p-list" class="page">
-            <div style="display:flex; align-items:center; gap:10px; margin-bottom:20px;">
-                <button onclick="nav('shop')" style="background:none; border:none; color:white; font-size:20px;"><i class="fas fa-arrow-left"></i></button>
-                <h3 id="list-title" style="margin:0;">Products</h3>
+            <div style="display:flex; align-items:center; gap:10px; margin-bottom:15px;">
+                <i class="fas fa-arrow-left" onclick="nav('shop')"></i>
+                <h3 id="list-title" style="margin:0; font-size:16px;">Collection</h3>
             </div>
-            <div id="product-container">
-                </div>
+            <div id="product-grid" class="product-list-grid"></div>
         </div>
 
-        <div id="p-dash" class="page">
-            <div class="profile-card">
-                <div class="avatar" id="u-pic">K</div>
+        <div id="p-profile" class="page">
+            <div style="text-align:center; padding:20px;">
+                <div style="width:70px; height:70px; background:var(--primary); border-radius:50%; margin:0 auto 10px; display:flex; align-items:center; justify-content:center; font-size:24px; font-weight:bold;" id="u-pic">?</div>
                 <h3 id="u-name" style="margin:0;">User</h3>
-                <p id="u-id" style="color:var(--primary); font-size:11px; margin:5px 0;">#ID</p>
-                <div class="stats">
-                    <div class="stat-item"><b id="s-ord">0</b><span>Orders</span></div>
-                    <div class="stat-item"><b id="s-spent">$0</b><span>Spent</span></div>
-                    <div class="stat-item"><b>VIP</b><span>Rank</span></div>
-                </div>
+                <p id="u-id" style="font-size:12px; color:var(--primary);">#ID</p>
             </div>
-
-            <div class="section-h">Support & Freelance</div>
-            <div class="grid">
-                <div class="btn-cat" style="background:#22c55e; color:white; border:none;" onclick="tg.openLink('https://fiverr.com/zoha742')">Fiverr</div>
-                <div class="btn-cat" style="background:#8b5cf6; color:white; border:none;" onclick="tg.showAlert('AI Support is active!')">🤖 AI Support</div>
-            </div>
-
-            <div class="box">
-                <b style="font-size:11px; color:var(--primary);">SHIPPING ADDRESS</b>
-                <div id="addr-display">
-                    <p id="txt-addr" style="font-size:12px; margin:10px 0; color:#94a3b8;">No address saved.</p>
-                    <button onclick="editAddr()" style="background:none; border:none; color:var(--primary); font-size:11px; padding:0; cursor:pointer;">Change Address</button>
-                </div>
-                <div id="addr-form" style="display:none;">
-                    <input type="text" id="ship-n" placeholder="Full Name" style="width:100%; padding:8px; margin-bottom:5px; background:#0f172a; color:white; border:1px solid #334155; border-radius:5px;">
-                    <textarea id="ship-a" placeholder="Full Address..." style="width:100%; padding:8px; background:#0f172a; color:white; border:1px solid #334155; border-radius:5px;"></textarea>
-                    <button class="btn-buy" onclick="saveAddr()">Save</button>
-                </div>
-            </div>
-
-            <div class="section-h">Order History</div>
-            <div id="order-list">
-                <p style="text-align:center; font-size:12px; color:#94a3b8; margin-top:20px;">No orders yet.</p>
+            <div class="profile-list">
+                <div class="list-item"><i class="fas fa-box"></i> <span>My Orders</span></div>
+                <div class="list-item"><i class="fas fa-heart"></i> <span>Wishlist</span></div>
+                <div class="list-item"><i class="fas fa-shield-alt"></i> <span>Policies</span></div>
+                <div class="list-item"><i class="fas fa-headset"></i> <span>Chat with us</span></div>
             </div>
         </div>
     </div>
 
     <div id="modal">
-        <div style="flex:1; display:flex; align-items:center; justify-content:center; background:#000;">
-            <button onclick="closeModal()" style="position:absolute; top:20px; left:20px; background:rgba(0,0,0,0.5); border:none; color:white; width:40px; height:40px; border-radius:50%;"><i class="fas fa-arrow-left"></i></button>
-            <img id="m-img" src="" style="max-width:100%; max-height:100%;">
+        <div style="flex:1; display:flex; align-items:center; justify-content:center; position:relative;">
+            <i class="fas fa-times" onclick="closeModal()" style="position:absolute; top:20px; right:20px; font-size:24px; color:white; background:rgba(0,0,0,0.5); padding:10px; border-radius:50%;"></i>
+            <img id="m-img" src="" style="max-width:100%; max-height:80%; object-fit:contain;">
         </div>
-        <div style="background:var(--card); padding:20px; border-radius:20px 20px 0 0; margin-top:-20px;">
-            <h2 id="m-title" style="margin:0;">Product Name</h2>
-            <p style="color:var(--primary); font-size:24px; font-weight:800; margin:10px 0;">$15.00</p>
-            <p style="font-size:12px; color:#94a3b8;">Premium quality material with perfect fitting.</p>
-            <div style="display:flex; gap:10px; margin-top:15px;">
-                <div class="btn-cat" style="padding:8px 15px;">M</div>
-                <div class="btn-cat active" style="padding:8px 15px; border-color:var(--primary);">L</div>
-                <div class="btn-cat" style="padding:8px 15px;">XL</div>
+        <div class="modal-content">
+            <div id="m-status" class="status-tag status-available">Available</div>
+            <h2 id="m-title" style="margin:0; color:white;">Product Title</h2>
+            <p id="m-price" style="color:var(--primary); font-size:22px; font-weight:800; margin:10px 0;">$15.00</p>
+            
+            <p style="font-size:12px; color:#94a3b8; margin:0;">Select Size:</p>
+            <div class="size-box">
+                <div class="size-btn" onclick="setSize(this, 'M')">M</div>
+                <div class="size-btn active" onclick="setSize(this, 'L')">L</div>
+                <div class="size-btn" onclick="setSize(this, 'XL')">XL</div>
             </div>
-            <button class="btn-buy" style="padding:15px; font-size:16px;" onclick="placeOrder()">CONFIRM ORDER</button>
+
+            <button class="btn-buy" onclick="addToCart()" style="width:100%; padding:15px; background:var(--primary); color:white; border:none; border-radius:12px; font-weight:bold; font-size:16px;">
+                <i class="fas fa-cart-plus"></i> ADD TO CART
+            </button>
         </div>
     </div>
 
     <div class="bottom-nav">
-        <div class="nav-item active" onclick="nav('shop')"><i class="fas fa-store"></i>Store</div>
-        <div class="nav-item" onclick="nav('dash')"><i class="fas fa-user-circle"></i>Dashboard</div>
+        <div class="nav-item active" onclick="nav('shop')"><i class="fas fa-th-large"></i>Menu</div>
+        <div class="nav-item" onclick="tg.showAlert('Cart is empty')"><i class="fas fa-shopping-basket"></i>Cart</div>
+        <div class="nav-item" onclick="nav('profile')"><i class="fas fa-user-circle"></i>Profile</div>
     </div>
 
     <script>
         const tg = window.Telegram.WebApp;
         tg.expand();
         const BASE_IMG = "https://raw.githubusercontent.com/Zoha742/eshopbot/main/products/";
-        let db = { orders: JSON.parse(localStorage.getItem('eshop_orders')) || [] };
-        let cur = {};
+        let currentProduct = {};
 
         function nav(p) {
             document.querySelectorAll('.page').forEach(pg => pg.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(ni => ni.classList.remove('active'));
             document.getElementById('p-' + p).classList.add('active');
             if(p === 'shop') document.querySelectorAll('.nav-item')[0].classList.add('active');
-            if(p === 'dash') {
-                document.querySelectorAll('.nav-item')[1].classList.add('active');
-                refreshDash();
-            }
+            if(p === 'profile') document.querySelectorAll('.nav-item')[2].classList.add('active');
         }
 
-        // ৬টি প্রোডাক্ট দেখানোর ফাংশন
+        // প্রোডাক্ট লিস্ট গ্রিড ভিউ
         function openList(path, title) {
+            const grid = document.getElementById('product-grid');
+            grid.innerHTML = '';
             document.getElementById('list-title').innerText = title;
-            const container = document.getElementById('product-container');
-            container.innerHTML = '';
             
-            // ৬টি ইমেজের জন্য লুপ
             for(let i=1; i<=6; i++) {
-                const imgPath = BASE_IMG + path + i + '.jpg';
-                container.innerHTML += `
-                    <div class="product-card">
-                        <img src="${imgPath}" class="p-img" onerror="this.parentElement.style.display='none'">
-                        <div class="p-info">
-                            <b style="font-size:14px;">${title} #${i}</b>
-                            <p style="color:var(--primary); font-weight:bold; margin:5px 0;">$15.00</p>
-                            <button class="btn-buy" onclick="openModal('${imgPath}', '${title} #${i}')">View Details</button>
+                const imgUrl = BASE_IMG + path + i + '.jpg';
+                grid.innerHTML += `
+                    <div class="p-card-white">
+                        <div class="p-img-box">
+                            <img src="${imgUrl}" onerror="this.parentElement.parentElement.style.display='none'">
+                        </div>
+                        <div class="p-details">
+                            <div class="p-name">${title} #${i}</div>
+                            <div class="p-price">৳৮৮০</div>
+                            <button class="btn-view" onclick="openDetail('${imgUrl}', '${title} #${i}')">
+                                <i class="fas fa-search"></i> View & Buy
+                            </button>
                         </div>
                     </div>`;
             }
             nav('list');
         }
 
-        function openModal(img, title) {
-            cur = { img, title };
+        // ডিটেইল ভিউ (Size, Available/Sold)
+        function openDetail(img, title) {
+            currentProduct = { img, title, size: 'L' };
             document.getElementById('m-img').src = img;
             document.getElementById('m-title').innerText = title;
             document.getElementById('modal').style.display = 'flex';
+            
+            // Random Availability Demo
+            const isSold = Math.random() > 0.8;
+            const status = document.getElementById('m-status');
+            status.innerText = isSold ? "Sold Out" : "Available";
+            status.className = isSold ? "status-tag status-sold" : "status-tag status-available";
         }
 
         function closeModal() { document.getElementById('modal').style.display = 'none'; }
 
-        async function placeOrder() {
-            const addr = localStorage.getItem('eshop_addr');
-            if(!addr) { tg.showAlert("Please save your address in Dashboard first!"); closeModal(); nav('dash'); return; }
-
-            const o = { id: '#' + Math.floor(1000+Math.random()*9000), product: cur.title, price: 15, date: new Date().toLocaleDateString() };
-            
-            // MongoDB-তে ডাটা পাঠানো
-            const response = await fetch('/save-order', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    tgId: tg.initDataUnsafe.user.id,
-                    name: localStorage.getItem('eshop_name'),
-                    address: addr,
-                    order: o
-                })
-            });
-
-            if(response.ok) {
-                db.orders.push(o);
-                localStorage.setItem('eshop_orders', JSON.stringify(db.orders));
-                tg.showPopup({ title: "Success!", message: "Order placed successfully!" });
-                closeModal();
-                nav('dash');
-            }
+        function setSize(el, s) {
+            document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
+            el.classList.add('active');
+            currentProduct.size = s;
         }
 
-        function cancelOrder(id) {
-            tg.showConfirm("Are you sure you want to cancel this order?", (ok) => {
-                if(ok) {
-                    db.orders = db.orders.filter(o => o.id !== id);
-                    localStorage.setItem('eshop_orders', JSON.stringify(db.orders));
-                    refreshDash();
-                }
-            });
-        }
-
-        function saveAddr() {
-            const n = document.getElementById('ship-n').value;
-            const a = document.getElementById('ship-a').value;
-            if(!n || !a) return;
-            localStorage.setItem('eshop_name', n);
-            localStorage.setItem('eshop_addr', a);
-            document.getElementById('addr-form').style.display = 'none';
-            document.getElementById('addr-display').style.display = 'block';
-            refreshDash();
-        }
-
-        function editAddr() {
-            document.getElementById('addr-display').style.display = 'none';
-            document.getElementById('addr-form').style.display = 'block';
-        }
-
-        function refreshDash() {
-            const name = localStorage.getItem('eshop_name') || "User";
-            const addr = localStorage.getItem('eshop_addr') || "No address saved.";
-            document.getElementById('txt-addr').innerText = name + "\n" + addr;
-            document.getElementById('s-ord').innerText = db.orders.length;
-            document.getElementById('s-spent').innerText = '$' + (db.orders.length * 15);
-
-            const list = document.getElementById('order-list');
-            if(db.orders.length > 0) {
-                list.innerHTML = db.orders.map(o => `
-                    <div class="order-card">
-                        <b style="font-size:13px;">${o.product}</b>
-                        <p style="font-size:11px; color:#94a3b8; margin:3px 0;">Order ID: ${o.id} | ${o.date}</p>
-                        <p style="color:var(--primary); font-weight:bold; margin:0;">$15.00</p>
-                        <button class="btn-cancel" onclick="cancelOrder('${o.id}')">Cancel Order</button>
-                    </div>`).join('');
-            } else {
-                list.innerHTML = `<p style="text-align:center; font-size:12px; color:#94a3b8; margin-top:20px;">No orders yet.</p>`;
-            }
+        function addToCart() {
+            tg.showPopup({ message: `${currentProduct.title} (Size: ${currentProduct.size}) added to cart!` });
+            closeModal();
         }
 
         const user = tg.initDataUnsafe.user;
         if(user) {
             document.getElementById('u-name').innerText = user.first_name;
             document.getElementById('u-id').innerText = "#" + user.id;
+            document.getElementById('u-pic').innerText = user.first_name[0];
         }
     </script>
 </body>
