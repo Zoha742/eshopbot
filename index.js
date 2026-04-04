@@ -1,57 +1,83 @@
 const TelegramBot = require('node-telegram-bot-api');
-const express = require('express'); // Render-এ পোর্ট বাইন্ডিংয়ের জন্য
-
+const express = require('express');
 const app = express();
+
+// ১. আপনার বটের টোকেন (BotFather থেকে পাওয়া)
 const token = '8624381226:AAEdlqEKTrzwIPuq1aSPIuPEfb-3GmI0nOI';
-const ADMIN_CHAT_ID = '22446688'; // @userinfobot থেকে নিয়ে বসান
+
+// ২. আপনার নিজের চ্যাট আইডি (অর্ডার রিসিভ করার জন্য)
+// @userinfobot থেকে আপনার আইডিটি নিয়ে এখানে বসান
+const ADMIN_CHAT_ID = 'আপনার_চ্যাট_আইডি_এখানে_দিন'; 
 
 const bot = new TelegramBot(token, { polling: true });
 
-// Render-এ অ্যাপটি সচল রাখার জন্য একটি ছোট সার্ভার
-app.get('/', (req, res) => res.send('Bot is Running!'));
+// Render-এ পোর্ট বাইন্ডিং এবং সচল রাখার জন্য সার্ভার
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.get('/', (req, res) => res.send('eShop365 Bot is Live! 🚀'));
+app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
 
-// /start কমান্ড
+// /start কমান্ড দিলে শপ ওপেন করার বাটন আসবে
 bot.onText(/\/start/, (msg) => {
-    bot.sendMessage(msg.chat.id, "Welcome to eShop365! 🛍️\nনিচের বাটন থেকে শপ ওপেন করুন।", {
+    const chatId = msg.chat.id;
+    bot.sendMessage(chatId, "Welcome to eShop365! 🛍️\nনিচের বাটনটি ক্লিক করে আমাদের শপ ওপেন করুন এবং শপিং শুরু করুন।", {
         reply_markup: {
-            inline_keyboard: [[
-                { 
-                    text: "🚀 Open eShop365", 
-                    web_app: { url: "https://your-render-app-url.com" } 
-                }
-            ]]
+            inline_keyboard: [
+                [
+                    {
+                        text: "🚀 Open eShop365 Shop",
+                        web_app: { url: "https://your-render-app-url.com" } // আপনার Render URL এখানে দিন
+                    }
+                ]
+            ]
         }
     });
 });
 
-// Mini App থেকে আসা ডেটা হ্যান্ডেল করা
+// Mini App থেকে আসা অর্ডার ডেটা হ্যান্ডেল করা
 bot.on('message', async (msg) => {
     if (msg.web_app_data) {
         try {
+            // Mini App থেকে পাঠানো JSON ডেটা পার্স করা
             const data = JSON.parse(msg.web_app_data.data);
             
-            // প্রোডাক্ট লিস্ট সাজানো
-            let itemsText = data.items.map((i, index) => 
-                `${index + 1}. 📦 **${i.title}**\n   📏 Size: ${i.size} | 🎨 Color: ${i.color}`
-            ).join('\n\n');
+            // প্রোডাক্ট লিস্ট সুন্দর করে সাজানো (Size, Color সহ)
+            let itemsDetails = data.items.map((item, index) => {
+                return `${index + 1}. 📦 **${item.title}**\n   📏 Size: ${item.size} | 🎨 Color: ${item.color}\n   💰 Price: $${item.price}.00`;
+            }).join('\n\n');
 
-            const report = `🚨 **নতুন অর্ডার এলার্ট!** 🚨\n\n` +
-                `👤 **ক্রেতা:** ${data.addr.name}\n` +
-                `🆔 **ID:** \`${data.user.id}\`\n\n` +
-                `📦 **পণ্যসমূহ:**\n${itemsText}\n\n` +
-                `📍 **ঠিকানা:** ${data.addr.a}\n` +
-                `💵 **মোট বিল:** $${data.total}.00`;
+            // অ্যাডমিনের (আপনার) জন্য ফুল অর্ডার রিপোর্ট
+            const adminReport = `
+🚨 **নতুন অর্ডার এলার্ট!** 🚨
 
-            // ১. অ্যাডমিনকে জানানো
-            await bot.sendMessage(ADMIN_CHAT_ID, report, { parse_mode: 'Markdown' });
+👤 **কাস্টমার প্রোফাইল:**
+- নাম: ${data.addr.name}
+- আইডি: \`${data.user.id}\`
+- ইউজারনেম: @${data.user.username || 'N/A'}
 
-            // ২. কাস্টমারকে কনফার্মেশন
-            await bot.sendMessage(msg.chat.id, "✅ আপনার অর্ডারটি সফলভাবে রেকর্ড করা হয়েছে!");
+📦 **অর্ডারকৃত পণ্যসমূহ:**
+${itemsDetails}
+
+📍 **ডেলিভারি ঠিকানা:**
+${data.addr.a}
+
+💵 **মোট বিল:** $${data.total}.00
+----------------------------
+            `;
+
+            // কাস্টমারের জন্য ছোট সামারি
+            const customerMsg = `✅ **আপনার অর্ডারটি সফলভাবে রেকর্ড করা হয়েছে!**\n\n💰 মোট বিল: $${data.total}.00\n📍 ঠিকানা: ${data.addr.a}\n\nআমরা শীঘ্রই আপনার সাথে যোগাযোগ করব। ধন্যবাদ!`;
+
+            // ১. আপনাকে (অ্যাডমিনকে) অর্ডারের ডিটেইলস পাঠানো
+            await bot.sendMessage(ADMIN_CHAT_ID, adminReport, { parse_mode: 'Markdown' });
+
+            // ২. কাস্টমারকে কনফার্মেশন মেসেজ পাঠানো
+            await bot.sendMessage(msg.chat.id, customerMsg, { parse_mode: 'Markdown' });
 
         } catch (error) {
-            console.error("Data Error:", error);
+            console.error("ডেটা প্রসেসিং এরর:", error);
+            bot.sendMessage(msg.chat.id, "❌ দুঃখিত, অর্ডারটি প্রসেস করার সময় একটি টেকনিক্যাল সমস্যা হয়েছে।");
         }
     }
 });
+
+console.log("eShop365 Bot is running successfully... 🚀");
