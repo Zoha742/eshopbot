@@ -4,7 +4,7 @@ const TelegramBot = require('node-telegram-bot-api');
 const token = '8624381226:AAEdlqEKTrzwIPuq1aSPIuPEfb-3GmI0nOI';
 
 // @userinfobot থেকে আপনার আইডিটি নিয়ে এখানে বসান (অর্ডার রিসিভ করার জন্য)
-const ADMIN_CHAT_ID = 'আপনার_চ্যাট_আইডি_এখানে_দিন'; 
+const ADMIN_CHAT_ID = '22446688'; 
 
 const bot = new TelegramBot(token, { polling: true });
 
