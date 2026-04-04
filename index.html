@@ -3,209 +3,219 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>eShop365 Pro Business</title>
+    <title>eShop365 Pro</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --primary: #38bdf8; --bg: #0f172a; --card: #1e293b; --text: #f8fafc; --accent: #22c55e; }
-        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 0; overflow: hidden; display: flex; flex-direction: column; }
+        :root { --primary: #38bdf8; --bg: #0f172a; --card: #1e293b; --text: #f8fafc; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); margin:0; padding:0; overflow:hidden; display:flex; flex-direction:column; }
+        .container { flex:1; overflow-y:auto; padding:15px; padding-bottom:90px; }
+        .page { display:none; } .page.active { display:block; }
         
-        /* Bottom Nav */
-        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: #1e293b; display: flex; border-top: 1px solid #334155; height: 75px; z-index: 1000; }
-        .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 11px; color: #94a3b8; cursor: pointer; }
-        .nav-item.active { color: var(--primary); }
-        .nav-item i { font-size: 20px; margin-bottom: 4px; }
+        /* Bottom Navigation */
+        .bottom-nav { position:fixed; bottom:0; left:0; width:100%; background:#1e293b; display:flex; border-top:1px solid #334155; height:70px; }
+        .nav-item { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; font-size:11px; color:#94a3b8; cursor:pointer; }
+        .nav-item.active { color:var(--primary); }
+        .nav-item i { font-size:20px; margin-bottom:3px; }
 
-        .container { flex: 1; overflow-y: auto; padding: 15px; padding-bottom: 95px; }
-        .page { display: none; }
-        .page.active { display: block; }
+        /* Headers */
+        .section-h { display:flex; align-items:center; gap:8px; color:var(--primary); font-size:12px; font-weight:800; margin:20px 0 10px; border-left:3px solid var(--primary); padding-left:8px; text-transform:uppercase; }
+        .grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+        .btn-cat { background:var(--card); padding:12px; border-radius:10px; text-align:center; border:1px solid #334155; font-size:12px; font-weight:600; }
 
-        /* Categories */
-        .section-h { display: flex; align-items: center; gap: 8px; color: var(--primary); font-size: 13px; font-weight: 800; margin: 20px 0 10px; border-left: 3px solid var(--primary); padding-left: 8px; }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        .cat-card { background: var(--card); padding: 15px 10px; border-radius: 12px; text-align: center; border: 1px solid #334155; font-weight: 600; font-size: 12px; cursor: pointer; }
+        /* Profile & Dashboard */
+        .profile-card { background:linear-gradient(180deg, #1e293b, #0f172a); border-radius:15px; padding:20px; text-align:center; border:1px solid #334155; }
+        .avatar { width:70px; height:70px; border-radius:50%; background:var(--primary); margin:0 auto 10px; display:flex; align-items:center; justify-content:center; font-size:30px; font-weight:bold; }
+        .stats { display:flex; justify-content:space-around; margin-top:15px; background:rgba(0,0,0,0.2); padding:10px; border-radius:10px; }
+        .stat-item b { display:block; color:var(--primary); font-size:14px; }
+        .stat-item span { font-size:10px; color:#94a3b8; }
 
-        /* Dashboard & User Info */
-        .profile-card { background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%); border-radius: 20px; padding: 25px; text-align: center; border: 1px solid #334155; }
-        .user-avatar { width: 80px; height: 80px; border-radius: 50%; background: var(--primary); margin: 0 auto 10px; display: flex; align-items: center; justify-content: center; font-size: 35px; border: 3px solid #0f172a; }
-        .stats { display: flex; justify-content: space-around; margin-top: 20px; background: rgba(0,0,0,0.3); padding: 15px; border-radius: 15px; }
-        .stat-box b { display: block; font-size: 16px; color: var(--primary); }
-        .stat-box span { font-size: 10px; color: #94a3b8; }
-
-        /* Address & Orders */
-        .box { background: var(--card); padding: 15px; border-radius: 15px; margin-top: 15px; border: 1px solid #334155; }
-        .input-f { width: 100%; padding: 12px; background: #0f172a; color: white; border: 1px solid #334155; border-radius: 10px; margin-top: 8px; box-sizing: border-box; }
-        .hidden { display: none; }
-        .order-item { display: flex; justify-content: space-between; padding: 10px; border-bottom: 1px solid #334155; font-size: 12px; }
+        /* Address Box */
+        .box { background:var(--card); padding:15px; border-radius:12px; margin-top:15px; border:1px solid #334155; }
+        .input-f { width:100%; padding:10px; background:#0f172a; color:white; border:1px solid #334155; border-radius:8px; margin-top:8px; box-sizing:border-box; }
+        .btn-confirm { width:100%; padding:14px; background:var(--primary); color:white; border:none; border-radius:10px; font-weight:bold; margin-top:15px; cursor:pointer; }
+        .hidden { display:none; }
 
         /* Modal */
-        #modal { position: fixed; inset: 0; background: var(--bg); z-index: 2000; display: none; flex-direction: column; }
-        .m-img { flex: 1; display: flex; align-items: center; justify-content: center; background: #000; }
-        .m-img img { max-width: 100%; max-height: 100%; object-fit: contain; }
-        .m-details { background: var(--card); padding: 25px; border-radius: 25px 25px 0 0; margin-top: -25px; }
-        .btn-confirm { width: 100%; padding: 16px; background: var(--primary); color: white; border: none; border-radius: 12px; font-weight: 800; cursor: pointer; margin-top: 15px; }
+        #modal { position:fixed; inset:0; background:var(--bg); z-index:2000; display:none; flex-direction:column; }
+        .m-img { flex:1; display:flex; align-items:center; justify-content:center; background:#000; }
+        .m-img img { max-width:100%; max-height:100%; }
+        .m-info { background:var(--card); padding:20px; border-radius:20px 20px 0 0; margin-top:-20px; }
     </style>
 </head>
 <body>
 
     <div class="container">
         <div id="p-shop" class="page active">
-            <div class="section-h">👕 T-SHIRT & SHIRTS</div>
+            <div class="section-h"><i class="fas fa-bolt"></i> Hot Deals</div>
             <div class="grid">
-                <div class="cat-card" onclick="openProduct('tshirts/printed/', 'Printed T-shirt')">Printed</div>
-                <div class="cat-card" onclick="openProduct('tshirts/polo/', 'Polo T-shirt')">Polo</div>
-                <div class="cat-card" onclick="openProduct('shirt/half/', 'Half Shirt')">Half Shirt</div>
+                <div class="btn-cat" onclick="openP('hotdeals/summer/', 'Summer Offer')">☀️ Summer Offer</div>
+                <div class="btn-cat" onclick="openP('hotdeals/sale/', 'Big Sale')">🎁 Big Sale</div>
             </div>
-            <div class="section-h">👖 PANTS (SEPARATE)</div>
+
+            <div class="section-h"><i class="fas fa-tshirt"></i> T-Shirts & Shirts</div>
             <div class="grid">
-                <div class="cat-card" onclick="openProduct('pants/jeans/', 'Jeans Pant')">Jeans</div>
-                <div class="cat-card" onclick="openProduct('pants/formal/', 'Formal Pant')">Formal</div>
+                <div class="btn-cat" onclick="openP('tshirts/printed/', 'Printed T-shirt')">Printed</div>
+                <div class="btn-cat" onclick="openP('tshirts/polo/', 'Polo T-shirt')">Polo</div>
+                <div class="btn-cat" onclick="openP('shirt/formal/', 'Formal Shirt')">Formal</div>
+                <div class="btn-cat" onclick="openP('shirt/half/', 'Half Shirt')">Half Shirt</div>
             </div>
-            <div class="section-h">🕋 PANJABI (SEPARATE)</div>
+
+            <div class="section-h"><i class="fas fa-user-tag"></i> Pants (Separate)</div>
             <div class="grid">
-                <div class="cat-card" onclick="openProduct('panjabi/easy/', 'Easy Panjabi')">Easy</div>
-                <div class="cat-card" onclick="openProduct('panjabi/kabli/', 'Kabli Set')">Kabli</div>
+                <div class="btn-cat" onclick="openP('pants/jeans/', 'Jeans Pant')">Jeans</div>
+                <div class="btn-cat" onclick="openP('pants/formal/', 'Formal Pant')">Formal</div>
+                <div class="btn-cat" onclick="openP('pants/gabardine/', 'Gabardine')">Gabardine</div>
+            </div>
+
+            <div class="section-h"><i class="fas fa-mosque"></i> Panjabi (Separate)</div>
+            <div class="grid">
+                <div class="btn-cat" onclick="openP('panjabi/easy/', 'Easy Panjabi')">Easy</div>
+                <div class="btn-cat" onclick="openP('panjabi/kabli/', 'Kabli Set')">Kabli</div>
             </div>
         </div>
 
         <div id="p-dash" class="page">
             <div class="profile-card">
-                <div class="user-avatar" id="u-pic">K</div>
+                <div class="avatar" id="u-pic">K</div>
                 <h3 id="u-name" style="margin:0;">User</h3>
-                <p id="u-id" style="color:var(--primary); font-size:11px; margin:5px 0;">#000000</p>
+                <p id="u-id" style="color:var(--primary); font-size:11px; margin:5px 0;">#ID</p>
                 <div class="stats">
-                    <div class="stat-box"><b id="stat-ord">0</b><span>Orders</span></div>
-                    <div class="stat-box"><b id="stat-spent">$0</b><span>Spent</span></div>
-                    <div class="stat-box"><b>VIP</b><span>Status</span></div>
+                    <div class="stat-item"><b id="s-ord">0</b><span>Orders</span></div>
+                    <div class="stat-item"><b id="s-spent">$0</b><span>Spent</span></div>
+                    <div class="stat-item"><b>VIP</b><span>Rank</span></div>
                 </div>
             </div>
 
             <div id="addr-box" class="box">
                 <b style="font-size:11px; color:var(--primary);">SHIPPING ADDRESS</b>
-                <div id="addr-input">
-                    <input type="text" id="ship-name" class="input-f" placeholder="Full Name">
-                    <textarea id="ship-full" class="input-f" placeholder="House, Area, City..."></textarea>
-                    <button class="btn-confirm" style="padding:10px; font-size:13px;" onclick="saveAddr()">Save & Secure</button>
+                <div id="addr-in">
+                    <input type="text" id="ship-n" class="input-f" placeholder="Full Name">
+                    <textarea id="ship-a" class="input-f" placeholder="Full Address..."></textarea>
+                    <button class="btn-confirm" style="padding:10px;" onclick="saveAddr()">Save Address</button>
                 </div>
-                <div id="addr-display" class="hidden">
+                <div id="addr-out" class="hidden">
                     <p id="txt-addr" style="font-size:12px; margin:10px 0;"></p>
-                    <button onclick="editAddr()" style="background:none; border:none; color:var(--primary); font-size:11px; padding:0;">Change Address</button>
+                    <button onclick="editAddr()" style="background:none; border:none; color:var(--primary); font-size:11px;">Change</button>
                 </div>
             </div>
 
-            <div class="section-h">ORDER RECORDS</div>
-            <div id="order-history" class="box" style="font-size:12px; text-align:center;">No active orders.</div>
+            <div class="section-h">Order History</div>
+            <div id="order-list" class="box" style="font-size:12px; text-align:center;">No orders yet.</div>
         </div>
     </div>
 
     <div id="modal">
         <div class="m-img">
-            <button onclick="closeProduct()" style="position:absolute; top:20px; left:20px; background:rgba(0,0,0,0.5); border:none; color:white; width:40px; height:40px; border-radius:50%;"><i class="fas fa-arrow-left"></i></button>
-            <img id="modal-img" src="">
+            <button onclick="closeP()" style="position:absolute; top:20px; left:20px; background:rgba(0,0,0,0.5); border:none; color:white; width:40px; height:40px; border-radius:50%;"><i class="fas fa-arrow-left"></i></button>
+            <img id="m-img-src" src="">
         </div>
-        <div class="m-details">
-            <h2 id="modal-title" style="margin:0;">Product</h2>
+        <div class="m-info">
+            <h2 id="m-title" style="margin:0;">Product</h2>
             <p style="color:var(--primary); font-size:24px; font-weight:800; margin:10px 0;">$15.00</p>
-            <div style="margin-bottom:15px;">
-                <span style="font-size:11px; color:#94a3b8;">SELECT SIZE</span>
-                <div style="display:flex; gap:10px; margin-top:8px;">
-                    <div class="cat-card" style="padding:8px 15px;" onclick="selectS(this)">M</div>
-                    <div class="cat-card active" style="padding:8px 15px; border-color:var(--primary);" onclick="selectS(this)">L</div>
-                    <div class="cat-card" style="padding:8px 15px;" onclick="selectS(this)">XL</div>
-                </div>
+            <div style="display:flex; gap:10px; margin-top:10px;">
+                <div class="btn-cat" style="padding:8px 15px;" onclick="selectSize(this)">M</div>
+                <div class="btn-cat active" style="padding:8px 15px; border-color:var(--primary);" onclick="selectSize(this)">L</div>
+                <div class="btn-cat" style="padding:8px 15px;" onclick="selectSize(this)">XL</div>
             </div>
-            <button class="btn-confirm" onclick="confirmOrder()">CONFIRM & GO TO DASHBOARD</button>
+            <button class="btn-confirm" onclick="confirmOrder()">CONFIRM ORDER</button>
         </div>
     </div>
 
     <div class="bottom-nav">
-        <div class="nav-item active" onclick="switchPage('shop', this)"><i class="fas fa-store"></i>Store</div>
-        <div class="nav-item" onclick="switchPage('dash', this)"><i class="fas fa-id-card"></i>Dashboard</div>
+        <div class="nav-item active" onclick="nav('shop', this)"><i class="fas fa-store"></i>Store</div>
+        <div class="nav-item" onclick="nav('dash', this)"><i class="fas fa-user-circle"></i>Dashboard</div>
     </div>
 
     <script>
         const tg = window.Telegram.WebApp;
         tg.expand();
-        const BASE = "https://raw.githubusercontent.com/Zoha742/eshopbot/main/products/";
-        let db = { orders: JSON.parse(localStorage.getItem('biz_orders')) || [] };
+        const BASE_IMG = "https://raw.githubusercontent.com/Zoha742/eshopbot/main/products/";
+        let db = { orders: JSON.parse(localStorage.getItem('eshop_orders')) || [] };
         let cur = {};
 
-        function switchPage(p, el) {
+        function nav(p, el) {
             document.querySelectorAll('.page').forEach(pg => pg.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(ni => ni.classList.remove('active'));
             document.getElementById('p-' + p).classList.add('active');
             el.classList.add('active');
-            if(p === 'dash') refreshDashboard();
+            if(p === 'dash') refreshDash();
         }
 
-        function openProduct(path, name) {
-            cur = { name, img: BASE + path + '1.jpg' };
-            document.getElementById('modal-img').src = cur.img;
-            document.getElementById('modal-title').innerText = name;
+        function openP(path, name) {
+            cur = { name, img: BASE_IMG + path + '1.jpg' };
+            document.getElementById('m-img-src').src = cur.img;
+            document.getElementById('m-title').innerText = name;
             document.getElementById('modal').style.display = 'flex';
         }
 
-        function closeProduct() { document.getElementById('modal').style.display = 'none'; }
+        function closeP() { document.getElementById('modal').style.display = 'none'; }
 
-        function confirmOrder() {
-            if(!localStorage.getItem('biz_addr')) {
-                tg.showAlert("আগে ড্যাশবোর্ডে গিয়ে আপনার অ্যাড্রেস সেভ করুন!");
-                switchPage('dash', document.querySelectorAll('.nav-item')[1]);
-                closeProduct();
-                return;
-            }
-            const o = { id: '#' + Math.floor(1000+Math.random()*9000), name: cur.name, status: "Processing" };
-            db.orders.push(o);
-            localStorage.setItem('biz_orders', JSON.stringify(db.orders));
+        async function confirmOrder() {
+            const addr = localStorage.getItem('eshop_addr');
+            if(!addr) { tg.showAlert("আগে ড্যাশবোর্ডে অ্যাড্রেস সেভ করুন!"); return; }
+
+            const o = { id: '#' + Math.floor(1000+Math.random()*9000), product: cur.name, status: "Pending" };
             
-            tg.showPopup({ title: "Order Success!", message: "Your order is added to Dashboard." });
-            closeProduct();
-            switchPage('dash', document.querySelectorAll('.nav-item')[1]); // ইউজারকে ড্যাশবোর্ডে নিয়ে আসা
+            // MongoDB-তে ডাটা পাঠানো
+            const response = await fetch('/save-order', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    tgId: tg.initDataUnsafe.user.id,
+                    name: localStorage.getItem('eshop_name'),
+                    address: addr,
+                    order: o
+                })
+            });
+
+            if(response.ok) {
+                db.orders.push(o);
+                localStorage.setItem('eshop_orders', JSON.stringify(db.orders));
+                tg.showPopup({ title: "Order Placed!", message: "অর্ডারটি আপনার ড্যাশবোর্ডে যোগ হয়েছে।" });
+                closeP();
+                nav('dash', document.querySelectorAll('.nav-item')[1]);
+            }
         }
 
         function saveAddr() {
-            const n = document.getElementById('ship-name').value;
-            const a = document.getElementById('ship-full').value;
+            const n = document.getElementById('ship-n').value;
+            const a = document.getElementById('ship-a').value;
             if(!n || !a) return;
-            localStorage.setItem('biz_name', n);
-            localStorage.setItem('biz_addr', a);
+            localStorage.setItem('eshop_name', n);
+            localStorage.setItem('eshop_addr', a);
             updateAddrUI();
         }
 
         function updateAddrUI() {
-            const a = localStorage.getItem('biz_addr');
+            const a = localStorage.getItem('eshop_addr');
             if(a) {
-                document.getElementById('addr-input').classList.add('hidden');
-                document.getElementById('addr-display').classList.remove('hidden');
-                document.getElementById('txt-addr').innerText = localStorage.getItem('biz_name') + "\n" + a;
+                document.getElementById('addr-in').classList.add('hidden');
+                document.getElementById('addr-out').classList.remove('hidden');
+                document.getElementById('txt-addr').innerText = localStorage.getItem('eshop_name') + "\n" + a;
             }
         }
 
         function editAddr() {
-            document.getElementById('addr-input').classList.remove('hidden');
-            document.getElementById('addr-display').classList.add('hidden');
+            document.getElementById('addr-in').classList.remove('hidden');
+            document.getElementById('addr-out').classList.add('hidden');
         }
 
-        function refreshDashboard() {
-            document.getElementById('stat-ord').innerText = db.orders.length;
-            document.getElementById('stat-spent').innerText = '$' + (db.orders.length * 15);
-            const list = document.getElementById('order-history');
+        function refreshDash() {
+            document.getElementById('s-ord').innerText = db.orders.length;
+            document.getElementById('s-spent').innerText = '$' + (db.orders.length * 15);
+            const list = document.getElementById('order-list');
             if(db.orders.length > 0) {
-                list.innerHTML = db.orders.map(o => `
-                    <div class="order-item">
-                        <span><b>${o.name}</b><br><small>${o.id}</small></span>
-                        <span style="color:var(--primary); font-weight:800;">${o.status}</span>
-                    </div>`).join('');
+                list.innerHTML = db.orders.map(o => `<div class="btn-cat" style="margin-top:5px; text-align:left;"><b>${o.product}</b> <span style="float:right; color:var(--primary);">${o.status}</span></div>`).join('');
             }
         }
 
-        const u = tg.initDataUnsafe.user;
-        if(u) {
-            document.getElementById('u-name').innerText = u.first_name;
-            document.getElementById('u-id').innerText = "#" + u.id;
+        const user = tg.initDataUnsafe.user;
+        if(user) {
+            document.getElementById('u-name').innerText = user.first_name;
+            document.getElementById('u-id').innerText = "#" + user.id;
         }
         updateAddrUI();
-        refreshDashboard();
     </script>
 </body>
 </html>
