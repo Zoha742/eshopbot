@@ -8,28 +8,28 @@ const bot = new TelegramBot(token, {polling: true});
 
 const WEB_URL = "https://eshopbot.onrender.com";
 
-function sendStart(chatId) {
-    bot.sendMessage(chatId, "👋 **Welcome to eShop365**\nপ্রিমিয়াম স্টোর থেকে শপিং করতে নিচের বাটনে ক্লিক করুন।", {
+function sendMain(chatId) {
+    bot.sendMessage(chatId, "👋 **Welcome to eShop365**\nPremium শপিং এর জন্য নিচের 'Open Store' বাটনে ক্লিক করুন।", {
         parse_mode: "Markdown",
         reply_markup: {
             inline_keyboard: [
                 [{ text: "🛍️ Open Premium Store", web_app: { url: WEB_URL } }],
-                [{ text: "👤 User Profile & Cart", web_app: { url: WEB_URL + "#profile" } }],
-                [{ text: "👨‍💻 Customer Support", callback_data: 'support_call' }]
+                [{ text: "👨‍💻 AI Agent Support", callback_data: 'ai_support' }]
             ]
         }
     });
 }
 
-bot.onText(/\/start/, (msg) => sendStart(msg.chat.id));
+bot.onText(/\/start/, (msg) => sendMain(msg.chat.id));
 
 bot.on('callback_query', (query) => {
-    if (query.data === 'support_call') {
-        bot.sendMessage(query.message.chat.id, "👨‍💻 **Customer Support**\nআপনার সমস্যার কথা এখানে লিখুন। শীঘ্রই আমাদের AI Agent আপনার সাথে যোগাযোগ করবে।");
+    if (query.data === 'ai_support') {
+        bot.sendMessage(query.message.chat.id, "🤖 **AI Agent Support**\n\nAI এজেন্ট বর্তমানে আপনার মেসেজটি প্রসেস করছে। দয়া করে আপনার প্রশ্নটি এখানে লিখুন, আমরা শীঘ্রই রিপ্লাই দেব।");
     }
     bot.answerCallbackQuery(query.id);
 });
 
+// Render Server Port Fix
 const server = http.createServer((req, res) => {
     fs.readFile(path.join(__dirname, 'index.html'), (err, data) => {
         res.writeHead(200, { 'Content-Type': 'text/html' });
