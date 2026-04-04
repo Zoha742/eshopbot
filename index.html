@@ -92,40 +92,39 @@
         </div>
     </div>
 
-    <div id="profile" class="content">
-        <div class="u-box" style="text-align:center;">
-            <h3 id="u-name">User</h3>
-            <p id="u-id" style="color:#38bdf8; font-size:12px;">#000000</p>
-        </div>
+   <div id="profile" class="content">
+    <div class="u-box" style="text-align:center; background:#1e293b; padding:15px; border-radius:12px;">
+        <h3 id="u-name">User</h3>
+        <p id="u-id" style="color:#38bdf8; font-size:12px;">#000000</p>
+    </div>
 
-        <div class="grid">
-            <div class="card" onclick="showSubTab('cart')"><i class="fas fa-shopping-cart"></i><br>AddCart</div>
-            <div class="card" onclick="showSubTab('record')"><i class="fas fa-history"></i><br>Order Record</div>
-            <div class="card" onclick="showSubTab('fav')"><i class="fas fa-heart"></i><br>Favorite</div>
-        </div>
+    <div class="grid" style="margin-top:15px;">
+        <div class="card" onclick="showSection('cart')"><i class="fas fa-shopping-cart"></i><br>AddCart</div>
+        <div class="card" onclick="showSection('orders')"><i class="fas fa-history"></i><br>Order Record</div>
+        <div class="card" onclick="showSection('fav')"><i class="fas fa-heart"></i><br>Love</div>
+    </div>
 
-        <div id="addr-section" class="u-box">
-            <h4 style="margin:0;">📍 Shipping Address</h4>
-            <div id="addr-form">
-                <input type="text" id="ship-name" class="input" placeholder="Full Name">
-                <textarea id="ship-addr" class="input" placeholder="City, Area, Road..." style="height:50px;"></textarea>
-                <button class="btn" style="background:#38bdf8;" onclick="saveAddr()">Save Address</button>
-            </div>
-            <div id="addr-saved" style="display:none; font-size:13px; margin-top:5px;">
-                <span id="saved-text"></span> 
-                <button onclick="editAddr()" style="color:#38bdf8; background:none; border:none; text-decoration:underline;">Edit</button>
-            </div>
-        </div>
-
-        <div id="sub-cart" class="u-box">
-            <h4>🛒 Current Cart</h4>
-            <div id="cart-list"></div>
-            <div id="bill-card" style="display:none; border-top:1px solid #334155; padding-top:10px; margin-top:10px;">
-                <div style="display:flex; justify-content:space-between;"><b>Total:</b> <span id="total-usd">$0</span></div>
-                <button class="btn" style="background:#22c55e;" onclick="sendOrder()">Confirm & Send Order</button>
-            </div>
+    <div id="sec-cart" class="sub-sec" style="display:block; margin-top:15px;">
+        <h4 style="border-bottom:1px solid #334155; padding-bottom:5px;">🛒 My Cart</h4>
+        <div id="cart-list"></div>
+        <div id="checkout-area" style="display:none; margin-top:10px;">
+            <p>Total: <span id="total-usd" style="color:#38bdf8; font-weight:bold;">$0</span></p>
+            <button class="btn" style="background:#22c55e;" onclick="sendOrder()">Confirm Order</button>
         </div>
     </div>
+
+    <div id="sec-orders" class="sub-sec" style="display:none; margin-top:15px;">
+        <h4 style="border-bottom:1px solid #334155; padding-bottom:5px;">📜 Order History</h4>
+        <div id="order-history-list">
+            <p style="text-align:center; color:#64748b; font-size:12px;">No past orders found.</p>
+        </div>
+    </div>
+
+    <div id="sec-fav" class="sub-sec" style="display:none; margin-top:15px;">
+        <h4 style="border-bottom:1px solid #334155; padding-bottom:5px;">❤️ Favorites</h4>
+        <div id="fav-list"></div>
+    </div>
+</div>
 
     <div id="details-modal" style="position:fixed; top:0; left:0; width:100%; height:100%; background:#0f172a; z-index:300; display:none; padding:20px; box-sizing:border-box; overflow-y:auto;">
         <button onclick="closeDet()" style="color:#38bdf8; background:none; border:none; font-size:18px;">❌ Close</button>
