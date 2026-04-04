@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>eShop365 Professional</title>
+    <title>eShop365 Pro Business</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --primary: #38bdf8; --bg: #0f172a; --card: #1e293b; --text: #f8fafc; }
-        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 0; height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
+        :root { --primary: #38bdf8; --bg: #0f172a; --card: #1e293b; --text: #f8fafc; --accent: #22c55e; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 0; overflow: hidden; display: flex; flex-direction: column; }
         
-        /* Bottom Navigation */
+        /* Bottom Nav */
         .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: #1e293b; display: flex; border-top: 1px solid #334155; height: 75px; z-index: 1000; }
         .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 11px; color: #94a3b8; cursor: pointer; }
         .nav-item.active { color: var(--primary); }
@@ -20,74 +20,192 @@
         .page { display: none; }
         .page.active { display: block; }
 
-        /* Sections */
-        .header { display: flex; align-items: center; gap: 8px; color: var(--primary); font-size: 13px; font-weight: 800; margin: 20px 0 10px; border-left: 3px solid var(--primary); padding-left: 8px; text-transform: uppercase; }
+        /* Categories */
+        .section-h { display: flex; align-items: center; gap: 8px; color: var(--primary); font-size: 13px; font-weight: 800; margin: 20px 0 10px; border-left: 3px solid var(--primary); padding-left: 8px; }
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        .card { background: var(--card); padding: 15px 10px; border-radius: 12px; text-align: center; border: 1px solid #334155; font-weight: 600; font-size: 12px; }
+        .cat-card { background: var(--card); padding: 15px 10px; border-radius: 12px; text-align: center; border: 1px solid #334155; font-weight: 600; font-size: 12px; cursor: pointer; }
 
-        /* Dashboard Look */
-        .profile-area { background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%); border-radius: 20px; padding: 25px; text-align: center; border: 1px solid #334155; }
-        .avatar { width: 85px; height: 85px; background: var(--primary); border-radius: 50%; margin: 0 auto 10px; display: flex; align-items: center; justify-content: center; font-size: 30px; font-weight: bold; border: 3px solid #1e293b; overflow: hidden; }
-        .avatar img { width: 100%; height: 100%; object-fit: cover; }
-        
+        /* Dashboard & User Info */
+        .profile-card { background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%); border-radius: 20px; padding: 25px; text-align: center; border: 1px solid #334155; }
+        .user-avatar { width: 80px; height: 80px; border-radius: 50%; background: var(--primary); margin: 0 auto 10px; display: flex; align-items: center; justify-content: center; font-size: 35px; border: 3px solid #0f172a; }
         .stats { display: flex; justify-content: space-around; margin-top: 20px; background: rgba(0,0,0,0.3); padding: 15px; border-radius: 15px; }
-        .stat-item b { display: block; font-size: 16px; color: var(--primary); }
-        .stat-item span { font-size: 10px; color: #94a3b8; }
+        .stat-box b { display: block; font-size: 16px; color: var(--primary); }
+        .stat-box span { font-size: 10px; color: #94a3b8; }
 
-        /* Address Box */
-        .addr-box { background: var(--card); padding: 15px; border-radius: 15px; margin-top: 15px; border: 1px solid #334155; }
-        .input { width: 100%; padding: 12px; background: #0f172a; color: white; border: 1px solid #334155; border-radius: 10px; margin-top: 8px; box-sizing: border-box; }
+        /* Address & Orders */
+        .box { background: var(--card); padding: 15px; border-radius: 15px; margin-top: 15px; border: 1px solid #334155; }
+        .input-f { width: 100%; padding: 12px; background: #0f172a; color: white; border: 1px solid #334155; border-radius: 10px; margin-top: 8px; box-sizing: border-box; }
         .hidden { display: none; }
+        .order-item { display: flex; justify-content: space-between; padding: 10px; border-bottom: 1px solid #334155; font-size: 12px; }
 
         /* Modal */
         #modal { position: fixed; inset: 0; background: var(--bg); z-index: 2000; display: none; flex-direction: column; }
-        .m-img { flex: 1; display: flex; align-items: center; justify-content: center; background: #000; position: relative; }
+        .m-img { flex: 1; display: flex; align-items: center; justify-content: center; background: #000; }
         .m-img img { max-width: 100%; max-height: 100%; object-fit: contain; }
-        .m-info { background: var(--card); padding: 25px; border-radius: 25px 25px 0 0; margin-top: -25px; }
-        .btn-confirm { width: 100%; padding: 16px; background: var(--primary); color: white; border: none; border-radius: 15px; font-weight: bold; font-size: 16px; margin-top: 20px; cursor: pointer; }
+        .m-details { background: var(--card); padding: 25px; border-radius: 25px 25px 0 0; margin-top: -25px; }
+        .btn-confirm { width: 100%; padding: 16px; background: var(--primary); color: white; border: none; border-radius: 12px; font-weight: 800; cursor: pointer; margin-top: 15px; }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <div id="pg-store" class="page active">
-            <div class="header">🔥 HOT DEALS</div>
+        <div id="p-shop" class="page active">
+            <div class="section-h">👕 T-SHIRT & SHIRTS</div>
             <div class="grid">
-                <div class="card" onclick="openP('hotdeals/summer/', 'Summer Offer')">☀️ Summer Offer</div>
-                <div class="card" onclick="openP('hotdeals/offer/', 'Big Sale')">🎁 Big Sale</div>
+                <div class="cat-card" onclick="openProduct('tshirts/printed/', 'Printed T-shirt')">Printed</div>
+                <div class="cat-card" onclick="openProduct('tshirts/polo/', 'Polo T-shirt')">Polo</div>
+                <div class="cat-card" onclick="openProduct('shirt/half/', 'Half Shirt')">Half Shirt</div>
             </div>
-
-            <div class="header">👕 T-SHIRTS & SHIRTS</div>
+            <div class="section-h">👖 PANTS (SEPARATE)</div>
             <div class="grid">
-                <div class="card" onclick="openP('tshirts/printed/', 'Printed T-shirt')">Printed</div>
-                <div class="card" onclick="openP('tshirts/polo/', 'Polo T-shirt')">Polo</div>
-                <div class="card" onclick="openP('shirt/formal/', 'Formal Shirt')">Formal</div>
-                <div class="card" onclick="openP('shirt/casual/', 'Casual Shirt')">Casual</div>
-                <div class="card" onclick="openP('shirt/half/', 'Half Shirt')">👕 Half Shirt</div>
+                <div class="cat-card" onclick="openProduct('pants/jeans/', 'Jeans Pant')">Jeans</div>
+                <div class="cat-card" onclick="openProduct('pants/formal/', 'Formal Pant')">Formal</div>
             </div>
-
-            <div class="header">👖 PANTS (ALADA)</div>
+            <div class="section-h">🕋 PANJABI (SEPARATE)</div>
             <div class="grid">
-                <div class="card" onclick="openP('pants/jeans/', 'Jeans Pant')">Jeans</div>
-                <div class="card" onclick="openP('pants/formal/', 'Formal Pant')">Formal</div>
-                <div class="card" onclick="openP('pants/gabardine/', 'Gabardine')">Gabardine</div>
-            </div>
-
-            <div class="header">🕋 PANJABI (ALADA)</div>
-            <div class="grid">
-                <div class="card" onclick="openP('panjabi/easy/', 'Easy Panjabi')">Easy</div>
-                <div class="card" onclick="openP('panjabi/kabli/', 'Kabli Panjabi')">Kabli</div>
-            </div>
-            
-            <div class="header">💼 ACCESSORIES</div>
-            <div class="grid">
-                <div class="card" onclick="openP('accessories/belt/', 'Leather Belt')">Belts</div>
-                <div class="card" onclick="openP('accessories/underwear/', 'Inner Wear')">Inner Wear</div>
+                <div class="cat-card" onclick="openProduct('panjabi/easy/', 'Easy Panjabi')">Easy</div>
+                <div class="cat-card" onclick="openProduct('panjabi/kabli/', 'Kabli Set')">Kabli</div>
             </div>
         </div>
 
-        <div id="pg-dash" class="page">
-            <div class="profile-area">
-                <div class="avatar" id="u-pic">K</div>
-                <h2 id="u-name" style="margin:0;">User</h2>
-                <p id="u-id"
+        <div id="p-dash" class="page">
+            <div class="profile-card">
+                <div class="user-avatar" id="u-pic">K</div>
+                <h3 id="u-name" style="margin:0;">User</h3>
+                <p id="u-id" style="color:var(--primary); font-size:11px; margin:5px 0;">#000000</p>
+                <div class="stats">
+                    <div class="stat-box"><b id="stat-ord">0</b><span>Orders</span></div>
+                    <div class="stat-box"><b id="stat-spent">$0</b><span>Spent</span></div>
+                    <div class="stat-box"><b>VIP</b><span>Status</span></div>
+                </div>
+            </div>
+
+            <div id="addr-box" class="box">
+                <b style="font-size:11px; color:var(--primary);">SHIPPING ADDRESS</b>
+                <div id="addr-input">
+                    <input type="text" id="ship-name" class="input-f" placeholder="Full Name">
+                    <textarea id="ship-full" class="input-f" placeholder="House, Area, City..."></textarea>
+                    <button class="btn-confirm" style="padding:10px; font-size:13px;" onclick="saveAddr()">Save & Secure</button>
+                </div>
+                <div id="addr-display" class="hidden">
+                    <p id="txt-addr" style="font-size:12px; margin:10px 0;"></p>
+                    <button onclick="editAddr()" style="background:none; border:none; color:var(--primary); font-size:11px; padding:0;">Change Address</button>
+                </div>
+            </div>
+
+            <div class="section-h">ORDER RECORDS</div>
+            <div id="order-history" class="box" style="font-size:12px; text-align:center;">No active orders.</div>
+        </div>
+    </div>
+
+    <div id="modal">
+        <div class="m-img">
+            <button onclick="closeProduct()" style="position:absolute; top:20px; left:20px; background:rgba(0,0,0,0.5); border:none; color:white; width:40px; height:40px; border-radius:50%;"><i class="fas fa-arrow-left"></i></button>
+            <img id="modal-img" src="">
+        </div>
+        <div class="m-details">
+            <h2 id="modal-title" style="margin:0;">Product</h2>
+            <p style="color:var(--primary); font-size:24px; font-weight:800; margin:10px 0;">$15.00</p>
+            <div style="margin-bottom:15px;">
+                <span style="font-size:11px; color:#94a3b8;">SELECT SIZE</span>
+                <div style="display:flex; gap:10px; margin-top:8px;">
+                    <div class="cat-card" style="padding:8px 15px;" onclick="selectS(this)">M</div>
+                    <div class="cat-card active" style="padding:8px 15px; border-color:var(--primary);" onclick="selectS(this)">L</div>
+                    <div class="cat-card" style="padding:8px 15px;" onclick="selectS(this)">XL</div>
+                </div>
+            </div>
+            <button class="btn-confirm" onclick="confirmOrder()">CONFIRM & GO TO DASHBOARD</button>
+        </div>
+    </div>
+
+    <div class="bottom-nav">
+        <div class="nav-item active" onclick="switchPage('shop', this)"><i class="fas fa-store"></i>Store</div>
+        <div class="nav-item" onclick="switchPage('dash', this)"><i class="fas fa-id-card"></i>Dashboard</div>
+    </div>
+
+    <script>
+        const tg = window.Telegram.WebApp;
+        tg.expand();
+        const BASE = "https://raw.githubusercontent.com/Zoha742/eshopbot/main/products/";
+        let db = { orders: JSON.parse(localStorage.getItem('biz_orders')) || [] };
+        let cur = {};
+
+        function switchPage(p, el) {
+            document.querySelectorAll('.page').forEach(pg => pg.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(ni => ni.classList.remove('active'));
+            document.getElementById('p-' + p).classList.add('active');
+            el.classList.add('active');
+            if(p === 'dash') refreshDashboard();
+        }
+
+        function openProduct(path, name) {
+            cur = { name, img: BASE + path + '1.jpg' };
+            document.getElementById('modal-img').src = cur.img;
+            document.getElementById('modal-title').innerText = name;
+            document.getElementById('modal').style.display = 'flex';
+        }
+
+        function closeProduct() { document.getElementById('modal').style.display = 'none'; }
+
+        function confirmOrder() {
+            if(!localStorage.getItem('biz_addr')) {
+                tg.showAlert("আগে ড্যাশবোর্ডে গিয়ে আপনার অ্যাড্রেস সেভ করুন!");
+                switchPage('dash', document.querySelectorAll('.nav-item')[1]);
+                closeProduct();
+                return;
+            }
+            const o = { id: '#' + Math.floor(1000+Math.random()*9000), name: cur.name, status: "Processing" };
+            db.orders.push(o);
+            localStorage.setItem('biz_orders', JSON.stringify(db.orders));
+            
+            tg.showPopup({ title: "Order Success!", message: "Your order is added to Dashboard." });
+            closeProduct();
+            switchPage('dash', document.querySelectorAll('.nav-item')[1]); // ইউজারকে ড্যাশবোর্ডে নিয়ে আসা
+        }
+
+        function saveAddr() {
+            const n = document.getElementById('ship-name').value;
+            const a = document.getElementById('ship-full').value;
+            if(!n || !a) return;
+            localStorage.setItem('biz_name', n);
+            localStorage.setItem('biz_addr', a);
+            updateAddrUI();
+        }
+
+        function updateAddrUI() {
+            const a = localStorage.getItem('biz_addr');
+            if(a) {
+                document.getElementById('addr-input').classList.add('hidden');
+                document.getElementById('addr-display').classList.remove('hidden');
+                document.getElementById('txt-addr').innerText = localStorage.getItem('biz_name') + "\n" + a;
+            }
+        }
+
+        function editAddr() {
+            document.getElementById('addr-input').classList.remove('hidden');
+            document.getElementById('addr-display').classList.add('hidden');
+        }
+
+        function refreshDashboard() {
+            document.getElementById('stat-ord').innerText = db.orders.length;
+            document.getElementById('stat-spent').innerText = '$' + (db.orders.length * 15);
+            const list = document.getElementById('order-history');
+            if(db.orders.length > 0) {
+                list.innerHTML = db.orders.map(o => `
+                    <div class="order-item">
+                        <span><b>${o.name}</b><br><small>${o.id}</small></span>
+                        <span style="color:var(--primary); font-weight:800;">${o.status}</span>
+                    </div>`).join('');
+            }
+        }
+
+        const u = tg.initDataUnsafe.user;
+        if(u) {
+            document.getElementById('u-name').innerText = u.first_name;
+            document.getElementById('u-id').innerText = "#" + u.id;
+        }
+        updateAddrUI();
+        refreshDashboard();
+    </script>
+</body>
+</html>
