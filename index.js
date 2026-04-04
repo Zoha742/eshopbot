@@ -1,59 +1,68 @@
-// index.js এর ভেতরে মেনু ফাংশনটি এভাবে আপডেট করুন
+const TelegramBot = require('node-telegram-bot-api');
+const token = '8624381226:AAEdlqEKTrzwIPuq1aSPIuPEfb-3GmI0nOI';
+const bot = new TelegramBot(token, {polling: true});
 
-function mainMenu(chatId) {
-    bot.sendMessage(chatId, "🛍️ **Welcome to eShop365**\nChoose an option below:", {
-        parse_mode: "Markdown",
-        reply_markup: {
-            inline_keyboard: [
-                [{ text: "👕 Categories", callback_data: 'show_categories' }],
-                [{ text: "👤 My Profile", callback_data: 'user_profile' }],
-                [{ text: "📞 Contact Support", callback_data: 'support' }]
-            ]
-        }
-    });
+const IMG_BASE = "https://raw.githubusercontent.com/Zoha742/eshopbot/main/products/";
+const WEB_URL = "https://eshopbot.onrender.com";
+
+// মেইন কিবোর্ড বাটন (Home & Back সহ)
+const mainKeyboard = {
+    reply_markup: {
+        keyboard: [
+            ['👕 T-Shirts', '👔 Shirts'],
+            ['👖 Pants', '🕌 Panjabi'],
+            ['🏠 Home', '⬅️ Back']
+        ],
+        resize_keyboard: true
+    }
+};
+
+// ডাটাবেস এবং ইমেজ লজিক
+const products = {
+    "shirt/casual/": ["Casual 1", "Casual 2", "Casual 3", "Casual 4", "Casual 5", "Casual 6"],
+    "tshirts/printed/": ["T-shirt 1", "T-shirt 2", "T-shirt 3", "T-shirt 4", "T-shirt 5", "T-shirt 6"]
+};
+
+bot.onText(/\/start|🏠 Home/, (msg) => {
+    bot.sendMessage(msg.chat.id, "✨ **Welcome to eShop365**\nUse the buttons below to browse or click 'Open Store' for full experience.", mainKeyboard);
+});
+
+// বাটন ক্লিক হ্যান্ডলার
+bot.on('message', (msg) => {
+    const text = msg.text;
+    if (text === '👕 T-Shirts') {
+        sendGallery(msg.chat.id, "tshirts/printed/");
+    } else if (text === '👔 Shirts') {
+        sendGallery(msg.chat.id, "shirt/casual/");
+    } else if (text === '⬅️ Back') {
+        bot.sendMessage(msg.chat.id, "Returning to Home...", mainKeyboard);
+    }
+});
+
+async function sendGallery(chatId, folder) {
+    const names = products[folder] || [];
+    bot.sendMessage(chatId, "⌛ Loading collection...");
+    
+    for (let i = 1; i <= 6; i++) {
+        const imgUrl = `${IMG_BASE}${folder}${i}.jpg`;
+        await bot.sendPhoto(chatId, imgUrl, {
+            caption: `✨ **${names[i-1] || 'Premium Item'}**\n💰 Price: $15`,
+            reply_markup: {
+                inline_keyboard: [
+                    [{ text: "❤️ Fav", callback_data: `fav_${i}` }, { text: "🛒 Add Cart", callback_data: `cart_${i}` }],
+                    [{ text: "🌐 View in Web", web_app: { url: `${WEB_URL}/#shop` } }] // সরাসরি ওয়েব ভিউ পপআপ
+                ]
+            }
+        });
+    }
 }
 
+// কার্ট এবং ফেভারিট পপআপ লজিক
 bot.on('callback_query', (query) => {
-    const data = query.data;
-    const chatId = query.message.chat.id;
-
-    if (data === 'user_profile') {
-        bot.editMessageText("👤 **USER PROFILE**\nName: ZOZO\nStatus: Active", {
-            chat_id: chatId,
-            message_id: query.message.message_id,
-            reply_markup: {
-                inline_keyboard: [
-                    [{ text: "💳 Payment Methods", callback_data: 'pay_options' }],
-                    [{ text: "📦 My Orders", callback_data: 'my_orders' }],
-                    [{ text: "⬅️ Back", callback_data: 'main_menu' }]
-                ]
-            }
-        });
-    }
-
-    if (data === 'pay_options') {
-        bot.answerCallbackQuery(query.id, { 
-            text: "Please select a payment method from the buttons below.", 
-            show_alert: false 
-        });
-        bot.editMessageText("💳 **SELECT PAYMENT METHOD**", {
-            chat_id: chatId,
-            message_id: query.message.message_id,
-            reply_markup: {
-                inline_keyboard: [
-                    [{ text: "💎 TON Wallet", callback_data: 'pay_ton' }],
-                    [{ text: "💵 Local (Bkash/Rocket)", callback_data: 'pay_local' }],
-                    [{ text: "⬅️ Back", callback_data: 'user_profile' }]
-                ]
-            }
-        });
-    }
-
-    // পেমেন্ট ক্লিক করলে পপআপ আসবে
-    if (data === 'pay_ton') {
-        bot.answerCallbackQuery(query.id, { 
-            text: "Connecting to TON Wallet...\nPlease confirm the transaction in your wallet app.", 
-            show_alert: true 
-        });
+    const action = query.data.split('_')[0];
+    if (action === 'fav') {
+        bot.answerCallbackQuery(query.id, { text: "❤️ Added to Favorites!", show_alert: false });
+    } else if (action === 'cart') {
+        bot.answerCallbackQuery(query.id, { text: "🛒 Added to your Profile Cart!", show_alert: true });
     }
 });
