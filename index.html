@@ -1,125 +1,87 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>eShop365 Premium App</title>
+    <title>eShop365 App</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        body { font-family: 'Inter', sans-serif; background: #0f172a; color: white; margin: 0; padding: 0; overflow-x: hidden; }
-        .tab-nav { display: flex; justify-content: space-around; background: #1e293b; position: sticky; top: 0; z-index: 100; border-bottom: 1px solid #334155; }
-        .tab { padding: 15px; cursor: pointer; color: #94a3b8; font-weight: bold; flex: 1; text-align: center; transition: 0.3s; }
-        .tab.active { color: #38bdf8; border-bottom: 3px solid #38bdf8; background: #1e293b; }
-        .content { padding: 15px; display: none; min-height: 80vh; }
-        .content.active { display: block; }
-        
-        /* Category Grid */
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
-        .btn-sub { background: #1e293b; padding: 15px; border-radius: 10px; border: 1px solid #334155; color: white; cursor: pointer; font-size: 14px; text-align: center; }
-        .btn-sub:active { background: #334155; transform: scale(0.98); }
-
-        /* Gallery Grid */
-        .gallery-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
-        .product-card { background: #1e293b; border-radius: 10px; overflow: hidden; border: 1px solid #334155; }
-        .product-card img { width: 100%; height: 180px; object-fit: cover; }
-        .product-info { padding: 10px; text-align: center; }
-        .price { color: #38bdf8; font-weight: bold; }
-
-        /* Profile & Buttons */
-        .card { background: #1e293b; border-radius: 12px; padding: 15px; margin-bottom: 15px; border: 1px solid #334155; }
-        .btn-action { width: 100%; padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; }
-        .footer-nav { padding: 20px; text-align: center; display: flex; gap: 10px; }
+        body { font-family: sans-serif; background: #0f172a; color: white; margin: 0; padding: 0; }
+        .nav { display: flex; background: #1e293b; position: sticky; top: 0; z-index: 10; }
+        .tab { flex: 1; padding: 15px; text-align: center; cursor: pointer; font-weight: bold; color: #94a3b8; }
+        .tab.active { color: #38bdf8; border-bottom: 3px solid #38bdf8; }
+        .section { display: none; padding: 15px; }
+        .section.active { display: block; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .btn { background: #1e293b; padding: 20px; border-radius: 10px; border: 1px solid #334155; color: white; text-align: center; cursor: pointer; }
+        .product-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
+        .card { background: #1e293b; border-radius: 8px; overflow: hidden; border: 1px solid #334155; }
+        .card img { width: 100%; height: 150px; object-fit: cover; }
+        .price { color: #38bdf8; padding: 5px; text-align: center; font-weight: bold; }
     </style>
 </head>
 <body>
-
-    <div class="tab-nav">
-        <div class="tab active" onclick="showTab('shop')">🏪 STORE</div>
-        <div class="tab" onclick="showTab('profile')">👤 PROFILE</div>
+    <div class="nav">
+        <div class="tab active" onclick="tab('shop')">STORE</div>
+        <div class="tab" onclick="tab('profile')">PROFILE</div>
     </div>
 
-    <div id="shop" class="content active">
-        <div id="category-menu">
-            <h4>Select Category</h4>
+    <div id="shop" class="section active">
+        <div id="menu">
             <div class="grid">
-                <div class="btn-sub" onclick="loadGallery('tshirts/printed/', 'Printed T-Shirts')">👕 T-SHIRTS</div>
-                <div class="btn-sub" onclick="loadGallery('shirt/casual/', 'Casual Shirts')">👔 SHIRTS</div>
-                <div class="btn-sub" onclick="loadGallery('pants/jeans/', 'Jeans Pants')">👖 PANTS</div>
-                <div class="btn-sub" onclick="loadGallery('panjabi/easy/', 'Easy Panjabi')">🕌 PANJABI</div>
-                <div class="btn-sub" onclick="loadGallery('shirt/formal/', 'Formal Shirts')">💼 FORMAL</div>
-                <div class="btn-sub" onclick="loadGallery('accessories/belt/', 'Accessories')">⌚ ACC</div>
+                <div class="btn" onclick="load('tshirts/printed/', 'T-Shirts')">👕 T-Shirts</div>
+                <div class="btn" onclick="load('shirt/casual/', 'Shirts')">👔 Shirts</div>
+                <div class="btn" onclick="load('pants/jeans/', 'Pants')">👖 Pants</div>
+                <div class="btn" onclick="load('panjabi/easy/', 'Panjabi')">🕌 Panjabi</div>
             </div>
         </div>
-
-        <div id="gallery-view" style="display: none;">
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <h4 id="gallery-title">Gallery</h4>
-                <button onclick="goBack()" style="background:none; border:none; color:#38bdf8; cursor:pointer;">⬅️ Back</button>
-            </div>
-            <div class="gallery-grid" id="product-container">
-                </div>
+        <div id="gallery" style="display:none;">
+            <button onclick="back()" style="color:#38bdf8; background:none; border:none; margin-bottom:10px;">⬅️ Back to Menu</button>
+            <h3 id="title"></h3>
+            <div class="product-grid" id="container"></div>
         </div>
     </div>
 
-    <div id="profile" class="content">
-        <div class="card">
-            <h3>User: <span id="u-name">ZOZO</span></h3>
-            <p>ID: <span id="u-id" style="color:#38bdf8;">#742001</span></p>
-        </div>
-        <div class="card">
-            <h4>💳 Wallet & Payment</h4>
-            <button class="btn-action" style="background:#0088cc; color:white;" onclick="msg('Connecting TON Wallet...')">Connect TON Wallet</button>
-            <button class="btn-action" style="background:#22c55e; color:white;" onclick="msg('Local Payment Selected')">Bkash / Nagad</button>
-        </div>
-        <div class="card">
-            <h4>📦 Orders</h4>
-            <button class="btn-action" style="background:#6366f1; color:white;" onclick="msg('No orders yet!')">View History</button>
+    <div id="profile" class="section">
+        <div style="background:#1e293b; padding:20px; border-radius:10px;">
+            <h3>User: <span id="u-name">Guest</span></h3>
+            <p>ID: <span id="u-id" style="color:#38bdf8;">#000000</span></p>
+            <hr border="0.1" color="#334155">
+            <button style="width:100%; padding:10px; background:#0088cc; color:white; border:none; border-radius:5px; margin-top:10px;" onclick="msg('Payment system starting...')">TON Wallet Pay</button>
+            <button style="width:100%; padding:10px; background:#22c55e; color:white; border:none; border-radius:5px; margin-top:10px;" onclick="msg('Local payment ready!')">Bkash/Nagad</button>
         </div>
     </div>
 
     <script>
         const tg = window.Telegram.WebApp;
         tg.expand();
-
         const IMG_BASE = "https://raw.githubusercontent.com/Zoha742/eshopbot/main/products/";
 
-        function showTab(id) {
-            document.querySelectorAll('.content').forEach(c => c.classList.remove('active'));
+        function tab(id) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
             document.getElementById(id).classList.add('active');
             event.currentTarget.classList.add('active');
         }
 
-        function loadGallery(path, title) {
-            document.getElementById('category-menu').style.display = 'none';
-            document.getElementById('gallery-view').style.display = 'block';
-            document.getElementById('gallery-title').innerText = title;
-            
-            const container = document.getElementById('product-container');
-            container.innerHTML = ''; // Clear previous
-
+        function load(path, title) {
+            document.getElementById('menu').style.display = 'none';
+            document.getElementById('gallery').style.display = 'block';
+            document.getElementById('title').innerText = title;
+            const con = document.getElementById('container');
+            con.innerHTML = '';
             for(let i=1; i<=6; i++) {
-                container.innerHTML += `
-                    <div class="product-card">
-                        <img src="${IMG_BASE}${path}${i}.jpg" onerror="this.src='https://via.placeholder.com/150?text=No+Image'">
-                        <div class="product-info">
-                            <div class="price">$15.00</div>
-                            <button class="btn-action" style="font-size:10px; padding:5px;" onclick="msg('Added to Cart!')">🛒 Add</button>
-                        </div>
-                    </div>`;
+                con.innerHTML += `<div class="card"><img src="${IMG_BASE}${path}${i}.jpg" onerror="this.src='https://via.placeholder.com/150'"><div class="price">$15.00</div></div>`;
             }
         }
 
-        function goBack() {
-            document.getElementById('category-menu').style.display = 'block';
-            document.getElementById('gallery-view').style.display = 'none';
+        function back() {
+            document.getElementById('menu').style.display = 'grid';
+            document.getElementById('gallery').style.display = 'none';
         }
 
-        function msg(text) {
-            tg.showPopup({ message: text });
-        }
+        function msg(t) { tg.showPopup({ message: t }); }
 
-        // সেট ইউজার ডাটা
         const user = tg.initDataUnsafe.user;
         if(user) {
             document.getElementById('u-name').innerText = user.first_name;
