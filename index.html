@@ -3,224 +3,153 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>eShop365 Pro Edition</title>
+    <title>eShop365 Pro</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root { --primary: #38bdf8; --bg: #0f172a; --card: #1e293b; --text: #f8fafc; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 0; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 0; height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
         
-        /* Fixed Bottom Nav */
-        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--card); display: flex; border-top: 1px solid #334155; height: 70px; z-index: 1000; }
-        .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 11px; color: #94a3b8; cursor: pointer; text-decoration: none; }
+        /* Main Navigation (Bottom Bar) */
+        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--card); display: flex; border-top: 1px solid #334155; z-index: 1000; height: 65px; }
+        .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 11px; color: #94a3b8; cursor: pointer; }
         .nav-item.active { color: var(--primary); }
-        .nav-item i { font-size: 22px; margin-bottom: 5px; }
+        .nav-item i { font-size: 22px; margin-bottom: 3px; }
 
-        .container { flex: 1; overflow-y: auto; padding: 15px; padding-bottom: 90px; }
+        .content-area { flex: 1; overflow-y: auto; padding: 15px; padding-bottom: 80px; }
         .page { display: none; }
         .page.active { display: block; }
 
-        /* Product & Grid */
+        /* Grid for Categories (7 Main Categories) */
+        .section-title { color: var(--primary); margin: 15px 0 10px 0; font-size: 14px; font-weight: bold; border-left: 4px solid var(--primary); padding-left: 10px; }
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        .cat-btn { background: var(--card); padding: 15px; border-radius: 12px; text-align: center; border: 1px solid #334155; font-weight: 600; }
-        .section-header { color: var(--primary); margin: 20px 0 10px; font-size: 14px; font-weight: bold; border-left: 4px solid var(--primary); padding-left: 10px; text-transform: uppercase; }
+        .cat-card { background: var(--card); padding: 15px; border-radius: 12px; text-align: center; border: 1px solid #334155; font-weight: 600; font-size: 13px; }
 
-        /* Modal & Size Selection */
-        .full-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 2000; display: none; padding: 20px; box-sizing: border-box; overflow-y: auto; }
-        .size-container { display: flex; gap: 10px; margin: 15px 0; }
-        .size-btn { flex: 1; padding: 12px; background: #334155; border-radius: 8px; text-align: center; font-weight: bold; border: 2px solid transparent; cursor: pointer; }
-        .size-btn.selected { border-color: var(--primary); color: var(--primary); }
+        /* Extra Feature Buttons (Fiverr & AI Support) */
+        .feature-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
+        .btn-extra { padding: 12px; border-radius: 10px; text-decoration: none; color: white; text-align: center; font-size: 13px; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .fiverr-btn { background: #1dbf73; }
+        .ai-btn { background: #8b5cf6; }
 
-        /* Address Form */
-        .box { background: var(--card); padding: 15px; border-radius: 15px; margin-bottom: 15px; border: 1px solid #334155; }
-        .input-field { width: 100%; padding: 12px; background: #0f172a; color: white; border: 1px solid #334155; border-radius: 10px; margin-top: 10px; box-sizing: border-box; }
-        .action-btn { width: 100%; padding: 15px; border-radius: 12px; border: none; font-weight: bold; cursor: pointer; margin-top: 15px; font-size: 14px; color: white; }
+        /* Modal for Product View */
+        #product-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 2000; display: none; padding: 20px; box-sizing: border-box; overflow-y: auto; }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <div id="store-page" class="page active">
-            <div class="section-header">👕 T-Shirts</div>
+    <div class="content-area">
+        <div id="p-store" class="page active">
+            <div class="section-title">👕 T-SHIRTS</div>
             <div class="grid">
-                <div class="cat-btn" onclick="openGallery('tshirts/printed/', 'Printed T-shirt')">Printed</div>
-                <div class="cat-btn" onclick="openGallery('tshirts/polo/', 'Polo T-shirt')">Polo</div>
-            </div>
-            <div class="section-header">👔 Shirts</div>
-            <div class="grid">
-                <div class="cat-btn" onclick="openGallery('shirt/formal/', 'Formal Shirt')">Formal</div>
-                <div class="cat-btn" onclick="openGallery('shirt/casual/', 'Casual Shirt')">Casual</div>
-            </div>
-            <div class="section-header">👖 Pants</div>
-            <div class="grid">
-                <div class="cat-btn" onclick="openGallery('pants/jeans/', 'Jeans Pant')">Jeans</div>
-                <div class="cat-btn" onclick="openGallery('pants/formal/', 'Formal Pant')">Formal</div>
-            </div>
-        </div>
-
-        <div id="profile-page" class="page">
-            <div class="box" style="text-align: center;">
-                <h3 id="user-name">Guest</h3>
-                <small id="user-id" style="color: var(--primary);">#000000</small>
+                <div class="cat-card" onclick="load('tshirts/printed/', 'Printed T-shirt')">Printed</div>
+                <div class="cat-card" onclick="load('tshirts/polo/', 'Polo T-shirt')">Polo</div>
             </div>
 
-            <div id="address-box" class="box">
-                <div class="section-header" style="margin-top:0;">Shipping Address</div>
-                <input type="text" id="ship-name" class="input-field" placeholder="Full Name">
-                <textarea id="ship-detail" class="input-field" placeholder="Address..." style="height:60px;"></textarea>
-                <button class="action-btn" style="background: var(--primary);" onclick="saveAddress()">Save & Close</button>
-            </div>
-            <div id="address-hidden" class="box" style="display:none;">
-                <p id="saved-addr-text" style="margin:0; font-size:14px;"></p>
-                <button onclick="editAddress()" style="background:none; border:none; color:var(--primary); cursor:pointer; padding-top:10px;">Edit Address</button>
+            <div class="section-title">👔 SHIRTS</div>
+            <div class="grid">
+                <div class="cat-card" onclick="load('shirt/formal/', 'Formal Shirt')">Formal</div>
+                <div class="cat-card" onclick="load('shirt/casual/', 'Casual Shirt')">Casual</div>
             </div>
 
-            <div class="section-header">Recorded Orders</div>
-            <div id="record-list"></div>
-            <div id="confirm-area" style="display:none; margin-top:20px;">
-                <div style="display:flex; justify-content:space-between; font-size:18px; margin-bottom:10px;">
-                    <span>Total:</span> <span id="total-val" style="color:var(--primary);">$0</span>
+            <div class="section-title">👖 PANTS</div>
+            <div class="grid">
+                <div class="cat-card" onclick="load('pants/jeans/', 'Jeans Pant')">Jeans</div>
+                <div class="cat-card" onclick="load('pants/formal/', 'Formal Pant')">Formal</div>
+            </div>
+
+            <div class="section-title">🕌 PANJABI</div>
+            <div class="grid">
+                <div class="cat-card" onclick="load('panjabi/easy/', 'Easy Panjabi')">Easy</div>
+                <div class="cat-card" onclick="load('panjabi/kabli/', 'Kabli Set')">Kabli</div>
+            </div>
+
+            <div class="section-title">👶 JUNIOR</div>
+            <div class="grid">
+                <div class="cat-card" onclick="load('junior/boys/', 'Boys Wear')">Boys</div>
+                <div class="cat-card" onclick="load('junior/girls/', 'Girls Wear')">Girls</div>
+            </div>
+
+            <div class="section-title">🔥 DEALS & ACCESSORIES</div>
+            <div class="grid">
+                <div class="cat-card" onclick="load('hotdeals/', 'Hot Deals')">Hot Deals</div>
+                <div class="cat-card" onclick="load('accessories/', 'Accessories')">All Accs</div>
+            </div>
+
+            <div class="section-title">🚀 QUICK SERVICES</div>
+            <div class="feature-grid">
+                <a href="https://www.fiverr.com/zoha742" target="_blank" class="btn-extra fiverr-btn">
+                    <i class="fab fa-fiverr"></i> Fiverr Shop
+                </a>
+                <div class="btn-extra ai-btn" onclick="tg.showPopup({message: 'AI Support is coming soon...'})">
+                    <i class="fas fa-robot"></i> AI Support
                 </div>
-                <button class="action-btn" style="background: #22c55e;" onclick="sendOrder()">Confirm Order</button>
             </div>
         </div>
-    </div>
 
-    <div id="product-modal" class="full-modal">
-        <button onclick="closeModal()" style="background:none; border:none; color:white; font-size:24px;"><i class="fas fa-times"></i></button>
-        <img id="modal-img" src="" style="width:100%; border-radius:15px; margin-top:15px;">
-        <h2 id="modal-title" style="margin:15px 0 5px 0;">Product</h2>
-        <p style="font-size:24px; color:var(--primary); font-weight:bold;">$15.00</p>
-        
-        <p style="margin-top:20px; font-weight:bold;">Select Size:</p>
-        <div class="size-container">
-            <div class="size-btn" onclick="selectSize('M', this)">M</div>
-            <div class="size-btn selected" onclick="selectSize('L', this)">L</div>
-            <div class="size-btn" onclick="selectSize('XL', this)">XL</div>
-            <div class="size-btn" onclick="selectSize('XXL', this)">XXL</div>
+        <div id="p-order" class="page">
+            <div class="section-title">MY ORDERS</div>
+            <div id="order-list" style="text-align: center; margin-top: 50px; color: #94a3b8;">
+                No active orders found.
+            </div>
         </div>
 
-        <button class="action-btn" style="background: var(--primary);" onclick="addToRecord()">Add to Record</button>
-    </div>
-
-    <div id="gallery-overlay" class="full-modal">
-        <div style="display:flex; align-items:center; gap:15px; margin-bottom:20px;">
-            <button onclick="closeGallery()" style="background:none; border:none; color:var(--primary); font-size:24px;"><i class="fas fa-arrow-left"></i></button>
-            <h3 id="gallery-title" style="margin:0;">Products</h3>
+        <div id="p-profile" class="page">
+            <div class="section-title">USER PROFILE</div>
+            <div style="background:var(--card); padding:20px; border-radius:15px; text-align:center;">
+                <h3 id="u-name">Loading...</h3>
+                <p id="u-id">#ID</p>
+                <button onclick="tg.close()" style="background: #ef4444; color: white; border: none; padding: 10px 20px; border-radius: 8px; margin-top: 15px;">Exit App</button>
+            </div>
         </div>
-        <div class="grid" id="gallery-items"></div>
     </div>
 
     <div class="bottom-nav">
-        <div class="nav-item active" onclick="switchTab('store', this)"><i class="fas fa-home"></i>Store</div>
-        <div class="nav-item" onclick="switchTab('profile', this)"><i class="fas fa-shopping-bag"></i>Record</div>
-        <a href="https://fiverr.com/zoha742" class="nav-item"><i class="fab fa-fiverr" style="font-size:26px;"></i>Fiverr</a>
-        <div class="nav-item" onclick="tg.showPopup({message: 'Contact AI Support @eShop365_bot'})"><i class="fas fa-robot"></i>Support</div>
+        <div class="nav-item active" onclick="nav('store', this)"><i class="fas fa-store"></i>Store</div>
+        <div class="nav-item" onclick="nav('order', this)"><i class="fas fa-shopping-basket"></i>Orders</div>
+        <div class="nav-item" onclick="nav('profile', this)"><i class="fas fa-user-circle"></i>Profile</div>
+    </div>
+
+    <div id="product-modal">
+        <button onclick="closeMod()" style="float:right; background:none; border:none; color:white; font-size:24px;"><i class="fas fa-times"></i></button>
+        <div id="modal-content" class="grid" style="margin-top: 40px;"></div>
     </div>
 
     <script>
         const tg = window.Telegram.WebApp;
         tg.expand();
-        const IMG_BASE = "https://raw.githubusercontent.com/Zoha742/eshopbot/main/products/";
-        let records = JSON.parse(localStorage.getItem('eshop_records')) || [];
-        let activeSize = 'L';
-        let activeItem = {};
+        const IMG_URL = "https://raw.githubusercontent.com/Zoha742/eshopbot/main/products/";
 
-        function switchTab(tab, el) {
+        function nav(pageId, el) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            document.getElementById(tab + '-page').classList.add('active');
+            document.getElementById('p-' + pageId).classList.add('active');
             el.classList.add('active');
-            if(tab === 'profile') renderRecords();
         }
 
-        function openGallery(path, name) {
-            const list = document.getElementById('gallery-items');
-            list.innerHTML = '';
-            document.getElementById('gallery-overlay').style.display = 'block';
-            document.getElementById('gallery-title').innerText = name;
+        function load(path, name) {
+            const modal = document.getElementById('product-modal');
+            const content = document.getElementById('modal-content');
+            content.innerHTML = '';
+            modal.style.display = 'block';
+            
+            // Loading 6 items per sub-category as per your folder
             for(let i=1; i<=6; i++) {
-                const img = `${IMG_BASE}${path}${i}.jpg`;
-                list.innerHTML += `<div class="cat-btn" style="padding:0; overflow:hidden;" onclick="viewProduct('${img}', '${name} #${i}')">
-                    <img src="${img}" style="width:100%; height:140px; object-fit:cover;">
-                    <div style="padding:8px;">$15.00</div>
-                </div>`;
+                content.innerHTML += `
+                    <div style="background:var(--card); border-radius:10px; overflow:hidden;">
+                        <img src="${IMG_URL}${path}${i}.jpg" style="width:100%; height:120px; object-fit:cover;">
+                        <div style="padding:10px; font-size:12px;">${name} #${i}</div>
+                    </div>`;
             }
         }
 
-        function closeGallery() { document.getElementById('gallery-overlay').style.display = 'none'; }
+        function closeMod() { document.getElementById('product-modal').style.display = 'none'; }
 
-        function viewProduct(img, title) {
-            activeItem = { img, title, price: 15 };
-            document.getElementById('modal-img').src = img;
-            document.getElementById('modal-title').innerText = title;
-            document.getElementById('product-modal').style.display = 'block';
+        // User Data
+        const user = tg.initDataUnsafe.user;
+        if(user) {
+            document.getElementById('u-name').innerText = user.first_name + " " + (user.last_name || "");
+            document.getElementById('u-id').innerText = "@" + (user.username || user.id);
         }
-
-        function closeModal() { document.getElementById('product-modal').style.display = 'none'; }
-
-        function selectSize(s, el) {
-            activeSize = s;
-            document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('selected'));
-            el.classList.add('selected');
-        }
-
-        function addToRecord() {
-            records.push({...activeItem, size: activeSize});
-            localStorage.setItem('eshop_records', JSON.stringify(records));
-            tg.showPopup({ message: "Added to your permanent record!" });
-            closeModal();
-        }
-
-        function renderRecords() {
-            const list = document.getElementById('record-list');
-            if(records.length === 0) { list.innerHTML = "No orders recorded."; document.getElementById('confirm-area').style.display = 'none'; return; }
-            list.innerHTML = records.map((item, index) => `
-                <div class="box" style="display:flex; justify-content:space-between; align-items:center;">
-                    <div><b>${item.title}</b><br><small>Size: ${item.size} | $${item.price}</small></div>
-                    <i class="fas fa-trash-alt" style="color:#ef4444;" onclick="removeItem(${index})"></i>
-                </div>`).join('');
-            document.getElementById('total-val').innerText = '$' + (records.length * 15);
-            document.getElementById('confirm-area').style.display = 'block';
-        }
-
-        function removeItem(index) { records.splice(index, 1); localStorage.setItem('eshop_records', JSON.stringify(records)); renderRecords(); }
-
-        function saveAddress() {
-            const n = document.getElementById('ship-name').value;
-            const d = document.getElementById('ship-detail').value;
-            if(!n || !d) return tg.showAlert("Fill address info!");
-            localStorage.setItem('u_name', n); localStorage.setItem('u_addr', d);
-            updateAddrUI();
-        }
-
-        function updateAddrUI() {
-            const n = localStorage.getItem('u_name');
-            if(n) {
-                document.getElementById('address-box').style.display = 'none';
-                document.getElementById('address-hidden').style.display = 'block';
-                document.getElementById('saved-addr-text').innerText = n + " - " + localStorage.getItem('u_addr');
-            }
-        }
-
-        function editAddress() {
-            document.getElementById('address-box').style.display = 'block';
-            document.getElementById('address-hidden').style.display = 'none';
-        }
-
-        function sendOrder() {
-            const n = localStorage.getItem('u_name');
-            if(!n) return tg.showAlert("Please save address first!");
-            const finalData = { user: tg.initDataUnsafe.user, orders: records, address: {name: n, detail: localStorage.getItem('u_addr')} };
-            tg.sendData(JSON.stringify(finalData));
-            records = []; localStorage.removeItem('eshop_records');
-            tg.close();
-        }
-
-        // Initialize
-        const u = tg.initDataUnsafe.user;
-        if(u) { document.getElementById('user-name').innerText = u.first_name; document.getElementById('user-id').innerText = "#" + u.id; }
-        updateAddrUI();
     </script>
 </body>
 </html>
