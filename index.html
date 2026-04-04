@@ -3,152 +3,186 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>eShop365 Pro</title>
+    <title>eShop365 Elite</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --primary: #38bdf8; --bg: #0f172a; --card: #1e293b; --text: #f8fafc; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 0; height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
+        :root { --primary: #38bdf8; --bg: #0f172a; --card: #1e293b; --text: #f8fafc; --accent: #22c55e; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 0; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
         
-        /* Main Navigation (Bottom Bar) */
-        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--card); display: flex; border-top: 1px solid #334155; z-index: 1000; height: 65px; }
-        .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 11px; color: #94a3b8; cursor: pointer; }
+        /* Dashboard & Navigation */
+        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(30, 41, 59, 0.95); backdrop-filter: blur(10px); display: flex; border-top: 1px solid #334155; height: 70px; z-index: 1000; }
+        .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 11px; color: #94a3b8; cursor: pointer; transition: 0.3s; }
         .nav-item.active { color: var(--primary); }
-        .nav-item i { font-size: 22px; margin-bottom: 3px; }
+        .nav-item i { font-size: 22px; margin-bottom: 4px; }
 
-        .content-area { flex: 1; overflow-y: auto; padding: 15px; padding-bottom: 80px; }
+        .container { flex: 1; overflow-y: auto; padding: 15px; padding-bottom: 90px; }
         .page { display: none; }
         .page.active { display: block; }
 
-        /* Grid for Categories (7 Main Categories) */
-        .section-title { color: var(--primary); margin: 15px 0 10px 0; font-size: 14px; font-weight: bold; border-left: 4px solid var(--primary); padding-left: 10px; }
+        /* Professional Grid System */
+        .section-header { display: flex; align-items: center; gap: 10px; margin: 20px 0 12px; font-weight: 800; letter-spacing: 1px; color: var(--primary); font-size: 14px; text-transform: uppercase; }
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        .cat-card { background: var(--card); padding: 15px; border-radius: 12px; text-align: center; border: 1px solid #334155; font-weight: 600; font-size: 13px; }
+        .cat-card { background: var(--card); padding: 18px 10px; border-radius: 16px; text-align: center; border: 1px solid #334155; transition: 0.2s; cursor: pointer; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+        .cat-card:active { transform: scale(0.95); background: #334155; }
 
-        /* Extra Feature Buttons (Fiverr & AI Support) */
-        .feature-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
-        .btn-extra { padding: 12px; border-radius: 10px; text-decoration: none; color: white; text-align: center; font-size: 13px; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 8px; }
-        .fiverr-btn { background: #1dbf73; }
-        .ai-btn { background: #8b5cf6; }
+        /* Full Image View & Product UI */
+        #product-view { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 3000; display: none; flex-direction: column; }
+        .full-img-container { flex: 1; display: flex; align-items: center; justify-content: center; background: #000; position: relative; }
+        .full-img-container img { max-width: 100%; max-height: 100%; object-fit: contain; }
+        .product-details { background: var(--card); padding: 25px; border-radius: 30px 30px 0 0; margin-top: -30px; position: relative; z-index: 3001; }
+        
+        /* Selectors (Size & Color) */
+        .selector-label { font-size: 13px; font-weight: 600; margin-bottom: 10px; display: block; color: #94a3b8; }
+        .chip-group { display: flex; gap: 10px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 5px; }
+        .chip { padding: 10px 18px; background: #0f172a; border-radius: 10px; border: 2px solid transparent; cursor: pointer; font-weight: bold; font-size: 14px; }
+        .chip.active { border-color: var(--primary); color: var(--primary); }
+        .color-dot { width: 30px; height: 30px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; }
+        .color-dot.active { border-color: white; transform: scale(1.1); }
 
-        /* Modal for Product View */
-        #product-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 2000; display: none; padding: 20px; box-sizing: border-box; overflow-y: auto; }
+        .add-cart-btn { background: var(--primary); color: #fff; width: 100%; padding: 18px; border-radius: 16px; border: none; font-size: 16px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; }
+
+        /* Profile & Dashboard */
+        .user-stat { background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); padding: 25px; border-radius: 20px; border: 1px solid #334155; margin-bottom: 20px; text-align: center; }
+        .dashboard-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 15px; }
+        .stat-item { background: #1e293b; padding: 10px; border-radius: 12px; font-size: 12px; }
     </style>
 </head>
 <body>
 
-    <div class="content-area">
+    <div class="container">
         <div id="p-store" class="page active">
-            <div class="section-title">👕 T-SHIRTS</div>
+            <div class="section-header"><i class="fas fa-bolt"></i> Hot Deals</div>
+            <div class="grid">
+                <div class="cat-card" onclick="load('hotdeals/summer/', 'Summer Offer')">☀️ Summer Offer</div>
+                <div class="cat-card" onclick="load('hotdeals/offer/', 'Special Offer')">🎁 Big Sale</div>
+            </div>
+
+            <div class="section-header"><i class="fas fa-tshirt"></i> Shirts & T-Shirts</div>
             <div class="grid">
                 <div class="cat-card" onclick="load('tshirts/printed/', 'Printed T-shirt')">Printed</div>
                 <div class="cat-card" onclick="load('tshirts/polo/', 'Polo T-shirt')">Polo</div>
-            </div>
-
-            <div class="section-title">👔 SHIRTS</div>
-            <div class="grid">
                 <div class="cat-card" onclick="load('shirt/formal/', 'Formal Shirt')">Formal</div>
                 <div class="cat-card" onclick="load('shirt/casual/', 'Casual Shirt')">Casual</div>
+                <div class="cat-card" onclick="load('shirt/half/', 'Half Shirt')">👕 Half Shirt</div>
             </div>
 
-            <div class="section-title">👖 PANTS</div>
+            <div class="section-header"><i class="fas fa-socks"></i> Accessories</div>
             <div class="grid">
-                <div class="cat-card" onclick="load('pants/jeans/', 'Jeans Pant')">Jeans</div>
-                <div class="cat-card" onclick="load('pants/formal/', 'Formal Pant')">Formal</div>
+                <div class="cat-card" onclick="load('accessories/belt/', 'Premium Belt')">💼 Belts</div>
+                <div class="cat-card" onclick="load('accessories/tie/', 'Official Tie')">👔 Ties</div>
+                <div class="cat-card" onclick="load('accessories/underwear/', 'Inner Wear')">🩲 Inner Wear</div>
             </div>
 
-            <div class="section-title">🕌 PANJABI</div>
+            <div class="section-header"><i class="fas fa-user-ninja"></i> Panjabi & Pants</div>
             <div class="grid">
                 <div class="cat-card" onclick="load('panjabi/easy/', 'Easy Panjabi')">Easy</div>
                 <div class="cat-card" onclick="load('panjabi/kabli/', 'Kabli Set')">Kabli</div>
-            </div>
-
-            <div class="section-title">👶 JUNIOR</div>
-            <div class="grid">
-                <div class="cat-card" onclick="load('junior/boys/', 'Boys Wear')">Boys</div>
-                <div class="cat-card" onclick="load('junior/girls/', 'Girls Wear')">Girls</div>
-            </div>
-
-            <div class="section-title">🔥 DEALS & ACCESSORIES</div>
-            <div class="grid">
-                <div class="cat-card" onclick="load('hotdeals/', 'Hot Deals')">Hot Deals</div>
-                <div class="cat-card" onclick="load('accessories/', 'Accessories')">All Accs</div>
-            </div>
-
-            <div class="section-title">🚀 QUICK SERVICES</div>
-            <div class="feature-grid">
-                <a href="https://www.fiverr.com/zoha742" target="_blank" class="btn-extra fiverr-btn">
-                    <i class="fab fa-fiverr"></i> Fiverr Shop
-                </a>
-                <div class="btn-extra ai-btn" onclick="tg.showPopup({message: 'AI Support is coming soon...'})">
-                    <i class="fas fa-robot"></i> AI Support
-                </div>
-            </div>
-        </div>
-
-        <div id="p-order" class="page">
-            <div class="section-title">MY ORDERS</div>
-            <div id="order-list" style="text-align: center; margin-top: 50px; color: #94a3b8;">
-                No active orders found.
+                <div class="cat-card" onclick="load('pants/jeans/', 'Jeans')">Jeans</div>
+                <div class="cat-card" onclick="load('pants/formal/', 'Formal')">Formal</div>
+                <div class="cat-card" onclick="load('pants/gabardine/', 'Gabardine')">Gabardine</div>
             </div>
         </div>
 
         <div id="p-profile" class="page">
-            <div class="section-title">USER PROFILE</div>
-            <div style="background:var(--card); padding:20px; border-radius:15px; text-align:center;">
-                <h3 id="u-name">Loading...</h3>
-                <p id="u-id">#ID</p>
-                <button onclick="tg.close()" style="background: #ef4444; color: white; border: none; padding: 10px 20px; border-radius: 8px; margin-top: 15px;">Exit App</button>
+            <div class="user-stat">
+                <img id="u-photo" src="https://via.placeholder.com/80" style="border-radius:50%; border:3px solid var(--primary); margin-bottom:10px;">
+                <h2 id="u-name" style="margin:0;">User Name</h2>
+                <p id="u-username" style="color:var(--primary); margin:5px 0;">@username</p>
+                
+                <div class="dashboard-grid">
+                    <div class="stat-item"><b>12</b><br>Orders</div>
+                    <div class="stat-item"><b>$180</b><br>Spent</div>
+                    <div class="stat-item"><b>VIP</b><br>Rank</div>
+                </div>
+            </div>
+
+            <div class="section-header">Support & Freelance</div>
+            <div class="grid">
+                <a href="https://fiverr.com/zoha742" class="cat-card" style="text-decoration:none; color:inherit; background:#1dbf73;"><i class="fab fa-fiverr"></i> Fiverr Shop</a>
+                <div class="cat-card" onclick="tg.showPopup({message:'AI Bot is analyzing...'})" style="background:#8b5cf6;"><i class="fas fa-robot"></i> AI Support</div>
             </div>
         </div>
     </div>
 
-    <div class="bottom-nav">
-        <div class="nav-item active" onclick="nav('store', this)"><i class="fas fa-store"></i>Store</div>
-        <div class="nav-item" onclick="nav('order', this)"><i class="fas fa-shopping-basket"></i>Orders</div>
-        <div class="nav-item" onclick="nav('profile', this)"><i class="fas fa-user-circle"></i>Profile</div>
+    <div id="product-view">
+        <div class="full-img-container">
+            <button onclick="closeProduct()" style="position:absolute; top:20px; left:20px; background:rgba(255,255,255,0.2); border:none; color:white; width:40px; height:40px; border-radius:50%;"><i class="fas fa-times"></i></button>
+            <img id="f-img" src="">
+        </div>
+        <div class="product-details">
+            <h2 id="f-title" style="margin:0 0 5px 0;">Product Name</h2>
+            <p id="f-price" style="font-size:24px; font-weight:800; color:var(--primary); margin:0 0 20px 0;">$15.00</p>
+            
+            <span class="selector-label">Select Size</span>
+            <div class="chip-group">
+                <div class="chip" onclick="sel(this)">M</div>
+                <div class="chip active" onclick="sel(this)">L</div>
+                <div class="chip" onclick="sel(this)">XL</div>
+                <div class="chip" onclick="sel(this)">XXL</div>
+            </div>
+
+            <span class="selector-label">Select Color</span>
+            <div class="chip-group">
+                <div class="color-dot active" style="background:#3b82f6;" onclick="selC(this)"></div>
+                <div class="color-dot" style="background:#ef4444;" onclick="selC(this)"></div>
+                <div class="color-dot" style="background:#10b981;" onclick="selC(this)"></div>
+                <div class="color-dot" style="background:#000;" onclick="selC(this)"></div>
+            </div>
+
+            <button class="add-cart-btn" onclick="addToCart()"><i class="fas fa-shopping-cart"></i> ADD TO CART</button>
+        </div>
     </div>
 
-    <div id="product-modal">
-        <button onclick="closeMod()" style="float:right; background:none; border:none; color:white; font-size:24px;"><i class="fas fa-times"></i></button>
-        <div id="modal-content" class="grid" style="margin-top: 40px;"></div>
+    <div class="bottom-nav">
+        <div class="nav-item active" onclick="nav('store', this)"><i class="fas fa-th-large"></i>Store</div>
+        <div class="nav-item" onclick="nav('cart', this)"><i class="fas fa-shopping-basket"></i>Orders</div>
+        <div class="nav-item" onclick="nav('profile', this)"><i class="fas fa-user-cog"></i>Dashboard</div>
     </div>
 
     <script>
         const tg = window.Telegram.WebApp;
         tg.expand();
-        const IMG_URL = "https://raw.githubusercontent.com/Zoha742/eshopbot/main/products/";
+        const BASE = "https://raw.githubusercontent.com/Zoha742/eshopbot/main/products/";
 
-        function nav(pageId, el) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            document.getElementById('p-' + pageId).classList.add('active');
+        function nav(p, el) {
+            document.querySelectorAll('.page').forEach(pg => pg.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(ni => ni.classList.remove('active'));
+            document.getElementById('p-' + p).classList.add('active');
             el.classList.add('active');
         }
 
         function load(path, name) {
-            const modal = document.getElementById('product-modal');
-            const content = document.getElementById('modal-content');
-            content.innerHTML = '';
-            modal.style.display = 'block';
-            
-            // Loading 6 items per sub-category as per your folder
-            for(let i=1; i<=6; i++) {
-                content.innerHTML += `
-                    <div style="background:var(--card); border-radius:10px; overflow:hidden;">
-                        <img src="${IMG_URL}${path}${i}.jpg" style="width:100%; height:120px; object-fit:cover;">
-                        <div style="padding:10px; font-size:12px;">${name} #${i}</div>
-                    </div>`;
-            }
+            // সিমুলেটেড ইমেজ লোডিং (GitHub structure অনুযায়ী)
+            const img = `${BASE}${path}1.jpg`;
+            document.getElementById('f-img').src = img;
+            document.getElementById('f-title').innerText = name;
+            document.getElementById('product-view').style.display = 'flex';
         }
 
-        function closeMod() { document.getElementById('product-modal').style.display = 'none'; }
+        function closeProduct() { document.getElementById('product-view').style.display = 'none'; }
 
-        // User Data
-        const user = tg.initDataUnsafe.user;
-        if(user) {
-            document.getElementById('u-name').innerText = user.first_name + " " + (user.last_name || "");
-            document.getElementById('u-id').innerText = "@" + (user.username || user.id);
+        function sel(el) {
+            document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+            el.classList.add('active');
+        }
+
+        function selC(el) {
+            document.querySelectorAll('.color-dot').forEach(c => c.classList.remove('active'));
+            el.classList.add('active');
+        }
+
+        function addToCart() {
+            tg.showPopup({ title: 'Success', message: 'Item added to your record!' });
+            closeProduct();
+        }
+
+        // Profile Setup
+        const u = tg.initDataUnsafe.user;
+        if(u) {
+            document.getElementById('u-name').innerText = u.first_name;
+            document.getElementById('u-username').innerText = u.username ? '@' + u.username : '#' + u.id;
+            if(u.photo_url) document.getElementById('u-photo').src = u.photo_url;
         }
     </script>
 </body>
