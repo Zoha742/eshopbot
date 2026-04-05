@@ -18,33 +18,31 @@
         .grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
         .btn-cat { background:var(--card); padding:14px; border-radius:12px; text-align:center; border:1px solid #334155; font-size:12px; font-weight:600; cursor:pointer; color: white; display:flex; align-items:center; justify-content:center; gap:5px; }
 
-        /* Product Cards */
+        /* Product Cards & Modal */
         .product-grid { display:grid; grid-template-columns: 1fr 1fr; gap:12px; padding:10px 0; }
         .p-card { background: #ffffff; border-radius:15px; overflow:hidden; color: #333; position:relative; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
         .p-img-box { width:100%; height:170px; background:#f3f4f6; display:flex; align-items:center; justify-content:center; overflow: hidden; }
         .p-img-box img { max-width:100%; max-height:100%; object-fit: contain; }
         .p-details { padding:12px; text-align:center; }
-        .p-name { font-size:13px; font-weight:700; color: #1e293b; margin:2px 0 6px; }
-        .p-price { font-size:15px; font-weight:800; color: var(--primary); margin-bottom:10px; }
         .btn-view-buy { background: var(--primary); color: white; border: none; width: 100%; padding: 10px; border-radius: 8px; font-size: 12px; font-weight: bold; cursor: pointer; }
 
-        /* Address Box (Hidden by default) */
+        /* Profile & List Items */
+        .u-header { text-align:center; padding:25px 0; background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%); border-radius: 15px; margin-bottom: 20px; border: 1px solid #334155; }
+        .profile-list { background:var(--card); border-radius:15px; border: 1px solid #334155; overflow: hidden; }
+        .list-item { display:flex; align-items:center; padding:18px; border-bottom:1px solid #334155; gap:15px; cursor:pointer; }
+        
+        /* Address Box Hidden */
         #address-box { display: none; background: var(--card); padding: 15px; border-radius: 12px; margin-top: 10px; border: 1px solid #334155; }
         .address-input { width: 100%; padding: 10px; background: #0f172a; border: 1px solid #334155; color: white; border-radius: 8px; margin-top: 5px; box-sizing: border-box; }
-
-        /* Admin Dashboard UI */
-        .admin-search { width: 100%; padding: 12px; background: var(--card); border: 2px solid var(--primary); color: white; border-radius: 10px; margin-bottom: 15px; outline: none; box-sizing: border-box; }
-        .status-tag { display:inline-block; padding:4px 10px; border-radius:12px; font-size:10px; font-weight:bold; color: white; text-transform: uppercase; }
-        .action-btns { display: flex; gap: 8px; margin-top: 10px; }
-        .btn-status { flex: 1; padding: 8px; border: none; border-radius: 6px; font-size: 11px; font-weight: bold; cursor: pointer; color: white; display: flex; align-items: center; justify-content: center; gap: 4px; }
 
         /* Bottom Nav */
         .bottom-nav { position:fixed; bottom:0; width:100%; max-width: 600px; left: 50%; transform: translateX(-50%); background:#1e293b; display:flex; height:75px; border-top:1px solid #334155; z-index:1000; }
         .nav-item { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; color:#94a3b8; font-size:11px; cursor:pointer; position: relative; }
         .nav-item.active { color:var(--primary); }
-        .badge { position:absolute; top:12px; right:30%; background:var(--danger); color:white; font-size:10px; min-width:17px; height:17px; border-radius:50%; display:none; align-items:center; justify-content:center; }
         
-        .order-card { background:var(--card); padding:15px; border-radius:12px; margin-bottom:15px; border:1px solid #334155; position: relative; }
+        /* Admin Search UI */
+        .admin-search { width: 100%; padding: 12px; background: var(--card); border: 2px solid var(--primary); color: white; border-radius: 10px; margin-bottom: 15px; outline: none; }
+        .status-tag { padding:4px 8px; border-radius:8px; font-size:10px; font-weight:bold; color: white; }
     </style>
 </head>
 <body>
@@ -63,56 +61,62 @@
                 <div class="btn-cat" onclick="openList('tshirts/polo/', 'Polo')">Polo</div>
             </div>
 
-            <div class="section-h"><i class="fas fa-vest"></i> PANTS & INNERWEAR</div>
-            <div class="grid">
-                <div class="btn-cat" onclick="openList('pants/gabardine/', 'Gabardine Pant')">👖 Gabardine</div>
-                <div class="btn-cat" onclick="openList('inner/men/', 'Innerwear')">🩲 Innerwear</div>
-                <div class="btn-cat" onclick="openList('pants/jeans/', 'Jeans')">Jeans</div>
-                <div class="btn-cat" onclick="openList('pants/formal/', 'Formal')">Formal</div>
-            </div>
-
             <div class="section-h"><i class="fas fa-user-tie"></i> SHIRTS</div>
             <div class="grid">
                 <div class="btn-cat" onclick="openList('shirt/formal/', 'Formal')">Formal</div>
                 <div class="btn-cat" onclick="openList('shirt/casual/', 'Casual')">Casual</div>
+                <div class="btn-cat" onclick="openList('shirt/half/', 'Half Shirt')">Half Shirt</div>
             </div>
-        </div>
 
-        <div id="p-cart" class="page">
-            <div class="section-h">YOUR CART</div>
-            <div id="cart-items"></div>
-            <div id="cart-summary" style="background:var(--card); padding:20px; border-radius:15px; margin-top:20px;">
-                <button class="btn-view-buy" style="height:48px;" onclick="placeOrder()">CONFIRM ORDER (COD)</button>
+            <div class="section-h"><i class="fas fa-vest"></i> PANTS</div>
+            <div class="grid">
+                <div class="btn-cat" onclick="openList('pants/gabardine/', 'Gabardine Pant')">👖 Gabardine Pant</div>
+                <div class="btn-cat" onclick="openList('pants/jeans/', 'Jeans')">Jeans</div>
+                <div class="btn-cat" onclick="openList('pants/formal/', 'Formal')">Formal</div>
+                <div class="btn-cat" onclick="openList('pants/cargo/', 'Cargo')">Cargo</div>
+            </div>
+
+            <div class="section-h"><i class="fas fa-belt"></i> ACCESSORIES</div>
+            <div class="grid">
+                <div class="btn-cat" onclick="openList('innerwear/', 'Innerwear')">🩲 Innerwear</div>
+                <div class="btn-cat" onclick="openList('accessories/belt/', 'Leather Belts')">Belts</div>
+                <div class="btn-cat" onclick="openList('accessories/tie/', 'Premium Ties')">Ties</div>
+                <div class="btn-cat" onclick="openList('accessories/wallet/', 'Wallets')">Wallets</div>
             </div>
         </div>
 
         <div id="p-profile" class="page">
-            <div class="profile-list" style="margin-top:20px;">
-                <div class="list-item" onclick="toggleAddressBox()"><i class="fas fa-map-marker-alt"></i> <span>Manage Address</span></div>
+            <div class="u-header">
+                <div style="width:70px; height:70px; background:var(--primary); border-radius:50%; margin:0 auto 10px; display:flex; align-items:center; justify-content:center; font-weight:bold; font-size:24px; color: white;" id="u-pic">?</div>
+                <h3 id="u-name" style="margin:0;">User</h3>
+                <p id="u-id" style="font-size:12px; color:var(--primary);">#ID</p>
+            </div>
+            <div class="profile-list">
+                <div class="list-item" onclick="toggleAddressBox()"><i class="fas fa-map-marker-alt"></i> <span>Manage Address</span> <i class="fas fa-chevron-down" style="margin-left:auto;"></i></div>
                 <div id="address-box">
-                    <textarea id="address-input" class="address-input" placeholder="Address & Phone..."></textarea>
-                    <button class="btn-view-buy" style="margin-top:10px; background:var(--success);" onclick="saveAddress()">Save</button>
+                    <textarea id="address-input" class="address-input" placeholder="Address & Mobile No..."></textarea>
+                    <button class="btn-view-buy" style="margin-top:10px; background:var(--success);" onclick="saveAddress()">Save Address</button>
                 </div>
-                <div class="list-item" onclick="nav('orders')"><i class="fas fa-box"></i> <span>My Orders</span></div>
-                <div class="list-item" onclick="promptAdminLogin()" style="color:var(--warning);"><i class="fas fa-user-shield"></i> <span>Admin Panel</span></div>
+                <div class="list-item" onclick="nav('orders')"><i class="fas fa-box"></i> <span>My Orders</span> <i class="fas fa-chevron-right" style="margin-left:auto;"></i></div>
+                <div class="list-item" onclick="promptAdminLogin()" style="color:var(--warning);"><i class="fas fa-user-shield"></i> <span>Admin Dashboard</span> <i class="fas fa-chevron-right" style="margin-left:auto;"></i></div>
             </div>
         </div>
 
-        <div id="p-orders" class="page">
-            <div class="section-h">MY ORDER HISTORY</div>
-            <div id="order-list-container"></div>
-        </div>
-
         <div id="p-admin" class="page">
-            <div class="section-h">ADMIN DASHBOARD</div>
+            <div class="section-h">ADMIN CONTROL</div>
             <input type="text" id="adminSearchInput" class="admin-search" placeholder="Search by Order ID or Name..." oninput="searchOrders()">
             <div id="admin-order-list"></div>
+        </div>
+
+        <div id="p-orders" class="page">
+            <div class="section-h">ORDER HISTORY</div>
+            <div id="order-list-container"></div>
         </div>
     </div>
 
     <div class="bottom-nav">
         <div class="nav-item active" onclick="nav('shop')"><i class="fas fa-store"></i>Menu</div>
-        <div class="nav-item" onclick="nav('cart')"><i class="fas fa-shopping-basket"></i>Cart<span class="badge" id="badge">0</span></div>
+        <div class="nav-item" onclick="nav('cart')"><i class="fas fa-shopping-basket"></i>Cart</div>
         <div class="nav-item" onclick="nav('profile')"><i class="fas fa-user-circle"></i>Profile</div>
     </div>
 
@@ -120,7 +124,6 @@
         const tg = window.Telegram.WebApp;
         tg.expand();
 
-        let cart = JSON.parse(localStorage.getItem('eshop_cart')) || [];
         let orders = JSON.parse(localStorage.getItem('eshop_orders')) || [];
 
         function nav(p) {
@@ -130,107 +133,68 @@
             if(p === 'admin') renderAdminOrders();
         }
 
-        // --- Admin Confirmation & Status Logic ---
-        function updateOrderStatus(idx, newStatus) {
-            orders[idx].status = newStatus;
-            localStorage.setItem('eshop_orders', JSON.stringify(orders));
-            tg.showAlert(`Order marked as ${newStatus}`);
-            renderAdminOrders(); // Refresh admin view
+        // Admin Order Management
+        function renderAdminOrders() {
+            const container = document.getElementById('admin-order-list');
+            if(orders.length === 0) { container.innerHTML = '<p style="text-align:center;">No orders.</p>'; return; }
+            
+            container.innerHTML = orders.map((o, idx) => `
+                <div class="order-card" style="background:var(--card); padding:15px; border-radius:12px; margin-bottom:10px; border:1px solid #334155;">
+                    <div style="display:flex; justify-content:space-between;">
+                        <b>ID: #${o.id}</b>
+                        <span class="status-tag" style="background:${o.status === 'Confirmed' ? 'var(--success)' : (o.status === 'Rejected' ? 'var(--danger)' : 'var(--warning)')}">${o.status}</span>
+                    </div>
+                    <p style="font-size:11px; margin:5px 0; color:#94a3b8;">User: ${o.userName}<br>Addr: ${o.address}</p>
+                    <div style="display:flex; gap:8px; margin-top:10px;">
+                        <button onclick="updateStatus(${idx}, 'Confirmed')" style="flex:1; padding:8px; background:var(--success); border:none; border-radius:5px; color:white; font-size:11px;">Confirm</button>
+                        <button onclick="updateStatus(${idx}, 'Rejected')" style="flex:1; padding:8px; background:var(--danger); border:none; border-radius:5px; color:white; font-size:11px;">Reject</button>
+                    </div>
+                </div>
+            `).join('');
         }
 
-        function getStatusColor(status) {
-            if(status === 'Confirmed') return '#22c55e';
-            if(status === 'Rejected') return '#ef4444';
-            return '#f59e0b'; // Pending
+        function updateStatus(idx, status) {
+            orders[idx].status = status;
+            localStorage.setItem('eshop_orders', JSON.stringify(orders));
+            tg.showAlert("Order " + status);
+            renderAdminOrders();
         }
 
         function searchOrders() {
             let val = document.getElementById('adminSearchInput').value.toLowerCase();
-            let items = document.querySelectorAll('#admin-order-list .order-card');
-            items.forEach(item => {
-                item.style.display = item.innerText.toLowerCase().includes(val) ? "block" : "none";
-            });
+            let cards = document.querySelectorAll('#admin-order-list .order-card');
+            cards.forEach(c => c.style.display = c.innerText.toLowerCase().includes(val) ? "block" : "none");
         }
 
-        function renderAdminOrders() {
-            const container = document.getElementById('admin-order-list');
-            if(orders.length === 0) { container.innerHTML = '<p>No orders yet.</p>'; return; }
-            
-            container.innerHTML = orders.map((o, idx) => `
-                <div class="order-card">
-                    <div style="display:flex; justify-content:space-between;">
-                        <b>ID: #${o.id}</b>
-                        <span class="status-tag" style="background:${getStatusColor(o.status)}">${o.status}</span>
-                    </div>
-                    <p style="font-size:11px; color:#94a3b8; margin:5px 0;">Customer: ${o.userName}<br>Addr: ${o.address}</p>
-                    <div class="action-btns">
-                        <button class="btn-status" style="background:var(--success);" onclick="updateOrderStatus(${idx}, 'Confirmed')"><i class="fas fa-check"></i> Confirm</button>
-                        <button class="btn-status" style="background:var(--danger);" onclick="updateOrderStatus(${idx}, 'Rejected')"><i class="fas fa-times"></i> Reject</button>
-                        <button class="btn-status" style="background:#475569;" onclick="deleteOrder(${idx})"><i class="fas fa-trash"></i></button>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        // --- User Order View ---
         function renderOrders() {
             const container = document.getElementById('order-list-container');
             container.innerHTML = orders.map(o => `
-                <div class="order-card" style="border-left: 4px solid ${getStatusColor(o.status)}">
-                    <div style="display:flex; justify-content:space-between;">
-                        <b>Order #${o.id}</b>
-                        <span style="color:${getStatusColor(o.status)}; font-weight:bold;">${o.status}</span>
-                    </div>
-                    <p style="font-size:12px; margin-top:5px;">${o.status === 'Confirmed' ? '✅ Your order is being processed.' : (o.status === 'Rejected' ? '❌ Order Cancelled.' : '⏳ Waiting for admin approval.')}</p>
+                <div class="order-card" style="background:var(--card); padding:15px; border-radius:12px; margin-bottom:10px; border-left:4px solid ${o.status === 'Confirmed' ? 'var(--success)' : 'var(--warning)'}">
+                    <b>Order #${o.id}</b> - <span style="color:var(--primary)">${o.status}</span>
                 </div>
             `).join('');
         }
 
-        function deleteOrder(idx) {
-            if(confirm("Delete this order record?")) {
-                orders.splice(idx, 1);
-                localStorage.setItem('eshop_orders', JSON.stringify(orders));
-                renderAdminOrders();
-            }
-        }
-
-        function promptAdminLogin() {
-            let n = prompt("Admin Name:");
-            if(n === "zoha") {
-                let c = prompt("Admin Code:");
-                if(c === "22446688") nav('admin');
-            }
-        }
-
-        // Address Toggle
         function toggleAddressBox() {
-            let box = document.getElementById('address-box');
-            box.style.display = box.style.display === 'block' ? 'none' : 'block';
+            let b = document.getElementById('address-box');
+            b.style.display = b.style.display === 'block' ? 'none' : 'block';
         }
 
         function saveAddress() {
             localStorage.setItem('user_address', document.getElementById('address-input').value);
-            tg.showAlert("Address Saved!");
-            toggleAddressBox();
+            tg.showAlert("Saved!"); toggleAddressBox();
         }
 
-        function placeOrder() {
-            const addr = localStorage.getItem('user_address');
-            if(!addr) { tg.showAlert("Add address in Profile first!"); return; }
-            
-            const newOrder = {
-                id: Math.floor(1000 + Math.random() * 9000),
-                items: [...cart],
-                status: 'Pending',
-                address: addr,
-                userName: tg.initDataUnsafe.user?.first_name || "User"
-            };
-            orders.unshift(newOrder);
-            localStorage.setItem('eshop_orders', JSON.stringify(orders));
-            cart = [];
-            localStorage.removeItem('eshop_cart');
-            tg.showAlert("Order Placed Successfully!");
-            nav('orders');
+        function promptAdminLogin() {
+            if(prompt("Name:") === "zoha" && prompt("Code:") === "22446688") nav('admin');
+        }
+
+        // Profile Init
+        const user = tg.initDataUnsafe.user;
+        if(user) {
+            document.getElementById('u-name').innerText = user.first_name;
+            document.getElementById('u-id').innerText = "#" + user.id;
+            document.getElementById('u-pic').innerText = user.first_name[0];
         }
     </script>
 </body>
