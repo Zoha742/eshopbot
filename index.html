@@ -13,30 +13,25 @@
         .page { display:none; } .page.active { display:block; animation: fadeIn 0.3s ease; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* General Header */
-        .section-h { display:flex; align-items:center; gap:8px; color:var(--primary); font-size:12px; font-weight:800; margin:20px 0 10px; border-left:3px solid var(--primary); padding-left:8px; text-transform:uppercase; letter-spacing: 0.5px; }
+        /* Headers & Grid */
+        .section-h { display:flex; align-items:center; gap:8px; color:var(--primary); font-size:12px; font-weight:800; margin:20px 0 10px; border-left:3px solid var(--primary); padding-left:8px; text-transform:uppercase; }
         .grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
-        
-        /* Category Button */
-        .btn-cat { background:var(--card); padding:14px; border-radius:12px; text-align:center; border:1px solid #334155; font-size:12px; font-weight:600; cursor:pointer; transition: all 0.2s ease; display:flex; align-items:center; justify-content:center; gap:5px; color: white; }
-        .btn-cat:active { transform: scale(0.96); background: rgba(56, 189, 248, 0.1); border-color: var(--primary); }
+        .btn-cat { background:var(--card); padding:14px; border-radius:12px; text-align:center; border:1px solid #334155; font-size:12px; font-weight:600; cursor:pointer; color: white; display:flex; align-items:center; justify-content:center; gap:5px; }
 
-        /* Fixed Product Card View */
+        /* Product Cards (Fixed Image Header) */
         .product-grid { display:grid; grid-template-columns: 1fr 1fr; gap:12px; padding:10px 0; }
         .p-card { background: #ffffff; border-radius:15px; overflow:hidden; color: #333; position:relative; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
-        .p-img-box { width:100%; height:170px; background:#f3f4f6; position:relative; display:flex; align-items:center; justify-content:center; overflow: hidden; }
+        .p-img-box { width:100%; height:170px; background:#f3f4f6; display:flex; align-items:center; justify-content:center; overflow: hidden; }
         .p-img-box img { max-width:100%; max-height:100%; object-fit: contain; }
         
-        /* Wishlist Heart Icon */
-        .fav-btn { position:absolute; top:10px; right:10px; background:rgba(255,255,255,0.9); width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#b0bec5; font-size:16px; cursor:pointer; z-index:10; border: 1px solid #e0e0e0; }
+        .fav-btn { position:absolute; top:10px; right:10px; background:rgba(255,255,255,0.9); width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#b0bec5; cursor:pointer; z-index:10; }
         .fav-btn.active { color: var(--danger); }
-        
         .p-details { padding:12px; text-align:center; }
         .p-name { font-size:13px; font-weight:700; color: #1e293b; margin:2px 0 6px; }
         .p-price { font-size:15px; font-weight:800; color: var(--primary); margin-bottom:10px; }
         .btn-view-buy { background: var(--primary); color: white; border: none; width: 100%; padding: 10px; border-radius: 8px; font-size: 12px; font-weight: bold; cursor: pointer; }
 
-        /* Fixed Detail Modal with Scroll */
+        /* Fixed Detail Modal */
         #modal { position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:2000; display:none; flex-direction:column; backdrop-filter: blur(5px); }
         .modal-body { flex: 1; display: flex; flex-direction: column; overflow-y: auto; }
         .modal-image-container { position: relative; width: 100%; background: #000; display: flex; align-items: center; justify-content: center; padding: 20px 0; }
@@ -44,26 +39,18 @@
         .close-modal { position:absolute; top:20px; right:20px; font-size:20px; color:white; background:rgba(0,0,0,0.6); width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer; z-index:100; }
         .modal-details-panel { background: var(--card); padding: 25px; border-radius: 25px 25px 0 0; margin-top: -20px; position: relative; z-index: 10; border-top: 1px solid #334155; }
         
-        .status-tag { display:inline-block; padding:5px 12px; border-radius:20px; font-size:11px; font-weight:bold; margin-bottom:12px; color: white; }
-        .size-box { display:flex; gap:12px; margin:15px 0 25px; }
-        .size-btn { border: 1px solid #334155; padding: 10px 18px; border-radius: 10px; cursor: pointer; color: white; background: #0f172a; }
-        .size-btn.active { border-color: var(--primary); background: rgba(56, 189, 248, 0.15); color: var(--primary); }
-
-        /* Profile & List Items */
+        /* Profile & Bottom Nav */
         .u-header { text-align:center; padding:25px 0; background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%); border-radius: 15px; margin-bottom: 20px; border: 1px solid #334155; }
         .profile-list { background:var(--card); border-radius:15px; border: 1px solid #334155; overflow: hidden; }
         .list-item { display:flex; align-items:center; padding:18px; border-bottom:1px solid #334155; gap:15px; cursor:pointer; }
-        .list-item i { width: 22px; color: #94a3b8; font-size: 18px; text-align: center; }
-        .list-item span { flex: 1; font-size: 14px; font-weight: 500; color: #e2e8f0; }
-
-        /* Navigation */
         .bottom-nav { position:fixed; bottom:0; width:100%; max-width: 600px; left: 50%; transform: translateX(-50%); background:#1e293b; display:flex; height:75px; border-top:1px solid #334155; z-index:1000; }
         .nav-item { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; color:#94a3b8; font-size:11px; cursor:pointer; position: relative; }
         .nav-item.active { color:var(--primary); }
         .badge { position:absolute; top:12px; right:30%; background:var(--danger); color:white; font-size:10px; min-width:17px; height:17px; border-radius:50%; display:none; align-items:center; justify-content:center; font-weight: 800; }
-
-        /* Order Card */
+        
+        /* Order Cards */
         .order-card { background:var(--card); padding:15px; border-radius:12px; margin-bottom:15px; border:1px solid #334155; }
+        .status-tag { display:inline-block; padding:5px 12px; border-radius:20px; font-size:11px; font-weight:bold; color: white; }
     </style>
 </head>
 <body>
@@ -124,10 +111,14 @@
             <div id="cart-summary" style="background:var(--card); padding:20px; border-radius:15px; margin-top:20px;">
                 <div style="display:flex; justify-content:space-between; margin-bottom:5px;"><span>Subtotal:</span><b id="subtotal">$0</b></div>
                 <div style="display:flex; justify-content:space-between; margin-bottom:10px;"><span>Delivery:</span><b>$2</b></div>
-                <div style="display:flex; justify-content:space-between; font-size:18px; color:var(--primary); border-top:1px solid #334155; padding-top:10px;">
+                <div style="display:flex; justify-content:space-between; font-size:18px; color:var(--primary); border-top:1px solid #334155; padding-top:10px; margin-bottom:15px;">
                     <b>Total:</b><b id="total-price">$0</b>
                 </div>
-                <button class="btn-view-buy" style="height:48px; margin-top:18px;" onclick="placeOrder()">PLACE ORDER</button>
+                
+                <button id="pay-btn" class="btn-view-buy" style="height:48px; background:#f59e0b; margin-bottom:10px;" onclick="handlePayment()">
+                    <i class="fas fa-credit-card"></i> PAY NOW (Online)
+                </button>
+                <button class="btn-view-buy" style="height:48px;" onclick="placeOrder()">CASH ON DELIVERY</button>
             </div>
         </div>
 
@@ -140,17 +131,34 @@
             <div class="profile-list">
                 <div class="list-item" onclick="nav('orders')"><i class="fas fa-box"></i> <span>My Orders</span> <i class="fas fa-chevron-right"></i></div>
                 <div class="list-item" onclick="nav('wishlist')"><i class="fas fa-heart"></i> <span>My Wishlist</span> <i class="fas fa-chevron-right"></i></div>
-                <div class="list-item" onclick="openAdmin()"><i class="fas fa-user-shield"></i> <span>Admin Control (Simulation)</span> <i class="fas fa-chevron-right"></i></div>
+                <div class="list-item" onclick="promptAdminLogin()" style="border-top: 1px dashed #334155; margin-top:10px;">
+                    <i class="fas fa-user-shield" style="color:var(--warning);"></i> 
+                    <span style="color:var(--warning);">Admin Dashboard</span> 
+                    <i class="fas fa-chevron-right"></i>
+                </div>
             </div>
         </div>
 
         <div id="p-orders" class="page">
             <div style="display:flex; align-items:center; gap:12px; margin-bottom:18px;">
                 <i class="fas fa-arrow-left" onclick="nav('profile')" style="cursor:pointer;"></i>
-                <h3 style="margin:0;">My Orders</h3>
+                <h3 style="margin:0;">Order History</h3>
             </div>
             <div id="order-list-container"></div>
             <div id="orders-empty" style="text-align:center; padding:50px 0; color: #94a3b8; display:none;">No orders yet.</div>
+        </div>
+
+        <div id="p-admin" class="page">
+            <div style="display:flex; align-items:center; gap:12px; margin-bottom:18px;">
+                <i class="fas fa-arrow-left" onclick="nav('profile')" style="cursor:pointer;"></i>
+                <h3 style="margin:0;">Admin Control</h3>
+            </div>
+            <div class="grid" style="margin-bottom:20px;">
+                <div class="btn-cat" onclick="tg.showAlert('Stats: Total Sales Coming Soon')"><i class="fas fa-chart-line"></i> Sales Info</div>
+                <div class="btn-cat" onclick="tg.showAlert('Feature: Manage Products Coming Soon')"><i class="fas fa-edit"></i> Edit Items</div>
+            </div>
+            <div class="section-h">Manage Recent Orders</div>
+            <div id="admin-order-list"></div>
         </div>
 
         <div id="p-wishlist" class="page">
@@ -184,10 +192,7 @@
 
     <div class="bottom-nav">
         <div class="nav-item active" onclick="nav('shop')"><i class="fas fa-store"></i>Menu</div>
-        <div class="nav-item" onclick="nav('cart')">
-            <i class="fas fa-shopping-basket"></i>Cart
-            <span class="badge" id="badge">0</span>
-        </div>
+        <div class="nav-item" onclick="nav('cart')"><i class="fas fa-shopping-basket"></i>Cart<span class="badge" id="badge">0</span></div>
         <div class="nav-item" onclick="nav('profile')"><i class="fas fa-user-circle"></i>Profile</div>
     </div>
 
@@ -195,12 +200,17 @@
         const tg = window.Telegram.WebApp;
         tg.expand();
 
+        // ADMIN CREDENTIALS
+        const ADMIN_NAME = "zoha";
+        const ADMIN_CODE = "22446688";
+
         const BASE_IMG = "https://raw.githubusercontent.com/Zoha742/eshopbot/main/products/";
         let cart = JSON.parse(localStorage.getItem('eshop_cart')) || [];
         let wishlist = JSON.parse(localStorage.getItem('eshop_wishlist')) || [];
         let orders = JSON.parse(localStorage.getItem('eshop_orders')) || [];
         let currentItem = {};
 
+        // NAVIGATION
         function nav(p) {
             document.querySelectorAll('.page').forEach(pg => pg.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(ni => ni.classList.remove('active'));
@@ -209,10 +219,28 @@
             if(p === 'cart') { document.querySelectorAll('.nav-item')[1].classList.add('active'); renderCart(); }
             if(p === 'profile') document.querySelectorAll('.nav-item')[2].classList.add('active');
             if(p === 'orders') renderOrders();
+            if(p === 'admin') renderAdminOrders();
             if(p === 'wishlist') renderWishlist();
             window.scrollTo(0, 0);
         }
 
+        // ADMIN LOGIN LOGIC
+        function promptAdminLogin() {
+            // Using prompt for simplicity as requested
+            const name = prompt("Enter Admin Name:");
+            if (name === ADMIN_NAME) {
+                const code = prompt("Enter Admin Code:");
+                if (code === ADMIN_CODE) {
+                    nav('admin');
+                } else {
+                    tg.showAlert("Wrong Code!");
+                }
+            } else if(name != null) {
+                tg.showAlert("Wrong Admin Name!");
+            }
+        }
+
+        // --- PRODUCT & CART LOGIC ---
         function openList(path, title) {
             const grid = document.getElementById('product-grid');
             grid.innerHTML = '';
@@ -227,7 +255,7 @@
                             <div class="fav-btn ${isFav?'active':''}" onclick="toggleWishlist('${pId}','${img}','${title} #${i}',event)">
                                 <i class="${isFav?'fas':'far'} fa-heart"></i>
                             </div>
-                            <img src="${img}" onerror="this.src='https://via.placeholder.com/150'">
+                            <img src="${img}" onerror="this.src='https://raw.githubusercontent.com/Zoha742/eshopbot/main/products/no-image.jpg'">
                         </div>
                         <div class="p-details">
                             <div class="p-name">${title} #${i}</div>
@@ -248,19 +276,12 @@
         }
 
         function closeModal() { document.getElementById('modal').style.display = 'none'; document.body.style.overflow = ''; }
-
-        function setSize(el, s) {
-            document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
-            el.classList.add('active');
-            currentItem.size = s;
-        }
+        function setSize(el, s) { document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active')); el.classList.add('active'); currentItem.size = s; }
 
         function addToCart() {
             cart.push({...currentItem, cartId: Date.now()});
             localStorage.setItem('eshop_cart', JSON.stringify(cart));
-            updateBadge();
-            tg.showAlert('Added to Cart!');
-            closeModal();
+            updateBadge(); tg.showAlert('Added to Cart!'); closeModal();
         }
 
         function updateBadge() {
@@ -286,30 +307,26 @@
             document.getElementById('total-price').innerText = '$' + (sub + 2);
         }
 
-        function removeItem(idx) {
-            cart.splice(idx, 1);
-            localStorage.setItem('eshop_cart', JSON.stringify(cart));
-            renderCart(); updateBadge();
+        function removeItem(idx) { cart.splice(idx, 1); localStorage.setItem('eshop_cart', JSON.stringify(cart)); renderCart(); updateBadge(); }
+
+        function handlePayment() {
+            // // Payment logic placeholder as requested
+            tg.showAlert("Online Payment Feature is coming soon.");
         }
 
-        // --- NEW: ORDER LOGIC ---
+        // --- ORDER LOGIC ---
         function placeOrder() {
             if(cart.length === 0) return;
-            tg.showConfirm('Place this order?', (ok) => {
+            tg.showConfirm('Place order with Cash on Delivery?', (ok) => {
                 if(ok) {
                     const orderId = 'ORD-' + Math.floor(1000 + Math.random() * 9000);
                     const newOrder = {
-                        id: orderId,
-                        items: [...cart],
-                        total: cart.length * 15 + 2,
-                        status: 'Pending',
-                        date: new Date().toLocaleDateString()
+                        id: orderId, items: [...cart], total: cart.length * 15 + 2,
+                        status: 'Pending', date: new Date().toLocaleDateString()
                     };
                     orders.unshift(newOrder);
                     localStorage.setItem('eshop_orders', JSON.stringify(orders));
-                    cart = [];
-                    localStorage.removeItem('eshop_cart');
-                    updateBadge();
+                    cart = []; localStorage.removeItem('eshop_cart'); updateBadge();
                     tg.showAlert('Order Placed! ID: ' + orderId);
                     nav('orders');
                 }
@@ -330,55 +347,84 @@
                     <div style="font-size:13px; color:#e2e8f0; margin-bottom:10px;">${order.items.map(i => i.title).join(', ')}</div>
                     <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid #334155; padding-top:10px;">
                         <b>Total: $${order.total}</b>
-                        <span class="status-tag" style="background:${order.status==='Confirmed'? 'var(--success)':'var(--warning)'}; margin:0;">${order.status}</span>
+                        <div>
+                            <span class="status-tag" style="background:${order.status==='Confirmed'?'var(--success)':'var(--warning)'}; margin:0;">${order.status}</span>
+                            ${order.status === 'Pending' ? `<button onclick="cancelOrder('${order.id}')" style="background:none; border:none; color:var(--danger); font-size:11px; margin-left:10px; cursor:pointer;">Cancel</button>` : ''}
+                        </div>
                     </div>
                 </div>`).join('');
         }
 
-        // --- ADMIN SIMULATION ---
-        function openAdmin() {
-            if(orders.length === 0) { tg.showAlert('No orders found.'); return; }
-            tg.showConfirm('Confirm the most recent order (# ' + orders[0].id + ')?', (ok) => {
+        function cancelOrder(id) {
+            tg.showConfirm("Cancel this order?", (ok) => {
                 if(ok) {
-                    orders[0].status = 'Confirmed';
+                    orders = orders.filter(o => o.id !== id);
                     localStorage.setItem('eshop_orders', JSON.stringify(orders));
-                    tg.showAlert('Order Confirmed!');
-                    if(document.getElementById('p-orders').classList.contains('active')) renderOrders();
+                    renderOrders();
                 }
             });
         }
 
-        // --- WISHLIST LOGIC ---
-        function toggleWishlist(id, img, title, e) {
-            e.stopPropagation();
-            const idx = wishlist.findIndex(w => w.id === id);
-            if(idx > -1) { wishlist.splice(idx, 1); }
-            else { wishlist.push({id, img, title}); }
-            localStorage.setItem('eshop_wishlist', JSON.stringify(wishlist));
-            tg.showAlert(idx > -1 ? 'Removed from Wishlist' : 'Added to Wishlist');
-            // Refresh current view if needed
-        }
-
-        function renderWishlist() {
-            const grid = document.getElementById('wishlist-grid');
-            if(wishlist.length === 0) { grid.innerHTML = '<p style="text-align:center; width:100%; color:#94a3b8;">Wishlist is empty</p>'; return; }
-            grid.innerHTML = wishlist.map(item => `
-                <div class="p-card">
-                    <div class="p-img-box">
-                        <img src="${item.img}">
+        // --- ADMIN PANEL FUNCTIONS ---
+        function renderAdminOrders() {
+            const container = document.getElementById('admin-order-list');
+            if(orders.length === 0) { container.innerHTML = '<p style="text-align:center; padding:20px;">No orders to manage.</p>'; return; }
+            container.innerHTML = orders.map((order, idx) => `
+                <div class="order-card" style="border-left: 4px solid ${order.status==='Confirmed'?'var(--success)':'var(--warning)'}">
+                    <div style="display:flex; justify-content:space-between;">
+                        <b>ID: #${order.id}</b>
+                        <button onclick="confirmOrderAdmin(${idx})" style="padding:4px 10px; background:var(--success); color:white; border:none; border-radius:4px; font-size:11px;">Confirm</button>
                     </div>
-                    <div class="p-details">
-                        <div class="p-name">${item.title}</div>
-                        <button class="btn-view-buy" onclick="openDetail('${item.img}', '${item.title}')">View</button>
+                    <p style="font-size:12px; margin:5px 0;">Items: ${order.items.map(i => i.title).join(', ')}</p>
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <span style="font-size:12px;">Total: $${order.total}</span>
+                        <button onclick="deleteOrderAdmin(${idx})" style="background:none; border:none; color:var(--danger); font-size:11px;">Delete</button>
                     </div>
                 </div>`).join('');
         }
 
-        // Init User
+        function confirmOrderAdmin(idx) {
+            orders[idx].status = 'Confirmed';
+            localStorage.setItem('eshop_orders', JSON.stringify(orders));
+            tg.showAlert('Order #' + orders[idx].id + ' Confirmed!');
+            renderAdminOrders();
+        }
+
+        function deleteOrderAdmin(idx) {
+            tg.showConfirm("Delete this record permanently?", (ok) => {
+                if(ok) { orders.splice(idx, 1); localStorage.setItem('eshop_orders', JSON.stringify(orders)); renderAdminOrders(); }
+            });
+        }
+
+        // --- WISHLIST ---
+        function toggleWishlist(id, img, title, e) {
+            e.stopPropagation();
+            const idx = wishlist.findIndex(w => w.id === id);
+            if(idx > -1) { wishlist.splice(idx, 1); } else { wishlist.push({id, img, title}); }
+            localStorage.setItem('eshop_wishlist', JSON.stringify(wishlist));
+            tg.showAlert(idx > -1 ? 'Removed from Wishlist' : 'Added to Wishlist');
+            // Update heart icon color
+            e.currentTarget.classList.toggle('active');
+            const icon = e.currentTarget.querySelector('i');
+            icon.classList.toggle('fas'); icon.classList.toggle('far');
+        }
+
+        function renderWishlist() {
+            const grid = document.getElementById('wishlist-grid');
+            if(wishlist.length === 0) { grid.innerHTML = '<p style="text-align:center; width:100%; color:#94a3b8;">Empty</p>'; return; }
+            grid.innerHTML = wishlist.map(item => `
+                <div class="p-card">
+                    <div class="p-img-box"><img src="${item.img}"></div>
+                    <div class="p-details"><div class="p-name">${item.title}</div>
+                    <button class="btn-view-buy" onclick="openDetail('${item.img}', '${item.title}')">View</button></div>
+                </div>`).join('');
+        }
+
+        // INIT USER
         updateBadge();
         const user = tg.initDataUnsafe.user;
         if(user) {
-            document.getElementById('u-name').innerText = user.first_name;
+            document.getElementById('u-name').innerText = user.first_name + (user.last_name ? ' ' + user.last_name : '');
             document.getElementById('u-id').innerText = "#" + user.id;
             document.getElementById('u-pic').innerText = user.first_name[0].toUpperCase();
         }
