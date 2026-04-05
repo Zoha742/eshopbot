@@ -7,58 +7,63 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --primary: #38bdf8; --bg: #0f172a; --card: #1e293b; --text: #f8fafc; --danger: #ef4444; --success: #22c55e; --warning: #f59e0b; }
+        :root { --primary: #38bdf8; --bg: #0f172a; --card: #1e293b; --text: #f8fafc; --danger: #ef4444; --success: #22c55e; }
         body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); margin:0; padding:0; overflow-x: hidden; }
         .container { padding:15px; padding-bottom:100px; max-width: 600px; margin: 0 auto; }
         .page { display:none; } .page.active { display:block; animation: fadeIn 0.3s ease; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* Store Design */
+        /* iteam.txt design sections */
         .section-h { display:flex; align-items:center; gap:8px; color:var(--primary); font-size:12px; font-weight:800; margin:20px 0 10px; border-left:3px solid var(--primary); padding-left:8px; text-transform:uppercase; }
         .grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
         .btn-cat { background:var(--card); padding:14px; border-radius:12px; text-align:center; border:1px solid #334155; font-size:12px; font-weight:600; cursor:pointer; color: white; display:flex; align-items:center; justify-content:center; gap:5px; }
 
-        /* Product Cards */
-        .product-grid { display:grid; grid-template-columns: 1fr 1fr; gap:12px; padding:10px 0; }
-        .p-card { background: #ffffff; border-radius:15px; overflow:hidden; color: #333; position:relative; }
-        .p-img-box { width:100%; height:160px; background:#f3f4f6; display:flex; align-items:center; justify-content:center; }
-        .p-img-box img { max-width:100%; max-height:100%; object-fit: contain; }
-        .p-info { padding:10px; text-align:center; }
-        .size-box { display:flex; justify-content:center; gap:4px; margin:8px 0; flex-wrap: wrap; }
-        .size-btn { border:1px solid #ccc; padding:3px 5px; font-size:9px; border-radius:4px; cursor:pointer; min-width: 25px; }
-        .size-btn.selected { background:var(--primary); color:white; border-color:var(--primary); }
-        .btn-buy { background: var(--primary); color: white; border: none; width: 100%; padding: 8px; border-radius: 6px; font-weight: bold; cursor: pointer; }
-
-        /* Cart & Orders */
+        /* Cart Summary Box */
         .cart-summary { background: var(--card); padding: 15px; border-radius: 12px; margin-top: 15px; border: 1px solid #334155; }
         .summary-line { display: flex; justify-content: space-between; margin-bottom: 5px; font-size: 14px; }
-        .order-card { background:var(--card); padding:12px; border-radius:12px; margin-bottom:12px; border: 1px solid #334155; }
         
-        /* Nav */
+        /* Fixed Bottom Nav (আপনার অরিজিনাল স্টাইল) */
         .bottom-nav { position:fixed; bottom:0; width:100%; max-width: 600px; left: 50%; transform: translateX(-50%); background:#1e293b; display:flex; height:70px; border-top:1px solid #334155; z-index:1000; }
         .nav-item { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; color:#94a3b8; font-size:11px; cursor:pointer; }
         .nav-item.active { color:var(--primary); }
+
+        /* Order Cards */
+        .order-card { background:var(--card); padding:12px; border-radius:12px; margin-bottom:12px; border: 1px solid #334155; }
+        
+        /* XXL Button Fix */
+        .size-box { display:flex; justify-content:center; gap:4px; margin:8px 0; }
+        .size-btn { border:1px solid #ccc; padding:3px 5px; font-size:10px; border-radius:4px; cursor:pointer; background: white; color: #333; }
+        .size-btn.selected { background:var(--primary); color:white; }
+        .btn-buy { background: var(--primary); color: white; border: none; width: 100%; padding: 10px; border-radius: 8px; font-weight: bold; }
     </style>
 </head>
 <body>
 
     <div class="container">
         <div id="p-shop" class="page active">
-            <div class="section-h"><i class="fas fa-bolt"></i> HOT DEALS [cite: 1]</div>
+            <div class="section-h"><i class="fas fa-bolt"></i> HOT DEALS</div>
             <div class="grid">
-                <div class="btn-cat" onclick="openP('hotdeals/summer/', 'Summer Offer')">☀️ Summer Offer [cite: 1]</div>
-                <div class="btn-cat" onclick="openP('hotdeals/sale/', 'Big Sale')">🎁 Big Sale [cite: 1]</div>
+                <div class="btn-cat" onclick="openP('hotdeals/summer/', 'Summer Offer')">☀️ Summer Offer</div>
+                <div class="btn-cat" onclick="openP('hotdeals/sale/', 'Big Sale')">🎁 Big Sale</div>
             </div>
-            <div class="section-h"><i class="fas fa-tshirt"></i> T-SHIRTS [cite: 1]</div>
-            <div class="grid">
-                <div class="btn-cat" onclick="openP('tshirts/printed/', 'Printed T-shirt')">Printed [cite: 1]</div>
-                <div class="btn-cat" onclick="openP('tshirts/polo/', 'Polo T-shirt')">Polo [cite: 1]</div>
-            </div>
-        </div>
 
-        <div id="p-list" class="page">
-            <div style="display:flex; align-items:center; gap:12px; margin-bottom:15px;"><i class="fas fa-arrow-left" onclick="nav('shop')"></i><h3 id="list-title">Products</h3></div>
-            <div id="product-grid" class="product-grid"></div>
+            <div class="section-h"><i class="fas fa-tshirt"></i> T-SHIRTS</div>
+            <div class="grid">
+                <div class="btn-cat" onclick="openP('tshirts/printed/', 'Printed T-shirt')">Printed</div>
+                <div class="btn-cat" onclick="openP('tshirts/polo/', 'Polo T-shirt')">Polo</div>
+            </div>
+
+            <div class="section-h"><i class="fas fa-user-tie"></i> SHIRTS</div>
+            <div class="grid">
+                <div class="btn-cat" onclick="openP('shirt/formal/', 'Formal Shirt')">Formal</div>
+                <div class="btn-cat" onclick="openP('shirt/casual/', 'Casual Shirt')">Casual</div>
+            </div>
+
+            <div class="section-h"><i class="fas fa-vest"></i> PANTS</div>
+            <div class="grid">
+                <div class="btn-cat" onclick="openP('pants/jeans/', 'Jeans Pant')">Jeans</div>
+                <div class="btn-cat" onclick="openP('pants/gabardine/', 'Gabardine')">Gabardine</div>
+            </div>
         </div>
 
         <div id="p-cart" class="page">
@@ -71,119 +76,96 @@
                     <hr style="border: 0.5px solid #334155; margin: 10px 0;">
                     <div class="summary-line" style="font-weight: bold; color: var(--primary);"><span>Total:</span> <span id="total-price">৳0</span></div>
                 </div>
-                <button class="btn-buy" style="height:45px; font-size:16px; margin-top: 15px;" onclick="placeOrder()">CONFIRM ORDER</button>
+                <button class="btn-buy" style="margin-top: 15px;" onclick="placeOrder()">CONFIRM ORDER</button>
             </div>
-            <div id="cart-empty" style="text-align:center; padding:50px; color:#94a3b8;">Cart is empty.</div>
         </div>
 
         <div id="p-orders" class="page">
-            <div class="section-h">MY ORDER HISTORY</div>
+            <div class="section-h">MY ORDERS</div>
             <div id="order-history-list"></div>
         </div>
 
         <div id="p-profile" class="page">
-            <div class="profile-list">
-                <div class="list-item" onclick="nav('orders')"><i class="fas fa-box"></i> <span>My Orders</span></div>
-                </div>
+            <div class="section-h">PROFILE</div>
+            <div class="grid">
+                <div class="btn-cat" onclick="nav('orders')">Order History</div>
+                <div class="btn-cat" onclick="promptAdmin()" style="color:var(--danger)">Admin Login</div>
+            </div>
         </div>
     </div>
 
     <div class="bottom-nav">
-        <div class="nav-item active" onclick="nav('shop')"><i class="fas fa-store"></i>Menu</div>
-        <div class="nav-item" onclick="nav('cart')"><i class="fas fa-shopping-basket"></i>Cart</div>
-        <div class="nav-item" onclick="nav('orders')"><i class="fas fa-box"></i>Orders</div>
-        <div class="nav-item" onclick="nav('profile')"><i class="fas fa-user-circle"></i>Profile</div>
+        <div class="nav-item active" id="nav-shop" onclick="nav('shop')"><i class="fas fa-store"></i>Menu</div>
+        <div class="nav-item" id="nav-cart" onclick="nav('cart')"><i class="fas fa-shopping-basket"></i>Cart</div>
+        <div class="nav-item" id="nav-orders" onclick="nav('orders')"><i class="fas fa-box"></i>Orders</div>
+        <div class="nav-item" id="nav-profile" onclick="nav('profile')"><i class="fas fa-user-circle"></i>Profile</div>
     </div>
 
     <script>
         const tg = window.Telegram.WebApp;
         let cart = [];
         let orders = JSON.parse(localStorage.getItem('eshop_orders')) || [];
-        const DELIVERY_CHARGE = 60;
+        const DELIVERY = 60;
 
         function nav(p) {
             document.querySelectorAll('.page').forEach(pg => pg.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(ni => ni.classList.remove('active'));
+            
             document.getElementById('p-' + p).classList.add('active');
+            document.getElementById('nav-' + p).classList.add('active');
+
             if(p === 'cart') renderCart();
             if(p === 'orders') renderOrderHistory();
         }
 
         function renderCart() {
             const cont = document.getElementById('cart-items');
-            const summaryBox = document.getElementById('cart-summary-box');
-            const empty = document.getElementById('cart-empty');
-            
-            if(cart.length === 0) {
-                cont.innerHTML = '';
-                summaryBox.style.display = 'none';
-                empty.style.display = 'block';
-                return;
-            }
-
-            empty.style.display = 'none';
-            summaryBox.style.display = 'block';
-            
-            let subtotal = 0;
+            const summary = document.getElementById('cart-summary-box');
+            if(cart.length === 0) { cont.innerHTML = '<p style="text-align:center">Cart empty</p>'; summary.style.display = 'none'; return; }
+            summary.style.display = 'block';
+            let sub = 0;
             cont.innerHTML = cart.map((it, idx) => {
-                subtotal += it.price;
+                sub += it.price;
                 return `<div style="display:flex; align-items:center; gap:10px; background:var(--card); padding:10px; border-radius:10px; margin-bottom:10px;">
-                    <img src="${it.img}" style="width:40px; height:40px; border-radius:5px;">
-                    <div style="flex:1; font-size:12px;">${it.title} (${it.size})<br>৳${it.price}</div>
-                    <i class="fas fa-trash" style="color:var(--danger);" onclick="removeFromCart(${idx})"></i>
+                    <div style="flex:1;">${it.title} (Size: ${it.size})<br>৳${it.price}</div>
+                    <i class="fas fa-trash" onclick="cart.splice(${idx},1);renderCart();"></i>
                 </div>`;
             }).join('');
-
-            document.getElementById('subtotal').innerText = '৳' + subtotal;
-            document.getElementById('total-price').innerText = '৳' + (subtotal + DELIVERY_CHARGE);
+            document.getElementById('subtotal').innerText = '৳' + sub;
+            document.getElementById('total-price').innerText = '৳' + (sub + DELIVERY);
         }
 
         function placeOrder() {
-            const addr = localStorage.getItem('user_address');
-            if(!addr) { tg.showAlert("Please add address in Profile!"); return; }
-            
-            let subtotal = cart.reduce((sum, item) => sum + item.price, 0);
-            const newOrder = {
-                id: 'ORD' + Math.floor(1000 + Math.random() * 9000),
-                items: [...cart],
-                total: subtotal + DELIVERY_CHARGE,
-                status: 'Pending',
-                date: new Date().toLocaleString()
+            let sub = cart.reduce((s, i) => s + i.price, 0);
+            const ord = { 
+                id: 'ORD'+Math.floor(1000+Math.random()*9000), 
+                items: [...cart], 
+                total: sub + DELIVERY,
+                status: 'Pending', 
+                customer: tg.initDataUnsafe.user?.first_name || "User"
             };
-
-            orders.unshift(newOrder);
+            orders.unshift(ord);
             localStorage.setItem('eshop_orders', JSON.stringify(orders));
             cart = [];
-            tg.showAlert("Order confirmed!");
+            tg.showAlert("Order Placed!"); 
             nav('orders');
         }
 
         function renderOrderHistory() {
             const cont = document.getElementById('order-history-list');
-            if(orders.length === 0) {
-                cont.innerHTML = '<p style="text-align:center; padding:20px;">No orders found.</p>';
-                return;
-            }
             cont.innerHTML = orders.map(o => `
                 <div class="order-card">
-                    <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
-                        <b>#${o.id}</b>
-                        <span style="color:var(--primary); font-size:12px;">${o.status}</span>
+                    <div style="display:flex; justify-content:space-between;"><b>#${o.id}</b> <span style="color:var(--primary);">${o.status}</span></div>
+                    <div style="font-size:11px; margin-top:5px;">
+                        ${o.items.map(i => `• ${i.title} (${i.size}) - ৳${i.price}`).join('<br>')}
                     </div>
-                    <div style="font-size:11px; color:#cbd5e1; margin-bottom:8px;">Date: ${o.date}</div>
-                    <div style="background:#0f172a; padding:8px; border-radius:8px; margin-bottom:8px;">
-                        ${o.items.map(i => `<div style="font-size:11px;">- ${i.title} (${i.size}) - ৳${i.price}</div>`).join('')}
-                    </div>
-                    <div style="text-align:right; font-weight:bold; color:var(--primary);">Total Paid: ৳${o.total}</div>
-                </div>
-            `).join('');
+                    <div style="text-align:right; font-weight:bold; margin-top:8px;">Total Paid: ৳${o.total}</div>
+                </div>`).join('');
         }
 
-        function removeFromCart(idx) {
-            cart.splice(idx, 1);
-            renderCart();
+        function promptAdmin() {
+            if(prompt("Name:") === "zoha" && prompt("Code:") === "22446688") alert("Admin login successful!");
         }
-
-        // ... openP, addToCart functions same as before ...
     </script>
 </body>
 </html>
