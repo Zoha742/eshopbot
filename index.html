@@ -1,67 +1,254 @@
-<div id="profile-page" class="page" style="display:none;">
-    <div class="user-header">
-        <h2 id="user-name-display">Loading...</h2>
-        <p id="user-id-display" class="user-id">#000000000</p>
-    </div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>eShop365 Pro</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root { --primary: #38bdf8; --bg: #0f172a; --card: #1e293b; --text: #f8fafc; --danger: #ef4444; --success: #22c55e; --warning: #f59e0b; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); margin:0; padding:0; overflow-x: hidden; }
+        .container { padding:15px; padding-bottom:100px; max-width: 600px; margin: 0 auto; }
+        .page { display:none; } .page.active { display:block; }
+        
+        /* Fixed Modal Image & Details */
+        #modal { position:fixed; inset:0; background:rgba(0,0,0,0.9); z-index:2000; display:none; flex-direction:column; }
+        .modal-body { flex:1; display:flex; flex-direction:column; overflow-y:auto; }
+        .modal-image-container { position:relative; width:100%; height:45vh; background:#000; display:flex; align-items:center; justify-content:center; }
+        .modal-content-img { max-width:100%; max-height:100%; object-fit:contain; }
+        .modal-details-panel { background:var(--card); padding:15px 20px; border-radius:20px 20px 0 0; margin-top:-15px; position:relative; }
+        
+        /* Size Selector Fix */
+        .size-box { display:flex; gap:10px; margin:15px 0; }
+        .size-btn { border:1px solid #334155; padding:8px 15px; border-radius:8px; cursor:pointer; color:white; }
+        .size-btn.active { background:var(--primary); border-color:var(--primary); }
 
-    <div class="shipping-section">
-        <h3>SHIPPING ADDRESS</h3>
-        <div id="address-input-area">
-            <textarea id="shipping-address" placeholder="Enter your address..."></textarea>
-            <button onclick="saveAddress()" class="save-btn">Save</button>
+        /* Profile Address Form */
+        .address-box { background:var(--card); padding:15px; border-radius:12px; margin-top:15px; border:1px solid #334155; }
+        .input-field { width:100%; padding:10px; margin-top:8px; border-radius:8px; border:1px solid #334155; background:#0f172a; color:white; box-sizing: border-box; }
+        
+        /* Search Box for Admin */
+        .search-container { position:relative; margin-bottom:15px; }
+        .search-input { width:100%; padding:12px 15px; border-radius:10px; border:1px solid #334155; background:var(--card); color:white; }
+
+        /* Others */
+        .section-h { display:flex; align-items:center; gap:8px; color:var(--primary); font-size:12px; font-weight:800; margin:20px 0 10px; border-left:3px solid var(--primary); padding-left:8px; text-transform:uppercase; }
+        .grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+        .btn-cat { background:var(--card); padding:14px; border-radius:12px; text-align:center; border:1px solid #334155; font-size:12px; font-weight:600; color: white; display:flex; align-items:center; justify-content:center; gap:5px; }
+        .product-grid { display:grid; grid-template-columns: 1fr 1fr; gap:12px; padding:10px 0; }
+        .p-card { background: #ffffff; border-radius:15px; overflow:hidden; color: #333; position:relative; }
+        .p-img-box { width:100%; height:170px; display:flex; align-items:center; justify-content:center; }
+        .p-img-box img { max-width:100%; max-height:100%; object-fit: contain; }
+        .p-details { padding:10px; text-align:center; }
+        .btn-view-buy { background: var(--primary); color: white; border: none; width: 100%; padding: 10px; border-radius: 8px; font-weight: bold; }
+        .bottom-nav { position:fixed; bottom:0; width:100%; max-width:600px; left:50%; transform:translateX(-50%); background:#1e293b; display:flex; height:70px; border-top:1px solid #334155; z-index:1000; }
+        .nav-item { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; color:#94a3b8; font-size:11px; }
+        .nav-item.active { color:var(--primary); }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div id="p-shop" class="page active">
+            <div class="section-h">MENU</div>
+            <div class="grid">
+                <div class="btn-cat" onclick="openList('tshirts/printed/', 'Printed T-Shirts')">Printed</div>
+                <div class="btn-cat" onclick="openList('tshirts/polo/', 'Polo T-Shirts')">Polo</div>
+                <div class="btn-cat" onclick="openList('shirt/formal/', 'Formal Shirts')">Formal</div>
+            </div>
         </div>
-        <div id="saved-address-display" style="display:none;">
-            <p id="address-text"></p>
-            <button onclick="editAddress()" class="edit-btn">Edit</button>
+
+        <div id="p-list" class="page">
+            <div style="display:flex; align-items:center; gap:10px; margin-bottom:15px;">
+                <i class="fas fa-arrow-left" onclick="nav('shop')"></i>
+                <h3 id="list-title" style="margin:0;">Products</h3>
+            </div>
+            <div id="product-grid" class="product-grid"></div>
+        </div>
+
+        <div id="p-profile" class="page">
+            <div style="text-align:center; padding:20px; background:var(--card); border-radius:15px;">
+                <h3 id="u-name" style="margin:0;">User</h3>
+                <p id="u-id" style="font-size:12px; color:var(--primary);">#ID</p>
+            </div>
+            
+            <div class="address-box">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <b style="color:var(--primary);">SHIPPING ADDRESS</b>
+                    <button onclick="saveAddress()" style="background:var(--success); border:none; color:white; padding:5px 10px; border-radius:5px; font-size:11px;">Save</button>
+                </div>
+                <textarea id="u-address" class="input-field" rows="3" placeholder="Enter your full address (Area, City, Phone)"></textarea>
+            </div>
+
+            <div style="margin-top:20px; display:grid; gap:10px;">
+                <div class="btn-cat" onclick="nav('orders')"><i class="fas fa-box"></i> My Orders</div>
+                <div class="btn-cat" onclick="promptAdminLogin()" style="color:var(--warning);"><i class="fas fa-user-shield"></i> Admin Panel</div>
+            </div>
+        </div>
+
+        <div id="p-orders" class="page">
+            <h3>My Orders</h3>
+            <div id="order-list-container"></div>
+        </div>
+
+        <div id="p-admin" class="page">
+            <h3>Admin Control</h3>
+            <div class="search-container">
+                <input type="text" id="admin-search" class="search-input" placeholder="Search by ID or Product Code..." onkeyup="searchOrders()">
+            </div>
+            <div id="admin-order-list"></div>
         </div>
     </div>
 
-    <div class="profile-buttons">
-        <button class="btn"><i class="fas fa-box"></i> My Orders</button>
-        <button id="admin-btn" class="btn admin-btn" style="display:none;"><i class="fas fa-user-shield"></i> Admin Panel</button>
+    <div id="modal">
+        <div class="modal-body">
+            <div class="modal-image-container">
+                <i class="fas fa-times" onclick="closeModal()" style="position:absolute; top:20px; right:20px; color:white; font-size:24px; z-index:100;"></i>
+                <img id="m-img" src="" class="modal-content-img">
+            </div>
+            <div class="modal-details-panel">
+                <div id="m-status" style="background:var(--success); display:inline-block; padding:2px 10px; border-radius:5px; font-size:11px; margin-bottom:8px;">Available</div>
+                <h2 id="m-title" style="margin:0; font-size:18px;">Product Title</h2>
+                <p id="m-price" style="color:var(--primary); font-size:22px; font-weight:800; margin:10px 0;">$15.00</p>
+                <div style="font-size:12px; color:#94a3b8;">Select Size:</div>
+                <div class="size-box">
+                    <div class="size-btn" onclick="setSize(this, 'M')">M</div>
+                    <div class="size-btn active" onclick="setSize(this, 'L')">L</div>
+                    <div class="size-btn" onclick="setSize(this, 'XL')">XL</div>
+                </div>
+                <button class="btn-view-buy" onclick="addToCart()">ADD TO CART</button>
+            </div>
+        </div>
     </div>
-</div>
 
-<script>
-// টেলিগ্রাম থেকে ইউজার ডাটা নেওয়া
-const tg = window.Telegram.WebApp;
-const user = tg.initDataUnsafe?.user;
+    <div class="bottom-nav">
+        <div class="nav-item active" onclick="nav('shop')"><i class="fas fa-store"></i>Store</div>
+        <div class="nav-item" onclick="nav('profile')"><i class="fas fa-user"></i>Profile</div>
+    </div>
 
-if (user) {
-    document.getElementById('user-name-display').innerText = user.first_name + (user.last_name ? " " + user.last_name : "");
-    document.getElementById('user-id-display').innerText = "#" + user.id;
-    
-    // এডমিন চেক (তোমার আইডি হলে এডমিন প্যানেল দেখাবে)
-    if (user.id === 5244583155) { // তোমার আইডি দিয়ে রিপ্লেস করো
-        document.getElementById('admin-btn').style.display = 'block';
-    }
-}
+    <script>
+        const tg = window.Telegram.WebApp;
+        const ADMIN_NAME = "zoha";
+        const ADMIN_CODE = "22446688";
+        const BASE_IMG = "https://raw.githubusercontent.com/Zoha742/eshopbot/main/products/";
 
-// অ্যাড্রেস সেভ এবং হাইড করার ফাংশন
-function saveAddress() {
-    const addr = document.getElementById('shipping-address').value;
-    if (addr.trim() !== "") {
-        localStorage.setItem('userAddress', addr);
-        displayAddress(addr);
-    }
-}
+        let cart = [];
+        let orders = JSON.parse(localStorage.getItem('eshop_orders')) || [];
+        let userAddress = localStorage.getItem('eshop_address') || "";
+        let currentItem = {};
 
-function displayAddress(addr) {
-    document.getElementById('address-input-area').style.display = 'none'; // বক্স হাইড হবে
-    document.getElementById('saved-address-display').style.display = 'block'; // টেক্সট দেখাবে
-    document.getElementById('address-text').innerText = addr;
-}
+        // Navigation
+        function nav(p) {
+            document.querySelectorAll('.page').forEach(pg => pg.classList.remove('active'));
+            document.getElementById('p-' + p).classList.add('active');
+            if(p === 'profile') document.getElementById('u-address').value = userAddress;
+            if(p === 'admin') renderAdminOrders();
+        }
 
-function editAddress() {
-    document.getElementById('address-input-area').style.display = 'block';
-    document.getElementById('saved-address-display').style.display = 'none';
-}
+        // Save User Address
+        function saveAddress() {
+            const addr = document.getElementById('u-address').value;
+            if(!addr) { tg.showAlert("Please enter an address!"); return; }
+            userAddress = addr;
+            localStorage.setItem('eshop_address', addr);
+            tg.showAlert("Address saved successfully!");
+        }
 
-// পেজ লোড হওয়ার সময় চেক করা
-window.onload = () => {
-    const savedAddr = localStorage.getItem('userAddress');
-    if (savedAddr) {
-        displayAddress(savedAddr);
-    }
-};
-</script>
+        // Product Logic
+        function openList(path, title) {
+            const grid = document.getElementById('product-grid');
+            grid.innerHTML = '';
+            document.getElementById('list-title').innerText = title;
+            for(let i=1; i<=4; i++) {
+                const img = BASE_IMG + path + i + '.jpg';
+                grid.innerHTML += `
+                    <div class="p-card">
+                        <div class="p-img-box"><img src="${img}"></div>
+                        <div class="p-details">
+                            <div style="font-size:13px; font-weight:bold;">${title} #${i}</div>
+                            <div style="color:var(--primary);">$15.00</div>
+                            <button class="btn-view-buy" style="margin-top:10px;" onclick="openDetail('${img}', '${title} #${i}')">View & Buy</button>
+                        </div>
+                    </div>`;
+            }
+            nav('list');
+        }
+
+        function openDetail(img, title) {
+            currentItem = { img, title, size: 'L', price: 15 };
+            document.getElementById('m-img').src = img;
+            document.getElementById('m-title').innerText = title;
+            document.getElementById('modal').style.display = 'flex';
+        }
+
+        function closeModal() { document.getElementById('modal').style.display = 'none'; }
+
+        function setSize(el, s) {
+            document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
+            el.classList.add('active');
+            currentItem.size = s;
+        }
+
+        function addToCart() {
+            if(!userAddress) {
+                tg.showAlert("Please save your Shipping Address in Profile first!");
+                nav('profile'); closeModal(); return;
+            }
+            const orderId = 'ORD' + Math.floor(1000 + Math.random() * 9000);
+            const newOrder = {
+                id: orderId,
+                title: currentItem.title,
+                size: currentItem.size,
+                address: userAddress,
+                status: 'Pending',
+                date: new Date().toLocaleDateString()
+            };
+            orders.unshift(newOrder);
+            localStorage.setItem('eshop_orders', JSON.stringify(orders));
+            tg.showAlert("Order Placed Successfully!");
+            closeModal(); nav('orders'); renderOrders();
+        }
+
+        function renderOrders() {
+            const container = document.getElementById('order-list-container');
+            container.innerHTML = orders.map(o => `
+                <div style="background:var(--card); padding:15px; border-radius:10px; margin-bottom:10px; border:1px solid #334155;">
+                    <div style="display:flex; justify-content:space-between;"><b>#${o.id}</b> <span>${o.status}</span></div>
+                    <p style="font-size:12px; margin:5px 0;">Product: ${o.title} (${o.size})</p>
+                </div>`).join('');
+        }
+
+        // Admin Panel Functions
+        function promptAdminLogin() {
+            const n = prompt("Name:");
+            const c = prompt("Code:");
+            if(n === ADMIN_NAME && c === ADMIN_CODE) nav('admin');
+            else tg.showAlert("Invalid Admin!");
+        }
+
+        function renderAdminOrders(filter = "") {
+            const container = document.getElementById('admin-order-list');
+            const filtered = orders.filter(o => o.id.toLowerCase().includes(filter.toLowerCase()) || o.title.toLowerCase().includes(filter.toLowerCase()));
+            container.innerHTML = filtered.map(o => `
+                <div style="background:var(--card); padding:10px; border-radius:10px; margin-bottom:10px; font-size:12px; border-left:4px solid var(--primary);">
+                    <b>ID: #${o.id}</b><br>
+                    Product: ${o.title} | Size: ${o.size}<br>
+                    <b style="color:var(--warning);">Address: ${o.address}</b>
+                </div>`).join('');
+        }
+
+        function searchOrders() {
+            const val = document.getElementById('admin-search').value;
+            renderAdminOrders(val);
+        }
+
+        // Init User
+        const user = tg.initDataUnsafe.user;
+        if(user) {
+            document.getElementById('u-name').innerText = user.first_name;
+            document.getElementById('u-id').innerText = "#" + user.id;
+        }
+    </script>
+</body>
+</html>
