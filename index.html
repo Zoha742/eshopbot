@@ -178,4 +178,87 @@
             emptyMsg.style.display = 'none';
             confirmBox.style.display = 'block';
             container.innerHTML = cart.map((item, idx) => `
-                <div style="display:flex; align-items:center; gap
+                <div style="display:flex; align-items:center; gap:10px; background:var(--card); padding:10px; border-radius:10px; margin-bottom:10px;">
+                    <img src="${item.img}" style="width:50px; height:50px; object-fit:cover; border-radius:5px;">
+                    <div style="flex:1; font-size:13px;">${item.title}</div>
+                    <i class="fas fa-trash-alt" style="color:var(--danger);" onclick="removeFromCart(${idx})"></i>
+                </div>`).join('');
+        }
+
+        function removeFromCart(idx) {
+            cart.splice(idx, 1);
+            renderCart();
+        }
+
+        // --- Order Placement ---
+        function placeOrder() {
+            const newOrder = {
+                id: 'ORD' + Math.floor(1000 + Math.random() * 9000),
+                items: [...cart],
+                status: 'Pending',
+                userName: tg.initDataUnsafe.user?.first_name || "User",
+                date: new Date().toLocaleDateString()
+            };
+            orders.unshift(newOrder);
+            localStorage.setItem('eshop_orders', JSON.stringify(orders));
+            cart = [];
+            tg.showAlert("Order Placed: " + newOrder.id);
+            nav('orders');
+        }
+
+        // --- User History ---
+        function renderUserOrders() {
+            const container = document.getElementById('order-list-container');
+            container.innerHTML = orders.map(o => `
+                <div class="order-card">
+                    <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+                        <b>#${o.id}</b> <span style="color:var(--primary); font-size:12px;">${o.status}</span>
+                    </div>
+                    <div style="display:flex; gap:5px; flex-wrap:wrap;">
+                        ${o.items.map(i => `<img src="${i.img}" class="order-item-img">`).join('')}
+                    </div>
+                </div>`).join('');
+        }
+
+        // --- Admin Dashboard (Proper Fix) ---
+        function renderAdminOrders() {
+            const container = document.getElementById('admin-order-list');
+            container.innerHTML = orders.map((o, idx) => `
+                <div class="order-card">
+                    <b>ID: #${o.id} | By: ${o.userName}</b>
+                    <div style="margin:10px 0; display:flex; gap:5px;">
+                        ${o.items.map(i => `<img src="${i.img}" class="order-item-img">`).join('')}
+                    </div>
+                    <div style="display:flex; gap:10px;">
+                        <button onclick="updateStatus(${idx}, 'Confirmed')" style="flex:1; background:var(--success); border:none; color:white; padding:8px; border-radius:5px;">Confirm</button>
+                        <button onclick="updateStatus(${idx}, 'Rejected')" style="flex:1; background:var(--danger); border:none; color:white; padding:8px; border-radius:5px;">Reject</button>
+                    </div>
+                </div>`).join('');
+        }
+
+        function updateStatus(idx, s) {
+            orders[idx].status = s;
+            localStorage.setItem('eshop_orders', JSON.stringify(orders));
+            renderAdminOrders();
+            tg.showAlert("Order Status Updated!");
+        }
+
+        function searchOrders() {
+            let val = document.getElementById('adminSearchInput').value.toLowerCase();
+            let cards = document.querySelectorAll('#admin-order-list .order-card');
+            cards.forEach(c => c.style.display = c.innerText.toLowerCase().includes(val) ? "block" : "none");
+        }
+
+        function promptAdminLogin() {
+            if(prompt("Admin Name:") === "z" && prompt("Code:") === "22") nav('admin');
+        }
+
+        const user = tg.initDataUnsafe.user;
+        if(user) {
+            document.getElementById('u-name').innerText = user.first_name;
+            document.getElementById('u-id').innerText = "#" + user.id;
+            document.getElementById('u-pic').innerText = user.first_name[0].toUpperCase();
+        }
+    </script>
+</body>
+</html>
