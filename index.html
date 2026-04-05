@@ -13,12 +13,12 @@
         .page { display:none; } .page.active { display:block; animation: fadeIn 0.3s ease; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* Store Design */
+        /* Store Design based on iteam.txt */
         .section-h { display:flex; align-items:center; gap:8px; color:var(--primary); font-size:12px; font-weight:800; margin:20px 0 10px; border-left:3px solid var(--primary); padding-left:8px; text-transform:uppercase; }
         .grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
         .btn-cat { background:var(--card); padding:14px; border-radius:12px; text-align:center; border:1px solid #334155; font-size:12px; font-weight:600; cursor:pointer; color: white; display:flex; align-items:center; justify-content:center; gap:5px; }
 
-        /* Product Cards */
+        /* Product Display */
         .product-grid { display:grid; grid-template-columns: 1fr 1fr; gap:12px; padding:10px 0; }
         .p-card { background: #ffffff; border-radius:15px; overflow:hidden; color: #333; position:relative; }
         .p-img-box { width:100%; height:160px; background:#f3f4f6; display:flex; align-items:center; justify-content:center; }
@@ -29,7 +29,7 @@
         .size-btn.selected { background:var(--primary); color:white; border-color:var(--primary); }
         .btn-buy { background: var(--primary); color: white; border: none; width: 100%; padding: 8px; border-radius: 6px; font-weight: bold; cursor: pointer; }
 
-        /* Profile & Order UI */
+        /* Profile & Order History */
         .u-header { text-align:center; padding:25px 0; background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%); border-radius: 15px; border: 1px solid #334155; margin-bottom: 20px; }
         .profile-list { background:var(--card); border-radius:15px; border: 1px solid #334155; overflow: hidden; }
         .list-item { display:flex; align-items:center; padding:16px; border-bottom:1px solid #334155; gap:15px; cursor:pointer; }
@@ -48,22 +48,49 @@
 
     <div class="container">
         <div id="p-shop" class="page active">
-            <div class="section-h"><i class="fas fa-tshirt"></i> T-SHIRTS</div>
+            <div class="section-h"><i class="fas fa-bolt"></i> HOT DEALS</div>
             <div class="grid">
-                <div class="btn-cat" onclick="openList('tshirts/printed/', 'Printed')">Printed</div>
-                <div class="btn-cat" onclick="openList('tshirts/polo/', 'Polo')">Polo</div>
+                <div class="btn-cat" onclick="openP('hotdeals/summer/', 'Summer Offer')">☀️ Summer Offer</div>
+                <div class="btn-cat" onclick="openP('hotdeals/sale/', 'Big Sale')">🎁 Big Sale</div>
             </div>
 
-            <div class="section-h"><i class="fas fa-vest"></i> PANTS</div>
+            <div class="section-h"><i class="fas fa-tshirt"></i> T-SHIRTS (SEPARATE)</div>
             <div class="grid">
-                <div class="btn-cat" onclick="openList('pants/gabardine/', 'Gabardine Pant')">👖 Gabardine</div>
-                <div class="btn-cat" onclick="openList('pants/jeans/', 'Jeans')">Jeans</div>
+                <div class="btn-cat" onclick="openP('tshirts/printed/', 'Printed T-shirt')">Printed</div>
+                <div class="btn-cat" onclick="openP('tshirts/polo/', 'Polo T-shirt')">Polo</div>
             </div>
 
-            <div class="section-h"><i class="fas fa-briefcase"></i> ACCESSORIES</div>
+            <div class="section-h"><i class="fas fa-user-tie"></i> SHIRTS (SEPARATE)</div>
             <div class="grid">
-                <div class="btn-cat" onclick="openList('innerwear/', 'Innerwear')">🩲 Innerwear</div>
-                <div class="btn-cat" onclick="openList('accessories/belt/', 'Belts')">Leather Belts</div>
+                <div class="btn-cat" onclick="openP('shirt/formal/', 'Formal Shirt')">Formal</div>
+                <div class="btn-cat" onclick="openP('shirt/casual/', 'Casual Shirt')">Casual</div>
+                <div class="btn-cat" onclick="openP('shirt/half/', 'Half Shirt')">Half Shirt</div>
+            </div>
+
+            <div class="section-h"><i class="fas fa-child"></i> JUNIOR (KIDS)</div>
+            <div class="grid">
+                <div class="btn-cat" onclick="openP('junior/boys/', 'Boys Collection')">Boys</div>
+                <div class="btn-cat" onclick="openP('junior/girls/', 'Girls Collection')">Girls</div>
+            </div>
+
+            <div class="section-h"><i class="fas fa-vest"></i> PANTS (SEPARATE)</div>
+            <div class="grid">
+                <div class="btn-cat" onclick="openP('pants/jeans/', 'Jeans Pant')">Jeans</div>
+                <div class="btn-cat" onclick="openP('pants/formal/', 'Formal Pant')">Formal</div>
+                <div class="btn-cat" onclick="openP('pants/gabardine/', 'Gabardine')">Gabardine</div>
+            </div>
+
+            <div class="section-h"><i class="fas fa-mosque"></i> PANJABI (SEPARATE)</div>
+            <div class="grid">
+                <div class="btn-cat" onclick="openP('panjabi/easy/', 'Easy Panjabi')">Easy</div>
+                <div class="btn-cat" onclick="openP('panjabi/kabli/', 'Kabli Set')">Kabli</div>
+            </div>
+
+            <div class="section-h"><i class="fas fa-belt"></i> ACCESSORIES</div>
+            <div class="grid">
+                <div class="btn-cat" onclick="openP('accessories/belt/', 'Leather Belt')">Belts</div>
+                <div class="btn-cat" onclick="openP('accessories/tie/', 'Premium Tie')">Ties</div>
+                <div class="btn-cat" onclick="openP('accessories/underwear/', 'Inner Wear')">Inner Wear</div>
             </div>
         </div>
 
@@ -79,10 +106,10 @@
             <div class="section-h">YOUR CART</div>
             <div id="cart-items"></div>
             <div id="confirm-box" style="display:none; text-align:center; padding:20px;">
-                <p style="color:var(--warning); font-size:12px;">Home Delivery & Cash on Delivery Available</p>
+                <p style="color:var(--warning); font-size:12px;">Home Delivery Available</p>
                 <button class="btn-buy" style="height:45px; font-size:16px;" onclick="placeOrder()">CONFIRM ORDER</button>
             </div>
-            <div id="cart-empty" style="text-align:center; padding:50px; color:#94a3b8;">Your cart is empty.</div>
+            <div id="cart-empty" style="text-align:center; padding:50px; color:#94a3b8;">Cart is empty.</div>
         </div>
 
         <div id="p-profile" class="page">
@@ -109,7 +136,7 @@
 
         <div id="p-admin" class="page">
             <div class="section-h">ADMIN CONTROL</div>
-            <input type="text" id="adminSearch" class="address-input" style="margin-bottom:15px;" placeholder="Search ID or Name..." oninput="searchAdmin()">
+            <input type="text" id="adminSearch" class="address-input" style="margin-bottom:15px;" placeholder="Search Order ID or Name..." oninput="searchAdmin()">
             <div id="admin-list"></div>
         </div>
     </div>
@@ -135,8 +162,7 @@
             if(p === 'admin') renderAdmin();
         }
 
-        // --- Store Logic ---
-        function openList(path, title) {
+        function openP(path, title) {
             const grid = document.getElementById('product-grid');
             grid.innerHTML = '';
             document.getElementById('list-title').innerText = title;
@@ -165,9 +191,9 @@
         }
 
         function addToCart(img, title, pid) {
-            if(!selectedSize[pid]) { tg.showAlert("Please select a size first!"); return; }
+            if(!selectedSize[pid]) { tg.showAlert("Size select korun!"); return; }
             cart.push({ img, title, size: selectedSize[pid] });
-            tg.showAlert("Added: " + title + " (" + selectedSize[pid] + ")");
+            tg.showAlert("Added to Cart!");
         }
 
         function renderCart() {
@@ -184,15 +210,14 @@
                 </div>`).join('');
         }
 
-        // --- Order & Profile ---
         function placeOrder() {
             const addr = localStorage.getItem('user_address');
-            if(!addr) { tg.showAlert("Please save your address in Profile!"); return; }
+            if(!addr) { tg.showAlert("Profile-e address save korun!"); return; }
             const ord = { id: 'ORD'+Math.floor(1000+Math.random()*9000), items: [...cart], status: 'Pending', addr, user: tg.initDataUnsafe.user?.first_name || "User" };
             orders.unshift(ord);
             localStorage.setItem('eshop_orders', JSON.stringify(orders));
             cart = [];
-            tg.showAlert("Order Placed!"); nav('orders');
+            tg.showAlert("Order Successfully Placed!"); nav('orders');
         }
 
         function renderOrderHistory() {
@@ -211,10 +236,9 @@
         }
         function saveAddress() {
             localStorage.setItem('user_address', document.getElementById('address-input').value);
-            tg.showAlert("Saved!"); toggleAddress();
+            tg.showAlert("Address Saved!"); toggleAddress();
         }
 
-        // --- Admin ---
         function renderAdmin() {
             const cont = document.getElementById('admin-list');
             cont.innerHTML = orders.map((o, idx) => `
@@ -232,7 +256,7 @@
             let v = document.getElementById('adminSearch').value.toLowerCase();
             document.querySelectorAll('#admin-list .order-card').forEach(c => c.style.display = c.innerText.toLowerCase().includes(v) ? 'block' : 'none');
         }
-        function promptAdmin() { if(prompt("Admin Name:") === "zoha" && prompt("Code:") === "22446688") nav('admin'); }
+        function promptAdmin() { if(prompt("Name:") === "zoha" && prompt("Code:") === "22446688") nav('admin'); }
 
         const u = tg.initDataUnsafe.user;
         if(u) {
