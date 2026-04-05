@@ -23,27 +23,22 @@
         .p-card { background: #ffffff; border-radius:15px; overflow:hidden; color: #333; position:relative; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
         .p-img-box { width:100%; height:170px; background:#f3f4f6; display:flex; align-items:center; justify-content:center; overflow: hidden; }
         .p-img-box img { max-width:100%; max-height:100%; object-fit: contain; }
-        .p-details { padding:12px; text-align:center; }
         .btn-view-buy { background: var(--primary); color: white; border: none; width: 100%; padding: 10px; border-radius: 8px; font-size: 12px; font-weight: bold; cursor: pointer; }
 
-        /* Order List UI (With Images) */
+        /* Order List UI */
         .order-card { background:var(--card); padding:15px; border-radius:12px; margin-bottom:15px; border:1px solid #334155; }
-        .order-item-img { width: 40px; height: 40px; border-radius: 5px; object-fit: cover; border: 1px solid #334155; }
-        .status-tag { padding:4px 10px; border-radius:8px; font-size:10px; font-weight:bold; color: white; }
+        .order-item-img { width: 40px; height: 40px; border-radius: 5px; object-fit: cover; }
+        
+        /* Hidden Confirm Button in Cart */
+        #confirm-order-box { display: none; padding: 20px; text-align: center; }
 
-        /* Profile Header */
+        /* Profile Style (Ager moto) */
         .u-header { text-align:center; padding:25px 0; background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%); border-radius: 15px; margin-bottom: 20px; border: 1px solid #334155; }
         .profile-list { background:var(--card); border-radius:15px; border: 1px solid #334155; overflow: hidden; }
         .list-item { display:flex; align-items:center; padding:18px; border-bottom:1px solid #334155; gap:15px; cursor:pointer; }
         
-        /* Address Box Hidden */
-        #address-box { display: none; background: #0f172a; padding: 15px; border-radius: 12px; margin: 10px; border: 1px solid #334155; }
-        .address-input { width: 100%; padding: 10px; background: #1e293b; border: 1px solid #334155; color: white; border-radius: 8px; margin-bottom: 10px; box-sizing: border-box; }
-
-        /* Admin Dashboard */
+        /* Admin Search */
         .admin-search { width: 100%; padding: 12px; background: var(--card); border: 2px solid var(--primary); color: white; border-radius: 10px; margin-bottom: 15px; outline: none; }
-        .action-btns { display: flex; gap: 8px; margin-top: 10px; }
-        .btn-status { flex: 1; padding: 10px; border: none; border-radius: 6px; font-size: 11px; font-weight: bold; cursor: pointer; color: white; }
 
         /* Bottom Nav */
         .bottom-nav { position:fixed; bottom:0; width:100%; max-width: 600px; left: 50%; transform: translateX(-50%); background:#1e293b; display:flex; height:75px; border-top:1px solid #334155; z-index:1000; }
@@ -55,6 +50,12 @@
 
     <div class="container">
         <div id="p-shop" class="page active">
+            <div class="section-h"><i class="fas fa-bolt"></i> HOT DEALS</div>
+            <div class="grid">
+                <div class="btn-cat" onclick="openList('hotdeals/summer/', 'Summer Offer')">☀️ Summer Offer</div>
+                <div class="btn-cat" onclick="openList('hotdeals/sale/', 'Big Sale')">🎁 Big Sale</div>
+            </div>
+
             <div class="section-h"><i class="fas fa-tshirt"></i> T-SHIRTS</div>
             <div class="grid">
                 <div class="btn-cat" onclick="openList('tshirts/printed/', 'Printed')">Printed</div>
@@ -65,21 +66,25 @@
             <div class="grid">
                 <div class="btn-cat" onclick="openList('pants/gabardine/', 'Gabardine Pant')">👖 Gabardine Pant</div>
                 <div class="btn-cat" onclick="openList('pants/jeans/', 'Jeans')">Jeans</div>
+                <div class="btn-cat" onclick="openList('pants/formal/', 'Formal')">Formal</div>
             </div>
 
             <div class="section-h"><i class="fas fa-belt"></i> ACCESSORIES</div>
             <div class="grid">
                 <div class="btn-cat" onclick="openList('innerwear/', 'Innerwear')">🩲 Innerwear</div>
                 <div class="btn-cat" onclick="openList('accessories/belt/', 'Leather Belts')">Belts</div>
+                <div class="btn-cat" onclick="openList('accessories/wallet/', 'Wallets')">Wallets</div>
             </div>
         </div>
 
         <div id="p-cart" class="page">
             <div class="section-h">YOUR CART</div>
             <div id="cart-items"></div>
-            <div id="cart-summary" style="padding:20px;">
-                <button class="btn-view-buy" style="height:50px; font-size:16px;" onclick="placeOrder()">CONFIRM ORDER</button>
+            <div id="confirm-order-box">
+                <p style="font-size: 13px; color: var(--warning);">* Home Delivery Available</p>
+                <button class="btn-view-buy" style="height:50px; font-size:16px;" onclick="placeOrder()">CONFIRM ORDER (COD)</button>
             </div>
+            <div id="empty-cart-msg" style="text-align:center; padding:50px 0; color: #94a3b8;">Cart is empty. Add products to confirm.</div>
         </div>
 
         <div id="p-profile" class="page">
@@ -89,24 +94,27 @@
                 <p id="u-id" style="font-size:12px; color:var(--primary);">#ID</p>
             </div>
             <div class="profile-list">
-                <div class="list-item" onclick="toggleAddressBox()"><i class="fas fa-map-marker-alt"></i> <span>Manage Address</span></div>
-                <div id="address-box">
-                    <textarea id="address-input" class="address-input" placeholder="Enter Full Address & Mobile Number"></textarea>
-                    <button class="btn-view-buy" style="background:var(--success);" onclick="saveAddress()">Save Address</button>
-                </div>
                 <div class="list-item" onclick="nav('orders')"><i class="fas fa-box"></i> <span>My Orders</span></div>
-                <div class="list-item" onclick="promptAdminLogin()" style="color:var(--warning); border-top:1px dashed #334155;"><i class="fas fa-user-shield"></i> <span>Admin Dashboard</span></div>
+                <div class="list-item" onclick="promptAdminLogin()" style="color:var(--warning);"><i class="fas fa-user-shield"></i> <span>Admin Dashboard</span></div>
             </div>
         </div>
 
+        <div id="p-list" class="page">
+            <div style="display:flex; align-items:center; gap:12px; margin-bottom:18px;">
+                <i class="fas fa-arrow-left" onclick="nav('shop')" style="cursor:pointer;"></i>
+                <h3 id="list-title" style="margin:0;">Products</h3>
+            </div>
+            <div id="product-grid" class="product-grid"></div>
+        </div>
+
         <div id="p-orders" class="page">
-            <div class="section-h">MY ORDER HISTORY</div>
+            <div class="section-h">ORDER HISTORY</div>
             <div id="order-list-container"></div>
         </div>
 
         <div id="p-admin" class="page">
             <div class="section-h">ADMIN CONTROL</div>
-            <input type="text" id="adminSearchInput" class="admin-search" placeholder="Search Order ID or Name..." oninput="searchOrders()">
+            <input type="text" id="adminSearchInput" class="admin-search" placeholder="Search Order ID..." oninput="searchOrders()">
             <div id="admin-order-list"></div>
         </div>
     </div>
@@ -119,140 +127,55 @@
 
     <script>
         const tg = window.Telegram.WebApp;
-        tg.expand();
-
-        let cart = JSON.parse(localStorage.getItem('eshop_cart')) || [];
+        const BASE_IMG = "https://raw.githubusercontent.com/Zoha742/eshopbot/main/products/";
+        let cart = [];
         let orders = JSON.parse(localStorage.getItem('eshop_orders')) || [];
 
         function nav(p) {
             document.querySelectorAll('.page').forEach(pg => pg.classList.remove('active'));
             document.getElementById('p-' + p).classList.add('active');
+            if(p === 'cart') renderCart();
             if(p === 'orders') renderUserOrders();
             if(p === 'admin') renderAdminOrders();
         }
 
-        // --- ORDER PLACEMENT (With Images) ---
-        function placeOrder() {
-            const addr = localStorage.getItem('user_address');
-            if(!addr) { tg.showAlert("Please add address in Profile!"); return; }
-            if(cart.length === 0) { tg.showAlert("Cart is empty!"); return; }
-
-            const newOrder = {
-                id: 'ORD' + Math.floor(1000 + Math.random() * 9000),
-                items: [...cart],
-                status: 'Pending',
-                address: addr,
-                userName: tg.initDataUnsafe.user?.first_name || "Guest User",
-                date: new Date().toLocaleDateString()
-            };
-
-            orders.unshift(newOrder);
-            localStorage.setItem('eshop_orders', JSON.stringify(orders));
-            cart = [];
-            localStorage.removeItem('eshop_cart');
-            tg.showAlert("Order Placed: " + newOrder.id);
-            nav('orders');
-        }
-
-        // --- USER VIEW: ORDER HISTORY (With Images) ---
-        function renderUserOrders() {
-            const container = document.getElementById('order-list-container');
-            if(orders.length === 0) { container.innerHTML = '<p style="text-align:center; padding:20px;">No orders found.</p>'; return; }
-
-            container.innerHTML = orders.map(o => `
-                <div class="order-card">
-                    <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
-                        <b>#${o.id}</b>
-                        <span class="status-tag" style="background:${getStatusColor(o.status)}">${o.status}</span>
-                    </div>
-                    <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:10px;">
-                        ${o.items.map(item => `
-                            <div style="display:flex; align-items:center; gap:8px; background:#0f172a; padding:5px; border-radius:8px;">
-                                <img src="${item.img}" class="order-item-img">
-                                <span style="font-size:10px;">${item.title}</span>
-                            </div>
-                        `).join('')}
-                    </div>
-                    <div style="font-size:11px; color:#94a3b8;">Date: ${o.date}</div>
-                </div>
-            `).join('');
-        }
-
-        // --- ADMIN VIEW: CONTROL PANEL ---
-        function renderAdminOrders() {
-            const container = document.getElementById('admin-order-list');
-            if(orders.length === 0) { container.innerHTML = '<p style="text-align:center;">No orders yet.</p>'; return; }
-
-            container.innerHTML = orders.map((o, idx) => `
-                <div class="order-card" id="admin-card-${idx}">
-                    <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
-                        <b>ID: #${o.id} | ${o.userName}</b>
-                        <span class="status-tag" style="background:${getStatusColor(o.status)}">${o.status}</span>
-                    </div>
-                    <div style="font-size:11px; color:#cbd5e1; margin-bottom:8px;">Address: ${o.address}</div>
-                    <div style="display:flex; gap:5px; margin-bottom:10px;">
-                        ${o.items.map(i => `<img src="${i.img}" class="order-item-img" title="${i.title}">`).join('')}
-                    </div>
-                    <div class="action-btns">
-                        <button class="btn-status" style="background:var(--success);" onclick="updateStatus(${idx}, 'Confirmed')">Confirm</button>
-                        <button class="btn-status" style="background:var(--danger);" onclick="updateStatus(${idx}, 'Rejected')">Reject</button>
-                        <button class="btn-status" style="background:#475569; flex:0.4;" onclick="deleteOrder(${idx})"><i class="fas fa-trash"></i></button>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function updateStatus(idx, status) {
-            orders[idx].status = status;
-            localStorage.setItem('eshop_orders', JSON.stringify(orders));
-            tg.showAlert("Order " + status);
-            renderAdminOrders();
-        }
-
-        function deleteOrder(idx) {
-            if(confirm("Delete this order?")) {
-                orders.splice(idx, 1);
-                localStorage.setItem('eshop_orders', JSON.stringify(orders));
-                renderAdminOrders();
+        // --- Store Products Load ---
+        function openList(path, title) {
+            const grid = document.getElementById('product-grid');
+            grid.innerHTML = '';
+            document.getElementById('list-title').innerText = title;
+            for(let i=1; i<=4; i++) {
+                const imgUrl = BASE_IMG + path + i + '.jpg';
+                grid.innerHTML += `
+                    <div class="p-card">
+                        <div class="p-img-box"><img src="${imgUrl}" onerror="this.src='https://via.placeholder.com/150'"></div>
+                        <div class="p-details">
+                            <div style="font-size:12px; font-weight:bold; margin-bottom:5px;">${title} #${i}</div>
+                            <button class="btn-view-buy" onclick="addToCart('${imgUrl}', '${title} #${i}')">Add to Cart</button>
+                        </div>
+                    </div>`;
             }
+            nav('list');
         }
 
-        function searchOrders() {
-            let val = document.getElementById('adminSearchInput').value.toLowerCase();
-            let cards = document.querySelectorAll('#admin-order-list .order-card');
-            cards.forEach(c => c.style.display = c.innerText.toLowerCase().includes(val) ? "block" : "none");
+        function addToCart(img, title) {
+            cart.push({img, title});
+            tg.showAlert(title + " Added to Cart!");
         }
 
-        function getStatusColor(s) {
-            if(s === 'Confirmed') return 'var(--success)';
-            if(s === 'Rejected') return 'var(--danger)';
-            return 'var(--warning)';
-        }
+        function renderCart() {
+            const container = document.getElementById('cart-items');
+            const confirmBox = document.getElementById('confirm-order-box');
+            const emptyMsg = document.getElementById('empty-cart-msg');
+            
+            if(cart.length === 0) {
+                container.innerHTML = '';
+                confirmBox.style.display = 'none';
+                emptyMsg.style.display = 'block';
+                return;
+            }
 
-        function toggleAddressBox() {
-            let b = document.getElementById('address-box');
-            b.style.display = b.style.display === 'block' ? 'none' : 'block';
-            document.getElementById('address-input').value = localStorage.getItem('user_address') || "";
-        }
-
-        function saveAddress() {
-            localStorage.setItem('user_address', document.getElementById('address-input').value);
-            tg.showAlert("Address Saved!");
-            toggleAddressBox();
-        }
-
-        function promptAdminLogin() {
-            if(prompt("Admin Name:") === "zoha" && prompt("Admin Code:") === "22446688") nav('admin');
-            else tg.showAlert("Wrong Admin Credentials!");
-        }
-
-        // Init Profile
-        const user = tg.initDataUnsafe.user;
-        if(user) {
-            document.getElementById('u-name').innerText = user.first_name + " " + (user.last_name || "");
-            document.getElementById('u-id').innerText = "#" + user.id;
-            document.getElementById('u-pic').innerText = user.first_name[0].toUpperCase();
-        }
-    </script>
-</body>
-</html>
+            emptyMsg.style.display = 'none';
+            confirmBox.style.display = 'block';
+            container.innerHTML = cart.map((item, idx) => `
+                <div style="display:flex; align-items:center; gap
