@@ -23,8 +23,6 @@
         .p-card { background: #ffffff; border-radius:15px; overflow:hidden; color: #333; position:relative; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
         .p-img-box { width:100%; height:170px; background:#f3f4f6; display:flex; align-items:center; justify-content:center; overflow: hidden; }
         .p-img-box img { max-width:100%; max-height:100%; object-fit: contain; }
-        .fav-btn { position:absolute; top:10px; right:10px; background:rgba(255,255,255,0.9); width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#b0bec5; cursor:pointer; z-index:10; }
-        .fav-btn.active { color: var(--danger); }
         .p-details { padding:12px; text-align:center; }
         .p-name { font-size:13px; font-weight:700; color: #1e293b; margin:2px 0 6px; }
         .p-price { font-size:15px; font-weight:800; color: var(--primary); margin-bottom:10px; }
@@ -34,31 +32,19 @@
         #address-box { display: none; background: var(--card); padding: 15px; border-radius: 12px; margin-top: 10px; border: 1px solid #334155; }
         .address-input { width: 100%; padding: 10px; background: #0f172a; border: 1px solid #334155; color: white; border-radius: 8px; margin-top: 5px; box-sizing: border-box; }
 
-        /* Admin Search */
-        .admin-search { width: 100%; padding: 12px; background: var(--card); border: 1px solid var(--primary); color: white; border-radius: 10px; margin-bottom: 15px; }
+        /* Admin Dashboard UI */
+        .admin-search { width: 100%; padding: 12px; background: var(--card); border: 2px solid var(--primary); color: white; border-radius: 10px; margin-bottom: 15px; outline: none; box-sizing: border-box; }
+        .status-tag { display:inline-block; padding:4px 10px; border-radius:12px; font-size:10px; font-weight:bold; color: white; text-transform: uppercase; }
+        .action-btns { display: flex; gap: 8px; margin-top: 10px; }
+        .btn-status { flex: 1; padding: 8px; border: none; border-radius: 6px; font-size: 11px; font-weight: bold; cursor: pointer; color: white; display: flex; align-items: center; justify-content: center; gap: 4px; }
 
-        /* Modal Fix */
-        #modal { position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:2000; display:none; flex-direction:column; backdrop-filter: blur(5px); }
-        .modal-body { flex: 1; display: flex; flex-direction: column; overflow-y: auto; }
-        .modal-image-container { position: relative; width: 100%; background: #000; display: flex; align-items: center; justify-content: center; padding: 20px 0; }
-        .modal-content-img { max-width: 90%; max-height: 50vh; object-fit: contain; } 
-        .close-modal { position:absolute; top:20px; right:20px; font-size:20px; color:white; background:rgba(0,0,0,0.6); width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer; z-index:100; }
-        .modal-details-panel { background: var(--card); padding: 25px; border-radius: 25px 25px 0 0; margin-top: -20px; position: relative; z-index: 10; border-top: 1px solid #334155; }
-        .size-box { display:flex; gap:10px; margin:15px 0; }
-        .size-btn { padding:8px 15px; background:#0f172a; border:1px solid #334155; border-radius:8px; color:white; cursor:pointer; }
-        .size-btn.active { background:var(--primary); border-color:var(--primary); }
-
-        /* Profile & Bottom Nav */
-        .u-header { text-align:center; padding:25px 0; background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%); border-radius: 15px; margin-bottom: 20px; border: 1px solid #334155; }
-        .profile-list { background:var(--card); border-radius:15px; border: 1px solid #334155; overflow: hidden; }
-        .list-item { display:flex; align-items:center; padding:18px; border-bottom:1px solid #334155; gap:15px; cursor:pointer; }
+        /* Bottom Nav */
         .bottom-nav { position:fixed; bottom:0; width:100%; max-width: 600px; left: 50%; transform: translateX(-50%); background:#1e293b; display:flex; height:75px; border-top:1px solid #334155; z-index:1000; }
         .nav-item { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; color:#94a3b8; font-size:11px; cursor:pointer; position: relative; }
         .nav-item.active { color:var(--primary); }
-        .badge { position:absolute; top:12px; right:30%; background:var(--danger); color:white; font-size:10px; min-width:17px; height:17px; border-radius:50%; display:none; align-items:center; justify-content:center; font-weight: 800; }
+        .badge { position:absolute; top:12px; right:30%; background:var(--danger); color:white; font-size:10px; min-width:17px; height:17px; border-radius:50%; display:none; align-items:center; justify-content:center; }
         
-        .order-card { background:var(--card); padding:15px; border-radius:12px; margin-bottom:15px; border:1px solid #334155; }
-        .status-tag { display:inline-block; padding:5px 12px; border-radius:20px; font-size:11px; font-weight:bold; color: white; }
+        .order-card { background:var(--card); padding:15px; border-radius:12px; margin-bottom:15px; border:1px solid #334155; position: relative; }
     </style>
 </head>
 <body>
@@ -77,120 +63,50 @@
                 <div class="btn-cat" onclick="openList('tshirts/polo/', 'Polo')">Polo</div>
             </div>
 
-            <div class="section-h"><i class="fas fa-user-tie"></i> SHIRTS</div>
+            <div class="section-h"><i class="fas fa-vest"></i> PANTS & INNERWEAR</div>
             <div class="grid">
-                <div class="btn-cat" onclick="openList('shirt/formal/', 'Formal')">Formal</div>
-                <div class="btn-cat" onclick="openList('shirt/casual/', 'Casual')">Casual</div>
-                <div class="btn-cat" onclick="openList('shirt/half/', 'Half Shirt')">Half Shirt</div>
-            </div>
-
-            <div class="section-h"><i class="fas fa-vest"></i> PANTS</div>
-            <div class="grid">
+                <div class="btn-cat" onclick="openList('pants/gabardine/', 'Gabardine Pant')">👖 Gabardine</div>
+                <div class="btn-cat" onclick="openList('inner/men/', 'Innerwear')">🩲 Innerwear</div>
                 <div class="btn-cat" onclick="openList('pants/jeans/', 'Jeans')">Jeans</div>
                 <div class="btn-cat" onclick="openList('pants/formal/', 'Formal')">Formal</div>
             </div>
 
-            <div class="section-h"><i class="fas fa-child"></i> JUNIOR (KIDS)</div>
+            <div class="section-h"><i class="fas fa-user-tie"></i> SHIRTS</div>
             <div class="grid">
-                <div class="btn-cat" onclick="openList('junior/boys/', 'Boys Collection')">Boys</div>
-                <div class="btn-cat" onclick="openList('junior/girls/', 'Girls Collection')">Girls</div>
+                <div class="btn-cat" onclick="openList('shirt/formal/', 'Formal')">Formal</div>
+                <div class="btn-cat" onclick="openList('shirt/casual/', 'Casual')">Casual</div>
             </div>
-            
-            <div class="section-h"><i class="fas fa-belt"></i> ACCESSORIES</div>
-            <div class="grid">
-                <div class="btn-cat" onclick="openList('accessories/belt/', 'Leather Belts')">Belts</div>
-                <div class="btn-cat" onclick="openList('accessories/tie/', 'Premium Ties')">Ties</div>
-            </div>
-        </div>
-
-        <div id="p-list" class="page">
-            <div style="display:flex; align-items:center; gap:12px; margin-bottom:18px;">
-                <i class="fas fa-arrow-left" onclick="nav('shop')" style="cursor:pointer;"></i>
-                <h3 id="list-title" style="margin:0;">Products</h3>
-            </div>
-            <div id="product-grid" class="product-grid"></div>
         </div>
 
         <div id="p-cart" class="page">
             <div class="section-h">YOUR CART</div>
             <div id="cart-items"></div>
-            <div id="empty-msg" style="text-align:center; padding:50px 0; color: #94a3b8; display:none;">Cart is empty</div>
             <div id="cart-summary" style="background:var(--card); padding:20px; border-radius:15px; margin-top:20px;">
-                <div style="display:flex; justify-content:space-between; margin-bottom:5px;"><span>Subtotal:</span><b id="subtotal">$0</b></div>
-                <div style="display:flex; justify-content:space-between; margin-bottom:10px;"><span>Delivery:</span><b>$2</b></div>
-                <div style="display:flex; justify-content:space-between; font-size:18px; color:var(--primary); border-top:1px solid #334155; padding-top:10px; margin-bottom:15px;">
-                    <b>Total:</b><b id="total-price">$0</b>
-                </div>
-                <button class="btn-view-buy" style="height:48px;" onclick="placeOrder()">CASH ON DELIVERY</button>
+                <button class="btn-view-buy" style="height:48px;" onclick="placeOrder()">CONFIRM ORDER (COD)</button>
             </div>
         </div>
 
         <div id="p-profile" class="page">
-            <div class="u-header">
-                <div style="width:70px; height:70px; background:var(--primary); border-radius:50%; margin:0 auto 10px; display:flex; align-items:center; justify-content:center; font-weight:bold; font-size:24px; color: white;" id="u-pic">?</div>
-                <h3 id="u-name" style="margin:0;">User</h3>
-                <p id="u-id" style="font-size:12px; color:var(--primary);">#ID</p>
-            </div>
-            <div class="profile-list">
-                <div class="list-item" onclick="toggleAddressBox()"><i class="fas fa-map-marker-alt"></i> <span>Add/Edit Address</span> <i class="fas fa-chevron-down"></i></div>
+            <div class="profile-list" style="margin-top:20px;">
+                <div class="list-item" onclick="toggleAddressBox()"><i class="fas fa-map-marker-alt"></i> <span>Manage Address</span></div>
                 <div id="address-box">
-                    <textarea id="address-input" class="address-input" placeholder="Enter Full Address & Mobile Number"></textarea>
-                    <button class="btn-view-buy" style="margin-top:10px; background:var(--success);" onclick="saveAddress()">Save Address</button>
+                    <textarea id="address-input" class="address-input" placeholder="Address & Phone..."></textarea>
+                    <button class="btn-view-buy" style="margin-top:10px; background:var(--success);" onclick="saveAddress()">Save</button>
                 </div>
-                <div class="list-item" onclick="nav('orders')"><i class="fas fa-box"></i> <span>My Orders</span> <i class="fas fa-chevron-right"></i></div>
-                <div class="list-item" onclick="nav('wishlist')"><i class="fas fa-heart"></i> <span>My Wishlist</span> <i class="fas fa-chevron-right"></i></div>
-                <div class="list-item" onclick="promptAdminLogin()" style="border-top: 1px dashed #334155; margin-top:10px;">
-                    <i class="fas fa-user-shield" style="color:var(--warning);"></i> 
-                    <span style="color:var(--warning);">Admin Dashboard</span> 
-                    <i class="fas fa-chevron-right"></i>
-                </div>
+                <div class="list-item" onclick="nav('orders')"><i class="fas fa-box"></i> <span>My Orders</span></div>
+                <div class="list-item" onclick="promptAdminLogin()" style="color:var(--warning);"><i class="fas fa-user-shield"></i> <span>Admin Panel</span></div>
             </div>
         </div>
 
         <div id="p-orders" class="page">
-            <div style="display:flex; align-items:center; gap:12px; margin-bottom:18px;">
-                <i class="fas fa-arrow-left" onclick="nav('profile')" style="cursor:pointer;"></i>
-                <h3 style="margin:0;">Order History</h3>
-            </div>
+            <div class="section-h">MY ORDER HISTORY</div>
             <div id="order-list-container"></div>
-            <div id="orders-empty" style="text-align:center; padding:50px 0; color: #94a3b8; display:none;">No orders yet.</div>
         </div>
 
         <div id="p-admin" class="page">
-            <div style="display:flex; align-items:center; gap:12px; margin-bottom:18px;">
-                <i class="fas fa-arrow-left" onclick="nav('profile')" style="cursor:pointer;"></i>
-                <h3 style="margin:0;">Admin Control</h3>
-            </div>
-            <input type="text" id="adminSearchInput" class="admin-search" placeholder="Search Order ID or Name..." onkeyup="searchOrders()">
+            <div class="section-h">ADMIN DASHBOARD</div>
+            <input type="text" id="adminSearchInput" class="admin-search" placeholder="Search by Order ID or Name..." oninput="searchOrders()">
             <div id="admin-order-list"></div>
-        </div>
-
-        <div id="p-wishlist" class="page">
-            <div style="display:flex; align-items:center; gap:12px; margin-bottom:18px;">
-                <i class="fas fa-arrow-left" onclick="nav('profile')" style="cursor:pointer;"></i>
-                <h3 style="margin:0;">My Wishlist</h3>
-            </div>
-            <div id="wishlist-grid" class="product-grid"></div>
-        </div>
-    </div>
-
-    <div id="modal">
-        <div class="modal-body">
-            <div class="modal-image-container">
-                <i class="fas fa-times close-modal" onclick="closeModal()"></i>
-                <img id="m-img" src="" class="modal-content-img">
-            </div>
-            <div class="modal-details-panel">
-                <div id="m-status" class="status-tag" style="background:var(--success);">Available</div>
-                <h2 id="m-title" style="margin:0; color:white;">Product Title</h2>
-                <p id="m-price" style="color:var(--primary); font-size:24px; font-weight:800; margin:10px 0;">$15.00</p>
-                <div class="size-box">
-                    <div class="size-btn" onclick="setSize(this, 'M')">M</div>
-                    <div class="size-btn active" onclick="setSize(this, 'L')">L</div>
-                    <div class="size-btn" onclick="setSize(this, 'XL')">XL</div>
-                </div>
-                <button class="btn-view-buy" onclick="addToCart()" style="height:52px; font-size:16px;">ADD TO CART</button>
-            </div>
         </div>
     </div>
 
@@ -204,194 +120,117 @@
         const tg = window.Telegram.WebApp;
         tg.expand();
 
-        const ADMIN_NAME = "zoha";
-        const ADMIN_CODE = "22446688";
-        const BASE_IMG = "https://raw.githubusercontent.com/Zoha742/eshopbot/main/products/";
-
         let cart = JSON.parse(localStorage.getItem('eshop_cart')) || [];
-        let wishlist = JSON.parse(localStorage.getItem('eshop_wishlist')) || [];
         let orders = JSON.parse(localStorage.getItem('eshop_orders')) || [];
-        let currentItem = {};
 
-        // Navigation
         function nav(p) {
             document.querySelectorAll('.page').forEach(pg => pg.classList.remove('active'));
-            document.querySelectorAll('.nav-item').forEach(ni => ni.classList.remove('active'));
             document.getElementById('p-' + p).classList.add('active');
-            if(p === 'shop') document.querySelectorAll('.nav-item')[0].classList.add('active');
-            if(p === 'cart') { document.querySelectorAll('.nav-item')[1].classList.add('active'); renderCart(); }
-            if(p === 'profile') document.querySelectorAll('.nav-item')[2].classList.add('active');
             if(p === 'orders') renderOrders();
             if(p === 'admin') renderAdminOrders();
-            if(p === 'wishlist') renderWishlist();
-            window.scrollTo(0, 0);
         }
 
-        // Address Functions
-        function toggleAddressBox() {
-            const box = document.getElementById('address-box');
-            box.style.display = box.style.display === 'block' ? 'none' : 'block';
-            document.getElementById('address-input').value = localStorage.getItem('user_address') || "";
-        }
-        function saveAddress() {
-            const addr = document.getElementById('address-input').value;
-            if(!addr) return tg.showAlert("Please enter address!");
-            localStorage.setItem('user_address', addr);
-            tg.showAlert("Address Saved!");
-            document.getElementById('address-box').style.display = 'none';
+        // --- Admin Confirmation & Status Logic ---
+        function updateOrderStatus(idx, newStatus) {
+            orders[idx].status = newStatus;
+            localStorage.setItem('eshop_orders', JSON.stringify(orders));
+            tg.showAlert(`Order marked as ${newStatus}`);
+            renderAdminOrders(); // Refresh admin view
         }
 
-        // Product Logic
-        function openList(path, title) {
-            const grid = document.getElementById('product-grid');
-            grid.innerHTML = '';
-            document.getElementById('list-title').innerText = title;
-            for(let i=1; i<=6; i++) {
-                const img = BASE_IMG + path + i + '.jpg';
-                const pId = path.replace(/\//g,'_')+i;
-                const isFav = wishlist.some(w => w.id === pId);
-                grid.innerHTML += `
-                    <div class="p-card">
-                        <div class="p-img-box">
-                            <div class="fav-btn ${isFav?'active':''}" onclick="toggleWishlist('${pId}','${img}','${title} #${i}',event)">
-                                <i class="${isFav?'fas':'far'} fa-heart"></i>
-                            </div>
-                            <img src="${img}" onerror="this.src='https://raw.githubusercontent.com/Zoha742/eshopbot/main/products/no-image.jpg'">
-                        </div>
-                        <div class="p-details">
-                            <div class="p-name">${title} #${i}</div>
-                            <div class="p-price">$15.00</div>
-                            <button class="btn-view-buy" onclick="openDetail('${img}', '${title} #${i}')">View & Buy</button>
-                        </div>
-                    </div>`;
-            }
-            nav('list');
-        }
-
-        function openDetail(img, title) {
-            currentItem = { img, title, size: 'L', price: 15 };
-            document.getElementById('m-img').src = img;
-            document.getElementById('m-title').innerText = title;
-            document.getElementById('modal').style.display = 'flex';
-        }
-        function closeModal() { document.getElementById('modal').style.display = 'none'; }
-        function setSize(el, s) { document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active')); el.classList.add('active'); currentItem.size = s; }
-
-        // Cart Logic
-        function addToCart() {
-            cart.push({...currentItem, cartId: Date.now()});
-            localStorage.setItem('eshop_cart', JSON.stringify(cart));
-            updateBadge(); tg.showAlert('Added to Cart!'); closeModal();
-        }
-        function updateBadge() {
-            const b = document.getElementById('badge');
-            b.innerText = cart.length; b.style.display = cart.length > 0 ? 'flex' : 'none';
-        }
-        function renderCart() {
-            const container = document.getElementById('cart-items');
-            if(cart.length === 0) { container.innerHTML = ''; document.getElementById('cart-summary').style.display = 'none'; document.getElementById('empty-msg').style.display = 'block'; return; }
-            document.getElementById('empty-msg').style.display = 'none'; document.getElementById('cart-summary').style.display = 'block';
-            container.innerHTML = cart.map((item, idx) => `
-                <div class="cart-item" style="background:var(--card); padding:10px; border-radius:10px; margin-bottom:10px; display:flex; align-items:center; gap:10px; border:1px solid #334155;">
-                    <img src="${item.img}" style="width:50px; height:50px; object-fit:cover; border-radius:5px;">
-                    <div style="flex:1;"><b>${item.title} (${item.size})</b><p style="color:var(--primary); margin:0;">$15</p></div>
-                    <i class="fas fa-trash-alt" style="color:var(--danger);" onclick="removeItem(${idx})"></i>
-                </div>`).join('');
-            document.getElementById('subtotal').innerText = '$' + (cart.length * 15);
-            document.getElementById('total-price').innerText = '$' + (cart.length * 15 + 2);
-        }
-        function removeItem(idx) { cart.splice(idx,1); localStorage.setItem('eshop_cart', JSON.stringify(cart)); renderCart(); updateBadge(); }
-
-        // Order Logic
-        function placeOrder() {
-            const addr = localStorage.getItem('user_address');
-            if(!addr) return tg.showAlert("Please add shipping address in Profile!");
-            tg.showConfirm('Place Order?', (ok) => {
-                if(ok) {
-                    const orderId = 'ORD-' + Math.floor(1000 + Math.random() * 9000);
-                    const newOrder = { id: orderId, items: [...cart], total: cart.length * 15 + 2, status: 'Pending', date: new Date().toLocaleDateString(), address: addr, userName: tg.initDataUnsafe.user?.first_name || "User" };
-                    orders.unshift(newOrder);
-                    localStorage.setItem('eshop_orders', JSON.stringify(orders));
-                    cart = []; localStorage.removeItem('eshop_cart'); updateBadge();
-                    tg.showAlert('Order Placed: ' + orderId);
-                    nav('orders');
-                }
-            });
-        }
-
-        function renderOrders() {
-            const container = document.getElementById('order-list-container');
-            if(orders.length === 0) { container.innerHTML = ''; document.getElementById('orders-empty').style.display = 'block'; return; }
-            document.getElementById('orders-empty').style.display = 'none';
-            container.innerHTML = orders.map(o => `
-                <div class="order-card">
-                    <div style="display:flex; justify-content:space-between;"><b>#${o.id}</b> <span>${o.date}</span></div>
-                    <div style="font-size:12px; color:#94a3b8; margin:5px 0;">${o.items.map(i => i.title).join(', ')}</div>
-                    <div style="display:flex; justify-content:space-between; align-items:center;"><b>Total: $${o.total}</b> <span class="status-tag" style="background:var(--warning)">${o.status}</span></div>
-                </div>`).join('');
-        }
-
-        // Admin Search & View
-        function renderAdminOrders() {
-            const container = document.getElementById('admin-order-list');
-            if(orders.length === 0) { container.innerHTML = '<p>No orders.</p>'; return; }
-            container.innerHTML = orders.map((o, idx) => `
-                <div class="order-card" style="border-left:4px solid var(--primary)">
-                    <b>ID: #${o.id} | By: ${o.userName}</b>
-                    <p style="font-size:11px; margin:5px 0;">Addr: ${o.address}</p>
-                    <p style="font-size:12px;">Items: ${o.items.map(i => i.title).join(', ')}</p>
-                    <button onclick="deleteOrderAdmin(${idx})" style="background:none; border:none; color:var(--danger); cursor:pointer;">Delete Order</button>
-                </div>`).join('');
+        function getStatusColor(status) {
+            if(status === 'Confirmed') return '#22c55e';
+            if(status === 'Rejected') return '#ef4444';
+            return '#f59e0b'; // Pending
         }
 
         function searchOrders() {
-            let input = document.getElementById('adminSearchInput').value.toLowerCase();
-            let cards = document.querySelectorAll('#admin-order-list .order-card');
-            cards.forEach(card => {
-                let text = card.innerText.toLowerCase();
-                card.style.display = text.includes(input) ? "block" : "none";
+            let val = document.getElementById('adminSearchInput').value.toLowerCase();
+            let items = document.querySelectorAll('#admin-order-list .order-card');
+            items.forEach(item => {
+                item.style.display = item.innerText.toLowerCase().includes(val) ? "block" : "none";
             });
         }
 
-        function deleteOrderAdmin(idx) {
-            if(confirm("Delete this order?")) { orders.splice(idx,1); localStorage.setItem('eshop_orders', JSON.stringify(orders)); renderAdminOrders(); }
+        function renderAdminOrders() {
+            const container = document.getElementById('admin-order-list');
+            if(orders.length === 0) { container.innerHTML = '<p>No orders yet.</p>'; return; }
+            
+            container.innerHTML = orders.map((o, idx) => `
+                <div class="order-card">
+                    <div style="display:flex; justify-content:space-between;">
+                        <b>ID: #${o.id}</b>
+                        <span class="status-tag" style="background:${getStatusColor(o.status)}">${o.status}</span>
+                    </div>
+                    <p style="font-size:11px; color:#94a3b8; margin:5px 0;">Customer: ${o.userName}<br>Addr: ${o.address}</p>
+                    <div class="action-btns">
+                        <button class="btn-status" style="background:var(--success);" onclick="updateOrderStatus(${idx}, 'Confirmed')"><i class="fas fa-check"></i> Confirm</button>
+                        <button class="btn-status" style="background:var(--danger);" onclick="updateOrderStatus(${idx}, 'Rejected')"><i class="fas fa-times"></i> Reject</button>
+                        <button class="btn-status" style="background:#475569;" onclick="deleteOrder(${idx})"><i class="fas fa-trash"></i></button>
+                    </div>
+                </div>
+            `).join('');
         }
 
-        function promptAdminLogin() {
-            let n = prompt("Name:");
-            if(n === ADMIN_NAME) {
-                let c = prompt("Code:");
-                if(c === ADMIN_CODE) nav('admin');
+        // --- User Order View ---
+        function renderOrders() {
+            const container = document.getElementById('order-list-container');
+            container.innerHTML = orders.map(o => `
+                <div class="order-card" style="border-left: 4px solid ${getStatusColor(o.status)}">
+                    <div style="display:flex; justify-content:space-between;">
+                        <b>Order #${o.id}</b>
+                        <span style="color:${getStatusColor(o.status)}; font-weight:bold;">${o.status}</span>
+                    </div>
+                    <p style="font-size:12px; margin-top:5px;">${o.status === 'Confirmed' ? '✅ Your order is being processed.' : (o.status === 'Rejected' ? '❌ Order Cancelled.' : '⏳ Waiting for admin approval.')}</p>
+                </div>
+            `).join('');
+        }
+
+        function deleteOrder(idx) {
+            if(confirm("Delete this order record?")) {
+                orders.splice(idx, 1);
+                localStorage.setItem('eshop_orders', JSON.stringify(orders));
+                renderAdminOrders();
             }
         }
 
-        function toggleWishlist(id, img, title, e) {
-            e.stopPropagation();
-            const idx = wishlist.findIndex(w => w.id === id);
-            if(idx > -1) wishlist.splice(idx, 1); else wishlist.push({id, img, title});
-            localStorage.setItem('eshop_wishlist', JSON.stringify(wishlist));
-            e.currentTarget.classList.toggle('active');
-            const i = e.currentTarget.querySelector('i');
-            i.classList.toggle('fas'); i.classList.toggle('far');
+        function promptAdminLogin() {
+            let n = prompt("Admin Name:");
+            if(n === "zoha") {
+                let c = prompt("Admin Code:");
+                if(c === "22446688") nav('admin');
+            }
         }
 
-        function renderWishlist() {
-            const grid = document.getElementById('wishlist-grid');
-            if(wishlist.length === 0) { grid.innerHTML = '<p>Empty</p>'; return; }
-            grid.innerHTML = wishlist.map(item => `
-                <div class="p-card">
-                    <div class="p-img-box"><img src="${item.img}"></div>
-                    <div class="p-details"><b>${item.title}</b><button class="btn-view-buy" onclick="openDetail('${item.img}', '${item.title}')">View</button></div>
-                </div>`).join('');
+        // Address Toggle
+        function toggleAddressBox() {
+            let box = document.getElementById('address-box');
+            box.style.display = box.style.display === 'block' ? 'none' : 'block';
         }
 
-        // Init
-        updateBadge();
-        const user = tg.initDataUnsafe.user;
-        if(user) {
-            document.getElementById('u-name').innerText = user.first_name + (user.last_name ? ' ' + user.last_name : '');
-            document.getElementById('u-id').innerText = "#" + user.id;
-            document.getElementById('u-pic').innerText = user.first_name[0].toUpperCase();
+        function saveAddress() {
+            localStorage.setItem('user_address', document.getElementById('address-input').value);
+            tg.showAlert("Address Saved!");
+            toggleAddressBox();
+        }
+
+        function placeOrder() {
+            const addr = localStorage.getItem('user_address');
+            if(!addr) { tg.showAlert("Add address in Profile first!"); return; }
+            
+            const newOrder = {
+                id: Math.floor(1000 + Math.random() * 9000),
+                items: [...cart],
+                status: 'Pending',
+                address: addr,
+                userName: tg.initDataUnsafe.user?.first_name || "User"
+            };
+            orders.unshift(newOrder);
+            localStorage.setItem('eshop_orders', JSON.stringify(orders));
+            cart = [];
+            localStorage.removeItem('eshop_cart');
+            tg.showAlert("Order Placed Successfully!");
+            nav('orders');
         }
     </script>
 </body>
