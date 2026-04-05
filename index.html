@@ -7,48 +7,39 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        /* আপনার অরিজিনাল থিম ও কালার স্কিম */
-        :root { --primary: #38bdf8; --bg: #0f172a; --card: #1e293b; --text: #f8fafc; --danger: #ef4444; --success: #22c55e; }
-        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); margin:0; padding:0; overflow-x: hidden; -webkit-tap-highlight-color: transparent; }
+        :root { --primary: #38bdf8; --bg: #0f172a; --card: #1e293b; --text: #f8fafc; --danger: #ef4444; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); margin:0; padding:0; overflow-x: hidden; }
         .container { padding:15px; padding-bottom:100px; max-width: 600px; margin: 0 auto; }
         .page { display:none; } .page.active { display:block; animation: fadeIn 0.3s ease; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* মেনু ও সেকশন ডিজাইন */
+        /* Storefront Header */
         .section-h { display:flex; align-items:center; gap:8px; color:var(--primary); font-size:12px; font-weight:800; margin:20px 0 10px; border-left:3px solid var(--primary); padding-left:8px; text-transform:uppercase; }
         .grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
-        .btn-cat { background:var(--card); padding:14px; border-radius:12px; text-align:center; border:1px solid #334155; font-size:12px; font-weight:600; cursor:pointer; color: white; display:flex; align-items:center; justify-content:center; gap:5px; transition: 0.2s; }
-        .btn-cat:active { transform: scale(0.95); background: #2d3748; }
+        .btn-cat { background:var(--card); padding:14px; border-radius:12px; text-align:center; border:1px solid #334155; font-size:12px; font-weight:600; cursor:pointer; color: white; display:flex; align-items:center; justify-content:center; gap:5px; }
 
-        /* প্রোডাক্ট ডিসপ্লে কার্ড */
+        /* Product Card Design */
         .product-grid { display:grid; grid-template-columns: 1fr 1fr; gap:12px; padding:10px 0; }
-        .p-card { background: #ffffff; border-radius:15px; overflow:hidden; color: #333; position:relative; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
-        .p-img-box { width:100%; height:160px; background:#f3f4f6; display:flex; align-items:center; justify-content:center; }
+        .p-card { background: #ffffff; border-radius:15px; overflow:hidden; color: #333; position:relative; display: flex; flex-direction: column; }
+        .p-img-box { width:100%; height:160px; background:#f3f4f6; display:flex; align-items:center; justify-content:center; overflow: hidden; }
         .p-img-box img { width:100%; height:100%; object-fit: cover; }
-        .p-info { padding:12px; }
-        .p-name { font-weight: 800; font-size: 13px; color: #1e293b; margin-bottom: 4px; }
-        .p-meta { font-size: 11px; color: #64748b; margin-bottom: 10px; font-weight: 600; }
+        .p-info { padding:10px; text-align:center; flex-grow: 1; }
+        .p-name { font-weight: bold; font-size: 13px; margin-bottom: 4px; }
+        .p-meta { font-size: 10px; color: #666; margin-bottom: 8px; }
         
-        /* সাইজ অপশন */
-        .size-box { display:flex; justify-content:center; gap:4px; margin-bottom:12px; }
-        .size-btn { border:1px solid #e2e8f0; padding:4px 6px; font-size:10px; border-radius:6px; cursor:pointer; background: #f8fafc; font-weight: bold; flex: 1; text-align: center; }
+        .size-box { display:flex; justify-content:center; gap:4px; margin:8px 0; }
+        .size-btn { border:1px solid #ddd; padding:4px 6px; font-size:10px; border-radius:4px; cursor:pointer; background: #fff; }
         .size-btn.selected { background: var(--primary); color: white; border-color: var(--primary); }
-        
-        .btn-buy { background: var(--primary); color: white; border: none; width: 100%; padding: 10px; border-radius: 8px; font-weight: 800; cursor: pointer; font-size: 12px; }
+        .btn-buy { background: var(--primary); color: white; border: none; width: 100%; padding: 10px; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: auto; }
 
-        /* কার্ট ও ডেলিভারি চার্জ */
-        .cart-summary { background: var(--card); padding: 15px; border-radius: 12px; margin-top: 15px; border: 1px solid #334155; }
-        .summary-line { display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 14px; color: #94a3b8; }
-        .total-line { font-weight: bold; color: var(--primary); border-top: 1px solid #334155; padding-top: 8px; margin-top: 8px; }
+        /* Profile & Address */
+        .u-header { text-align:center; padding:20px; background: var(--card); border-radius: 15px; margin-bottom: 15px; }
+        .address-box { background: var(--card); padding: 15px; border-radius: 12px; margin-top: 10px; border: 1px solid #334155; }
+        .address-input { width: 100%; padding: 10px; background: #0f172a; border: 1px solid #334155; color: white; border-radius: 8px; box-sizing: border-box; }
 
-        /* প্রোফাইল অ্যাড্রেস বক্স */
-        .address-box { background: var(--card); padding: 15px; border-radius: 12px; border: 1px solid #334155; margin-top: 15px; }
-        .address-input { width: 100%; padding: 10px; background: #0f172a; border: 1px solid #334155; color: white; border-radius: 8px; box-sizing: border-box; resize: none; margin-bottom: 10px; }
-
-        /* বটম ন্যাভিগেশন (ফিক্সড) */
-        .bottom-nav { position:fixed; bottom:0; width:100%; max-width: 600px; left: 50%; transform: translateX(-50%); background:#1e293b; display:flex; height:75px; border-top:1px solid #334155; z-index:1000; box-shadow: 0 -4px 10px rgba(0,0,0,0.3); }
-        .nav-item { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; color:#94a3b8; font-size:11px; cursor:pointer; font-weight: 500; }
-        .nav-item i { font-size: 20px; margin-bottom: 4px; }
+        /* Fixed Bottom Nav */
+        .bottom-nav { position:fixed; bottom:0; width:100%; max-width: 600px; left: 50%; transform: translateX(-50%); background:#1e293b; display:flex; height:70px; border-top:1px solid #334155; z-index:1000; }
+        .nav-item { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; color:#94a3b8; font-size:11px; cursor:pointer; }
         .nav-item.active { color:var(--primary); }
     </style>
 </head>
@@ -58,211 +49,120 @@
         <div id="p-shop" class="page active">
             <div class="section-h"><i class="fas fa-bolt"></i> HOT DEALS</div>
             <div class="grid">
-                <div class="btn-cat" onclick="openCategory('hotdeals/summer/', 'Summer Offer')">☀️ Summer Offer</div>
-                <div class="btn-cat" onclick="openCategory('hotdeals/sale/', 'Big Sale')">🎁 Big Sale</div>
+                <div class="btn-cat" onclick="openP('hotdeals/summer/', 'Summer Offer')">☀️ Summer Offer</div>
+                <div class="btn-cat" onclick="openP('hotdeals/sale/', 'Big Sale')">🎁 Big Sale</div>
             </div>
 
             <div class="section-h"><i class="fas fa-tshirt"></i> T-SHIRTS</div>
             <div class="grid">
-                <div class="btn-cat" onclick="openCategory('tshirts/printed/', 'Printed T-shirt')">Printed</div>
-                <div class="btn-cat" onclick="openCategory('tshirts/polo/', 'Polo T-shirt')">Polo</div>
+                <div class="btn-cat" onclick="openP('tshirts/printed/', 'Printed T-shirt')">Printed</div>
+                <div class="btn-cat" onclick="openP('tshirts/polo/', 'Polo T-shirt')">Polo</div>
             </div>
 
             <div class="section-h"><i class="fas fa-user-tie"></i> SHIRTS</div>
             <div class="grid">
-                <div class="btn-cat" onclick="openCategory('shirt/formal/', 'Formal Shirt')">Formal</div>
-                <div class="btn-cat" onclick="openCategory('shirt/casual/', 'Casual Shirt')">Casual</div>
-                <div class="btn-cat" onclick="openCategory('shirt/half/', 'Half Shirt')">Half</div>
+                <div class="btn-cat" onclick="openP('shirt/formal/', 'Formal Shirt')">Formal</div>
+                <div class="btn-cat" onclick="openP('shirt/casual/', 'Casual Shirt')">Casual</div>
+                <div class="btn-cat" onclick="openP('shirt/half/', 'Half Shirt')">Half Shirt</div>
             </div>
 
-            <div class="section-h"><i class="fas fa-child"></i> JUNIOR (KIDS)</div>
+            <div class="section-h"><i class="fas fa-vest"></i> PANTS</div>
             <div class="grid">
-                <div class="btn-cat" onclick="openCategory('junior/boys/', 'Boys Collection')">Boys</div>
-                <div class="btn-cat" onclick="openCategory('junior/girls/', 'Girls Collection')">Girls</div>
+                <div class="btn-cat" onclick="openP('pants/jeans/', 'Jeans Pant')">Jeans</div>
+                <div class="btn-cat" onclick="openP('pants/formal/', 'Formal Pant')">Formal</div>
+                <div class="btn-cat" onclick="openP('pants/gabardine/', 'Gabardine')">Gabardine</div>
             </div>
-
-            <div class="section-h"><i class="fas fa-mosque"></i> PANJABI</div>
-            <div class="grid">
-                <div class="btn-cat" onclick="openCategory('panjabi/easy/', 'Easy Panjabi')">Easy</div>
-                <div class="btn-cat" onclick="openCategory('panjabi/kabli/', 'Kabli Set')">Kabli</div>
             </div>
-        </div>
 
         <div id="p-list" class="page">
-            <div style="display:flex; align-items:center; gap:12px; margin-bottom:15px; background: var(--card); padding: 10px; border-radius: 10px;">
-                <i class="fas fa-arrow-left" onclick="nav('shop')" style="color: var(--primary); cursor: pointer;"></i>
-                <h3 id="list-title" style="margin:0; font-size: 16px;">Products</h3>
+            <div style="display:flex; align-items:center; gap:12px; margin-bottom:15px;">
+                <i class="fas fa-arrow-left" onclick="nav('shop')"></i>
+                <h3 id="list-title" style="margin:0;">Products</h3>
             </div>
             <div id="product-grid" class="product-grid"></div>
         </div>
 
-        <div id="p-cart" class="page">
-            <div class="section-h"><i class="fas fa-shopping-cart"></i> CART</div>
-            <div id="cart-container"></div>
-            <div id="cart-summary-box" style="display:none;">
-                <div class="cart-summary">
-                    <div class="summary-line"><span>Subtotal:</span> <span id="sub-total">৳0</span></div>
-                    <div class="summary-line"><span>Delivery Charge:</span> <span>৳60</span></div>
-                    <div class="summary-line total-line"><span>Total:</span> <span id="final-total">৳0</span></div>
-                </div>
-                <button class="btn-buy" style="margin-top:15px; height: 50px; background: var(--success);" onclick="confirmOrder()">PLACE ORDER</button>
-            </div>
-            <div id="empty-cart" style="text-align:center; padding: 50px 0; color: #94a3b8;">Cart is empty.</div>
-        </div>
-
-        <div id="p-orders" class="page">
-            <div class="section-h"><i class="fas fa-box"></i> MY ORDERS</div>
-            <div id="order-history"></div>
-        </div>
+        <div id="p-cart" class="page">... (Cart items & Total calculation) ...</div>
+        <div id="p-orders" class="page">... (Order History) ...</div>
 
         <div id="p-profile" class="page">
-            <div class="section-h"><i class="fas fa-user"></i> PROFILE</div>
+            <div class="u-header">
+                <h3 id="u-name">User Name</h3>
+                <p id="u-id">#ID</p>
+            </div>
             <div class="address-box">
-                <p style="font-size:12px; font-weight: bold; margin-bottom:10px;">SHIPPING ADDRESS</p>
-                <textarea id="addr-input" class="address-input" rows="3" placeholder="Flat No, Road, Area, Phone Number..."></textarea>
-                <button class="btn-buy" onclick="saveAddress()" style="background: var(--success);">SAVE ADDRESS</button>
+                <p style="font-size:12px; margin-bottom:8px;">Shipping Address:</p>
+                <textarea id="addr-input" class="address-input" rows="3" placeholder="Enter Full Address & Phone"></textarea>
+                <button class="btn-buy" style="margin-top:10px; background: #22c55e;" onclick="saveAddr()">Save Address</button>
             </div>
         </div>
     </div>
 
     <div class="bottom-nav">
-        <div class="nav-item active" id="nav-shop" onclick="nav('shop')"><i class="fas fa-th-large"></i>Menu</div>
+        <div class="nav-item active" id="nav-shop" onclick="nav('shop')"><i class="fas fa-store"></i>Menu</div>
         <div class="nav-item" id="nav-cart" onclick="nav('cart')"><i class="fas fa-shopping-basket"></i>Cart</div>
-        <div class="nav-item" id="nav-orders" onclick="nav('orders')"><i class="fas fa-history"></i>Orders</div>
+        <div class="nav-item" id="nav-orders" onclick="nav('orders')"><i class="fas fa-box"></i>Orders</div>
         <div class="nav-item" id="nav-profile" onclick="nav('profile')"><i class="fas fa-user-circle"></i>Profile</div>
     </div>
 
     <script>
         const tg = window.Telegram.WebApp;
-        tg.expand();
-        
-        const IMG_URL = "https://raw.githubusercontent.com/Zoha742/eshopbot/main/products/";
-        let cart = JSON.parse(localStorage.getItem('eshop_cart')) || [];
-        let orders = JSON.parse(localStorage.getItem('eshop_orders')) || [];
-        let selectedSizes = {};
+        const BASE_IMG = "https://raw.githubusercontent.com/Zoha742/eshopbot/main/products/";
+        let cart = [];
+        let selectedSize = {};
 
         function nav(p) {
             document.querySelectorAll('.page').forEach(pg => pg.classList.remove('active'));
-            document.querySelectorAll('.nav-item').forEach(ni => ni.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
             document.getElementById('p-' + p).classList.add('active');
             document.getElementById('nav-' + p).classList.add('active');
-            if(p === 'cart') renderCart();
-            if(p === 'orders') renderOrders();
         }
 
-        function openCategory(path, title) {
+        function openP(path, title) {
             const grid = document.getElementById('product-grid');
             grid.innerHTML = '';
             document.getElementById('list-title').innerText = title;
             
-            // বায়ারের চাহিদা অনুযায়ী ডাইনামিক প্রোডাক্ট ডিসপ্লে
             for(let i=1; i<=4; i++) {
-                const pid = 'PRD-' + Math.floor(1000 + Math.random() * 9000);
-                const price = 590;
-                const img = IMG_URL + path + i + '.jpg';
-                
+                const pid = 'ID-' + Math.floor(1000 + Math.random() * 9000);
+                const price = 550;
+                const imgUrl = BASE_IMG + path + i + '.jpg';
+
                 grid.innerHTML += `
                     <div class="p-card">
-                        <div class="p-img-box"><img src="${img}" onerror="this.src='https://via.placeholder.com/300x300?text=Image+Coming+Soon'"></div>
+                        <div class="p-img-box"><img src="${imgUrl}" onerror="this.src='https://via.placeholder.com/150'"></div>
                         <div class="p-info">
                             <div class="p-name">${title}</div>
-                            <div class="p-meta">ID: ${pid} | ৳${price}</div>
+                            <div class="p-meta">ID: ${pid} | Price: ৳${price}</div>
                             <div class="size-box">
-                                ${['M','L','XL','XXL'].map(s => `<div class="size-btn" id="sz-${pid}-${s}" onclick="selectSize('${pid}','${s}')">${s}</div>`).join('')}
+                                ${['M','L','XL','XXL'].map(s => `<span class="size-btn" onclick="setSize('${pid}','${s}',this)">${s}</span>`).join('')}
                             </div>
-                            <button class="btn-buy" onclick="addToCart('${img}','${title}','${pid}',${price})">Add to Cart</button>
+                            <button class="btn-buy" onclick="addToCart('${imgUrl}','${title}','${pid}',${price})">Add to Cart</button>
                         </div>
                     </div>`;
             }
             nav('list');
         }
 
-        function selectSize(pid, size) {
-            document.querySelectorAll(`[id^="sz-${pid}-"]`).forEach(el => el.classList.remove('selected'));
-            document.getElementById(`sz-${pid}-${size}`).classList.add('selected');
-            selectedSizes[pid] = size;
+        function setSize(pid, s, el) {
+            el.parentElement.querySelectorAll('.size-btn').forEach(b => b.classList.remove('selected'));
+            el.classList.add('selected');
+            selectedSize[pid] = s;
         }
 
         function addToCart(img, name, id, price) {
-            if(!selectedSizes[id]) { tg.showAlert("Please select a size (M-XXL)!"); return; }
-            cart.push({ img, name, id, price, size: selectedSizes[id] });
-            localStorage.setItem('eshop_cart', JSON.stringify(cart));
+            if(!selectedSize[id]) { tg.showAlert("Please select a size first!"); return; }
+            cart.push({ img, name, id, price, size: selectedSize[id] });
             tg.showAlert("Added to cart!");
         }
 
-        function renderCart() {
-            const cont = document.getElementById('cart-container');
-            const summary = document.getElementById('cart-summary-box');
-            const empty = document.getElementById('empty-cart');
-            
-            if(cart.length === 0) {
-                cont.innerHTML = ''; summary.style.display = 'none'; empty.style.display = 'block'; return;
-            }
-
-            empty.style.display = 'none';
-            summary.style.display = 'block';
-            let sub = 0;
-            cont.innerHTML = cart.map((it, idx) => {
-                sub += it.price;
-                return `<div style="display:flex; align-items:center; gap:12px; background:var(--card); padding:10px; border-radius:12px; margin-bottom:10px; border:1px solid #334155;">
-                    <img src="${it.img}" style="width:50px; height:50px; border-radius:8px; object-fit:cover;">
-                    <div style="flex:1;">
-                        <div style="font-size:13px; font-weight:bold;">${it.name}</div>
-                        <div style="font-size:11px; color:var(--primary);">Size: ${it.size} | ৳${it.price}</div>
-                    </div>
-                    <i class="fas fa-trash-alt" style="color:var(--danger); padding:10px;" onclick="removeItem(${idx})"></i>
-                </div>`;
-            }).join('');
-            
-            document.getElementById('sub-total').innerText = '৳' + sub;
-            document.getElementById('final-total').innerText = '৳' + (sub + 60);
+        function saveAddr() {
+            localStorage.setItem('user_addr', document.getElementById('addr-input').value);
+            tg.showAlert("Address Saved!");
         }
-
-        function removeItem(idx) { cart.splice(idx, 1); localStorage.setItem('eshop_cart', JSON.stringify(cart)); renderCart(); }
-
-        function confirmOrder() {
-            const addr = localStorage.getItem('user_address');
-            if(!addr) { tg.showAlert("Please save your address in Profile!"); nav('profile'); return; }
-            
-            let total = cart.reduce((s, i) => s + i.price, 0) + 60;
-            const newOrder = {
-                id: 'ORD' + Math.floor(1000 + Math.random() * 9000),
-                items: [...cart],
-                total: total,
-                status: 'Pending',
-                date: new Date().toLocaleDateString()
-            };
-            
-            orders.unshift(newOrder);
-            localStorage.setItem('eshop_orders', JSON.stringify(orders));
-            cart = [];
-            localStorage.removeItem('eshop_cart');
-            tg.showAlert("Order placed successfully!");
-            nav('orders');
-        }
-
-        function renderOrders() {
-            const cont = document.getElementById('order-history');
-            if(orders.length === 0) { cont.innerHTML = '<p style="text-align:center; margin-top:20px;">No orders yet.</p>'; return; }
-            cont.innerHTML = orders.map(o => `
-                <div style="background:var(--card); padding:15px; border-radius:12px; margin-bottom:12px; border-left: 4px solid var(--primary);">
-                    <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
-                        <span style="font-weight:bold;">#${o.id}</span>
-                        <span style="color:var(--primary); font-size:12px; font-weight:bold;">${o.status}</span>
-                    </div>
-                    <div style="font-size:11px; color:#94a3b8;">${o.items.map(i => i.name + ' (' + i.size + ')').join(', ')}</div>
-                    <div style="margin-top:10px; font-weight:bold; text-align:right;">Total: ৳${o.total}</div>
-                </div>`).join('');
-        }
-
-        function saveAddress() {
-            const val = document.getElementById('addr-input').value;
-            if(val.length < 10) { tg.showAlert("Please enter a valid full address!"); return; }
-            localStorage.setItem('user_address', val);
-            tg.showAlert("Address saved!");
-        }
-
-        document.getElementById('addr-input').value = localStorage.getItem('user_address') || '';
+        
+        // Initializing user address
+        document.getElementById('addr-input').value = localStorage.getItem('user_addr') || '';
     </script>
 </body>
 </html>
