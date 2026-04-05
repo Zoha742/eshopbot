@@ -8,39 +8,40 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root { --primary: #38bdf8; --bg: #0f172a; --card: #1e293b; --text: #f8fafc; --danger: #ef4444; }
-        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); margin:0; padding:0; overflow-x: hidden; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); margin:0; padding:0; overflow-x: hidden; -webkit-tap-highlight-color: transparent; }
         .container { padding:15px; padding-bottom:100px; max-width: 600px; margin: 0 auto; }
         .page { display:none; } .page.active { display:block; animation: fadeIn 0.3s ease; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* Storefront Header */
-        .section-h { display:flex; align-items:center; gap:8px; color:var(--primary); font-size:12px; font-weight:800; margin:20px 0 10px; border-left:3px solid var(--primary); padding-left:8px; text-transform:uppercase; }
+        .section-h { display:flex; align-items:center; gap:8px; color:var(--primary); font-size:12px; font-weight:800; margin:20px 0 10px; border-left:3px solid var(--primary); padding-left:8px; text-transform:uppercase; letter-spacing: 0.5px; }
         .grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
-        .btn-cat { background:var(--card); padding:14px; border-radius:12px; text-align:center; border:1px solid #334155; font-size:12px; font-weight:600; cursor:pointer; color: white; display:flex; align-items:center; justify-content:center; gap:5px; }
-
-        /* Product Card Design */
-        .product-grid { display:grid; grid-template-columns: 1fr 1fr; gap:12px; padding:10px 0; }
-        .p-card { background: #ffffff; border-radius:15px; overflow:hidden; color: #333; position:relative; display: flex; flex-direction: column; }
-        .p-img-box { width:100%; height:160px; background:#f3f4f6; display:flex; align-items:center; justify-content:center; overflow: hidden; }
-        .p-img-box img { width:100%; height:100%; object-fit: cover; }
-        .p-info { padding:10px; text-align:center; flex-grow: 1; }
-        .p-name { font-weight: bold; font-size: 13px; margin-bottom: 4px; }
-        .p-meta { font-size: 10px; color: #666; margin-bottom: 8px; }
         
-        .size-box { display:flex; justify-content:center; gap:4px; margin:8px 0; }
-        .size-btn { border:1px solid #ddd; padding:4px 6px; font-size:10px; border-radius:4px; cursor:pointer; background: #fff; }
-        .size-btn.selected { background: var(--primary); color: white; border-color: var(--primary); }
-        .btn-buy { background: var(--primary); color: white; border: none; width: 100%; padding: 10px; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: auto; }
+        .btn-cat { background:var(--card); padding:14px; border-radius:12px; text-align:center; border:1px solid #334155; font-size:12px; font-weight:600; cursor:pointer; transition: all 0.2s ease; display:flex; align-items:center; justify-content:center; gap:5px; }
+        .btn-cat:active { transform: scale(0.96); background: rgba(56, 189, 248, 0.1); border-color: var(--primary); }
 
-        /* Profile & Address */
-        .u-header { text-align:center; padding:20px; background: var(--card); border-radius: 15px; margin-bottom: 15px; }
-        .address-box { background: var(--card); padding: 15px; border-radius: 12px; margin-top: 10px; border: 1px solid #334155; }
-        .address-input { width: 100%; padding: 10px; background: #0f172a; border: 1px solid #334155; color: white; border-radius: 8px; box-sizing: border-box; }
+        .product-grid { display:grid; grid-template-columns: 1fr 1fr; gap:12px; padding:10px 0; }
+        .p-card { background: #ffffff; border-radius:15px; overflow:hidden; color: #333; position:relative; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+        
+        .p-img-box { width:100%; height:170px; background:#f3f4f6; display:flex; align-items:center; justify-content:center; overflow: hidden; }
+        .p-img-box img { max-width:100%; max-height:100%; object-fit: contain; }
+        
+        .fav-btn { position:absolute; top:10px; right:10px; background:rgba(255,255,255,0.9); width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#b0bec5; font-size:16px; cursor:pointer; z-index:10; border: 1px solid #e0e0e0; }
+        .fav-btn.active { color: var(--danger); }
+        
+        .p-details { padding:12px; text-align:center; }
+        .p-name { font-size:13px; font-weight:700; color: #1e293b; margin:2px 0 6px; }
+        .p-price { font-size:15px; font-weight:800; color: var(--primary); margin-bottom:10px; }
+        .btn-view-buy { background: var(--primary); color: white; border: none; width: 100%; padding: 10px; border-radius: 8px; font-size: 12px; font-weight: bold; cursor: pointer; }
 
-        /* Fixed Bottom Nav */
-        .bottom-nav { position:fixed; bottom:0; width:100%; max-width: 600px; left: 50%; transform: translateX(-50%); background:#1e293b; display:flex; height:70px; border-top:1px solid #334155; z-index:1000; }
+        /* Modal & Nav Styles are kept from your original code */
+        #modal { position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:2000; display:none; flex-direction:column; backdrop-filter: blur(5px); }
+        .modal-body { flex: 1; display: flex; flex-direction: column; overflow-y: auto; }
+        .modal-details-panel { background: var(--card); padding: 25px; border-radius: 25px 25px 0 0; margin-top: -20px; color: white; }
+        
+        .bottom-nav { position:fixed; bottom:0; width:100%; max-width: 600px; left: 50%; transform: translateX(-50%); background:#1e293b; display:flex; height:75px; border-top:1px solid #334155; z-index:1000; }
         .nav-item { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; color:#94a3b8; font-size:11px; cursor:pointer; }
         .nav-item.active { color:var(--primary); }
+        .badge { position:absolute; top:12px; right:30%; background:var(--danger); color:white; font-size:10px; min-width:17px; height:17px; border-radius:50%; display:none; align-items:center; justify-content:center; }
     </style>
 </head>
 <body>
@@ -49,120 +50,130 @@
         <div id="p-shop" class="page active">
             <div class="section-h"><i class="fas fa-bolt"></i> HOT DEALS</div>
             <div class="grid">
-                <div class="btn-cat" onclick="openP('hotdeals/summer/', 'Summer Offer')">☀️ Summer Offer</div>
-                <div class="btn-cat" onclick="openP('hotdeals/sale/', 'Big Sale')">🎁 Big Sale</div>
+                <div class="btn-cat" onclick="openList('hotdeals/summer/', 'Summer Offer')">☀️ Summer Offer</div>
+                <div class="btn-cat" onclick="openList('hotdeals/sale/', 'Big Sale')">🎁 Big Sale</div>
             </div>
 
             <div class="section-h"><i class="fas fa-tshirt"></i> T-SHIRTS</div>
             <div class="grid">
-                <div class="btn-cat" onclick="openP('tshirts/printed/', 'Printed T-shirt')">Printed</div>
-                <div class="btn-cat" onclick="openP('tshirts/polo/', 'Polo T-shirt')">Polo</div>
+                <div class="btn-cat" onclick="openList('tshirts/printed/', 'Printed')">Printed</div>
+                <div class="btn-cat" onclick="openList('tshirts/polo/', 'Polo')">Polo</div>
             </div>
 
             <div class="section-h"><i class="fas fa-user-tie"></i> SHIRTS</div>
             <div class="grid">
-                <div class="btn-cat" onclick="openP('shirt/formal/', 'Formal Shirt')">Formal</div>
-                <div class="btn-cat" onclick="openP('shirt/casual/', 'Casual Shirt')">Casual</div>
-                <div class="btn-cat" onclick="openP('shirt/half/', 'Half Shirt')">Half Shirt</div>
+                <div class="btn-cat" onclick="openList('shirt/formal/', 'Formal')">Formal</div>
+                <div class="btn-cat" onclick="openList('shirt/casual/', 'Casual')">Casual</div>
+                <div class="btn-cat" onclick="openList('shirt/half/', 'Half Shirt')">Half Shirt</div>
             </div>
 
             <div class="section-h"><i class="fas fa-vest"></i> PANTS</div>
             <div class="grid">
-                <div class="btn-cat" onclick="openP('pants/jeans/', 'Jeans Pant')">Jeans</div>
-                <div class="btn-cat" onclick="openP('pants/formal/', 'Formal Pant')">Formal</div>
-                <div class="btn-cat" onclick="openP('pants/gabardine/', 'Gabardine')">Gabardine</div>
-            </div>
+                <div class="btn-cat" onclick="openList('pants/jeans/', 'Jeans')">Jeans</div>
+                <div class="btn-cat" onclick="openList('pants/formal/', 'Formal')">Formal</div>
+                <div class="btn-cat" onclick="openList('pants/gabardine/', 'Gabardine')">Gabardine</div>
             </div>
 
+            <div class="section-h"><i class="fas fa-child"></i> JUNIOR (KIDS)</div>
+            <div class="grid">
+                <div class="btn-cat" onclick="openList('junior/boys/', 'Boys Collection')">Boys</div>
+                <div class="btn-cat" onclick="openList('junior/girls/', 'Girls Collection')">Girls</div>
+            </div>
+
+            <div class="section-h"><i class="fas fa-belt"></i> ACCESSORIES</div>
+            <div class="grid">
+                <div class="btn-cat" onclick="openList('accessories/belt/', 'Leather Belts')">Belts</div>
+                <div class="btn-cat" onclick="openList('accessories/tie/', 'Premium Ties')">Ties</div>
+                <div class="btn-cat" onclick="openList('accessories/underwear/', 'Inner Wear')">Inner Wear</div>
+            </div>
+        </div>
+
         <div id="p-list" class="page">
-            <div style="display:flex; align-items:center; gap:12px; margin-bottom:15px;">
-                <i class="fas fa-arrow-left" onclick="nav('shop')"></i>
-                <h3 id="list-title" style="margin:0;">Products</h3>
+            <div style="display:flex; align-items:center; gap:12px; margin-bottom:18px;">
+                <i class="fas fa-arrow-left" onclick="nav('shop')" style="cursor:pointer;"></i>
+                <h3 id="list-title">Products</h3>
             </div>
             <div id="product-grid" class="product-grid"></div>
         </div>
 
-        <div id="p-cart" class="page">... (Cart items & Total calculation) ...</div>
-        <div id="p-orders" class="page">... (Order History) ...</div>
-
-        <div id="p-profile" class="page">
-            <div class="u-header">
-                <h3 id="u-name">User Name</h3>
-                <p id="u-id">#ID</p>
-            </div>
-            <div class="address-box">
-                <p style="font-size:12px; margin-bottom:8px;">Shipping Address:</p>
-                <textarea id="addr-input" class="address-input" rows="3" placeholder="Enter Full Address & Phone"></textarea>
-                <button class="btn-buy" style="margin-top:10px; background: #22c55e;" onclick="saveAddr()">Save Address</button>
+        <div id="p-cart" class="page">
+            <div class="section-h"><i class="fas fa-shopping-basket"></i> YOUR CART</div>
+            <div id="cart-items"></div>
+            <div id="cart-summary" class="summary-box" style="background:var(--card); padding:15px; border-radius:12px; margin-top:10px;">
+                <div style="display:flex; justify-content:space-between;"><span>Total:</span><b id="total-price">$0</b></div>
+                <button class="btn-view-buy" style="margin-top:10px;" onclick="placeOrder()">CHECKOUT</button>
             </div>
         </div>
     </div>
 
     <div class="bottom-nav">
-        <div class="nav-item active" id="nav-shop" onclick="nav('shop')"><i class="fas fa-store"></i>Menu</div>
-        <div class="nav-item" id="nav-cart" onclick="nav('cart')"><i class="fas fa-shopping-basket"></i>Cart</div>
-        <div class="nav-item" id="nav-orders" onclick="nav('orders')"><i class="fas fa-box"></i>Orders</div>
-        <div class="nav-item" id="nav-profile" onclick="nav('profile')"><i class="fas fa-user-circle"></i>Profile</div>
+        <div class="nav-item active" onclick="nav('shop')"><i class="fas fa-store"></i>Menu</div>
+        <div class="nav-item" onclick="nav('cart')" style="position:relative;">
+            <i class="fas fa-shopping-basket"></i>Cart
+            <span class="badge" id="badge">0</span>
+        </div>
+        <div class="nav-item" onclick="nav('profile')"><i class="fas fa-user-circle"></i>Profile</div>
     </div>
 
     <script>
         const tg = window.Telegram.WebApp;
+        tg.expand();
+
         const BASE_IMG = "https://raw.githubusercontent.com/Zoha742/eshopbot/main/products/";
-        let cart = [];
-        let selectedSize = {};
+        let cart = JSON.parse(localStorage.getItem('eshop_cart')) || [];
 
         function nav(p) {
             document.querySelectorAll('.page').forEach(pg => pg.classList.remove('active'));
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(ni => ni.classList.remove('active'));
             document.getElementById('p-' + p).classList.add('active');
-            document.getElementById('nav-' + p).classList.add('active');
+            if(p === 'cart') renderCart();
         }
 
-        function openP(path, title) {
+        function openList(path, title) {
             const grid = document.getElementById('product-grid');
-            grid.innerHTML = '';
-            document.getElementById('list-title').innerText = title;
-            
-            for(let i=1; i<=4; i++) {
-                const pid = 'ID-' + Math.floor(1000 + Math.random() * 9000);
-                const price = 550;
-                const imgUrl = BASE_IMG + path + i + '.jpg';
-
-                grid.innerHTML += `
+            let html = '';
+            for(let i=1; i<=6; i++) {
+                const img = BASE_IMG + path + i + '.jpg';
+                html += `
                     <div class="p-card">
-                        <div class="p-img-box"><img src="${imgUrl}" onerror="this.src='https://via.placeholder.com/150'"></div>
-                        <div class="p-info">
-                            <div class="p-name">${title}</div>
-                            <div class="p-meta">ID: ${pid} | Price: ৳${price}</div>
-                            <div class="size-box">
-                                ${['M','L','XL','XXL'].map(s => `<span class="size-btn" onclick="setSize('${pid}','${s}',this)">${s}</span>`).join('')}
-                            </div>
-                            <button class="btn-buy" onclick="addToCart('${imgUrl}','${title}','${pid}',${price})">Add to Cart</button>
+                        <div class="p-img-box"><img src="${img}" onerror="this.src='${BASE_IMG}no-image.jpg'"></div>
+                        <div class="p-details">
+                            <div class="p-name">${title} #${i}</div>
+                            <div class="p-price">$15.00</div>
+                            <button class="btn-view-buy" onclick="addToCart('${title} #${i}', '${img}')">Add to Cart</button>
                         </div>
                     </div>`;
             }
+            grid.innerHTML = html;
+            document.getElementById('list-title').innerText = title;
             nav('list');
         }
 
-        function setSize(pid, s, el) {
-            el.parentElement.querySelectorAll('.size-btn').forEach(b => b.classList.remove('selected'));
-            el.classList.add('selected');
-            selectedSize[pid] = s;
+        function addToCart(title, img) {
+            cart.push({title, img, price: 15, cartId: Date.now()});
+            localStorage.setItem('eshop_cart', JSON.stringify(cart));
+            updateBadge();
+            tg.showAlert('Added to cart!');
         }
 
-        function addToCart(img, name, id, price) {
-            if(!selectedSize[id]) { tg.showAlert("Please select a size first!"); return; }
-            cart.push({ img, name, id, price, size: selectedSize[id] });
-            tg.showAlert("Added to cart!");
+        function updateBadge() {
+            const badge = document.getElementById('badge');
+            badge.innerText = cart.length;
+            badge.style.display = cart.length > 0 ? 'flex' : 'none';
         }
 
-        function saveAddr() {
-            localStorage.setItem('user_addr', document.getElementById('addr-input').value);
-            tg.showAlert("Address Saved!");
+        function renderCart() {
+            const container = document.getElementById('cart-items');
+            container.innerHTML = cart.map(item => `
+                <div style="display:flex; gap:10px; background:var(--card); padding:10px; margin-bottom:5px; border-radius:8px;">
+                    <img src="${item.img}" style="width:50px; height:50px; border-radius:5px;">
+                    <div style="flex:1;"><b>${item.title}</b><p>$${item.price}</p></div>
+                </div>
+            `).join('');
+            document.getElementById('total-price').innerText = '$' + (cart.length * 15);
         }
-        
-        // Initializing user address
-        document.getElementById('addr-input').value = localStorage.getItem('user_addr') || '';
+
+        updateBadge();
     </script>
 </body>
 </html>
