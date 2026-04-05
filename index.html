@@ -30,24 +30,23 @@
         .p-price { font-size:15px; font-weight:800; color: var(--primary); margin-bottom:10px; }
         .btn-view-buy { background: var(--primary); color: white; border: none; width: 100%; padding: 10px; border-radius: 8px; font-size: 12px; font-weight: bold; cursor: pointer; }
 
-        /* Address Box in Profile */
-        .address-container { background: var(--card); border-radius: 15px; padding: 15px; margin-top: 20px; border: 1px solid #334155; }
-        .address-input { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: white; font-size: 13px; margin-top: 10px; box-sizing: border-box; }
-        .save-btn { background: var(--success); color: white; border: none; padding: 8px 15px; border-radius: 6px; font-size: 11px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        /* Address Box (Hidden by default) */
+        #address-box { display: none; background: var(--card); padding: 15px; border-radius: 12px; margin-top: 10px; border: 1px solid #334155; }
+        .address-input { width: 100%; padding: 10px; background: #0f172a; border: 1px solid #334155; color: white; border-radius: 8px; margin-top: 5px; box-sizing: border-box; }
 
-        /* Search Box for Admin */
-        .search-box { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #334155; background: var(--card); color: white; margin-bottom: 20px; }
+        /* Admin Search */
+        .admin-search { width: 100%; padding: 12px; background: var(--card); border: 1px solid var(--primary); color: white; border-radius: 10px; margin-bottom: 15px; }
 
-        /* Fixed Detail Modal */
+        /* Modal Fix */
         #modal { position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:2000; display:none; flex-direction:column; backdrop-filter: blur(5px); }
         .modal-body { flex: 1; display: flex; flex-direction: column; overflow-y: auto; }
-        .modal-image-container { position: relative; width: 100%; background: #000; display: flex; align-items: center; justify-content: center; padding: 10px 0; min-height: 40vh; }
-        .modal-content-img { max-width: 90%; max-height: 40vh; object-fit: contain; } 
+        .modal-image-container { position: relative; width: 100%; background: #000; display: flex; align-items: center; justify-content: center; padding: 20px 0; }
+        .modal-content-img { max-width: 90%; max-height: 50vh; object-fit: contain; } 
         .close-modal { position:absolute; top:20px; right:20px; font-size:20px; color:white; background:rgba(0,0,0,0.6); width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer; z-index:100; }
-        .modal-details-panel { background: var(--card); padding: 25px; border-radius: 25px 25px 0 0; margin-top: -15px; position: relative; z-index: 10; border-top: 1px solid #334155; flex: 1; }
-        .size-box { display: flex; gap: 10px; margin: 15px 0; }
-        .size-btn { border: 1px solid #334155; padding: 8px 15px; border-radius: 8px; cursor: pointer; color: white; font-size: 13px; }
-        .size-btn.active { background: var(--primary); border-color: var(--primary); }
+        .modal-details-panel { background: var(--card); padding: 25px; border-radius: 25px 25px 0 0; margin-top: -20px; position: relative; z-index: 10; border-top: 1px solid #334155; }
+        .size-box { display:flex; gap:10px; margin:15px 0; }
+        .size-btn { padding:8px 15px; background:#0f172a; border:1px solid #334155; border-radius:8px; color:white; cursor:pointer; }
+        .size-btn.active { background:var(--primary); border-color:var(--primary); }
 
         /* Profile & Bottom Nav */
         .u-header { text-align:center; padding:25px 0; background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%); border-radius: 15px; margin-bottom: 20px; border: 1px solid #334155; }
@@ -84,11 +83,23 @@
                 <div class="btn-cat" onclick="openList('shirt/casual/', 'Casual')">Casual</div>
                 <div class="btn-cat" onclick="openList('shirt/half/', 'Half Shirt')">Half Shirt</div>
             </div>
-            
+
             <div class="section-h"><i class="fas fa-vest"></i> PANTS</div>
             <div class="grid">
                 <div class="btn-cat" onclick="openList('pants/jeans/', 'Jeans')">Jeans</div>
                 <div class="btn-cat" onclick="openList('pants/formal/', 'Formal')">Formal</div>
+            </div>
+
+            <div class="section-h"><i class="fas fa-child"></i> JUNIOR (KIDS)</div>
+            <div class="grid">
+                <div class="btn-cat" onclick="openList('junior/boys/', 'Boys Collection')">Boys</div>
+                <div class="btn-cat" onclick="openList('junior/girls/', 'Girls Collection')">Girls</div>
+            </div>
+            
+            <div class="section-h"><i class="fas fa-belt"></i> ACCESSORIES</div>
+            <div class="grid">
+                <div class="btn-cat" onclick="openList('accessories/belt/', 'Leather Belts')">Belts</div>
+                <div class="btn-cat" onclick="openList('accessories/tie/', 'Premium Ties')">Ties</div>
             </div>
         </div>
 
@@ -120,19 +131,15 @@
                 <h3 id="u-name" style="margin:0;">User</h3>
                 <p id="u-id" style="font-size:12px; color:var(--primary);">#ID</p>
             </div>
-
-            <div class="address-container">
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <b style="color:var(--primary); font-size:12px;">SHIPPING ADDRESS</b>
-                    <button class="save-btn" onclick="saveAddress()">Save Address</button>
+            <div class="profile-list">
+                <div class="list-item" onclick="toggleAddressBox()"><i class="fas fa-map-marker-alt"></i> <span>Add/Edit Address</span> <i class="fas fa-chevron-down"></i></div>
+                <div id="address-box">
+                    <textarea id="address-input" class="address-input" placeholder="Enter Full Address & Mobile Number"></textarea>
+                    <button class="btn-view-buy" style="margin-top:10px; background:var(--success);" onclick="saveAddress()">Save Address</button>
                 </div>
-                <textarea id="u-address" class="address-input" rows="3" placeholder="Street, City, Mobile Number..."></textarea>
-            </div>
-
-            <div class="profile-list" style="margin-top:20px;">
                 <div class="list-item" onclick="nav('orders')"><i class="fas fa-box"></i> <span>My Orders</span> <i class="fas fa-chevron-right"></i></div>
                 <div class="list-item" onclick="nav('wishlist')"><i class="fas fa-heart"></i> <span>My Wishlist</span> <i class="fas fa-chevron-right"></i></div>
-                <div class="list-item" onclick="promptAdminLogin()" style="border-top: 1px dashed #334155;">
+                <div class="list-item" onclick="promptAdminLogin()" style="border-top: 1px dashed #334155; margin-top:10px;">
                     <i class="fas fa-user-shield" style="color:var(--warning);"></i> 
                     <span style="color:var(--warning);">Admin Dashboard</span> 
                     <i class="fas fa-chevron-right"></i>
@@ -146,17 +153,18 @@
                 <h3 style="margin:0;">Order History</h3>
             </div>
             <div id="order-list-container"></div>
+            <div id="orders-empty" style="text-align:center; padding:50px 0; color: #94a3b8; display:none;">No orders yet.</div>
         </div>
 
         <div id="p-admin" class="page">
             <div style="display:flex; align-items:center; gap:12px; margin-bottom:18px;">
                 <i class="fas fa-arrow-left" onclick="nav('profile')" style="cursor:pointer;"></i>
-                <h3 style="margin:0;">Admin Panel</h3>
+                <h3 style="margin:0;">Admin Control</h3>
             </div>
-            <input type="text" id="admin-search" class="search-box" placeholder="Search by Order ID or Product Name..." onkeyup="filterAdminOrders()">
+            <input type="text" id="adminSearchInput" class="admin-search" placeholder="Search Order ID or Name..." onkeyup="searchOrders()">
             <div id="admin-order-list"></div>
         </div>
-        
+
         <div id="p-wishlist" class="page">
             <div style="display:flex; align-items:center; gap:12px; margin-bottom:18px;">
                 <i class="fas fa-arrow-left" onclick="nav('profile')" style="cursor:pointer;"></i>
@@ -174,14 +182,14 @@
             </div>
             <div class="modal-details-panel">
                 <div id="m-status" class="status-tag" style="background:var(--success);">Available</div>
-                <h2 id="m-title" style="margin:5px 0; color:white; font-size:18px;">Product Title</h2>
-                <p id="m-price" style="color:var(--primary); font-size:22px; font-weight:800; margin:5px 0;">$15.00</p>
+                <h2 id="m-title" style="margin:0; color:white;">Product Title</h2>
+                <p id="m-price" style="color:var(--primary); font-size:24px; font-weight:800; margin:10px 0;">$15.00</p>
                 <div class="size-box">
                     <div class="size-btn" onclick="setSize(this, 'M')">M</div>
                     <div class="size-btn active" onclick="setSize(this, 'L')">L</div>
                     <div class="size-btn" onclick="setSize(this, 'XL')">XL</div>
                 </div>
-                <button class="btn-view-buy" onclick="addToCart()" style="height:50px; font-size:16px;">ADD TO CART</button>
+                <button class="btn-view-buy" onclick="addToCart()" style="height:52px; font-size:16px;">ADD TO CART</button>
             </div>
         </div>
     </div>
@@ -203,35 +211,37 @@
         let cart = JSON.parse(localStorage.getItem('eshop_cart')) || [];
         let wishlist = JSON.parse(localStorage.getItem('eshop_wishlist')) || [];
         let orders = JSON.parse(localStorage.getItem('eshop_orders')) || [];
-        let userAddress = localStorage.getItem('eshop_user_address') || "";
         let currentItem = {};
 
+        // Navigation
         function nav(p) {
             document.querySelectorAll('.page').forEach(pg => pg.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(ni => ni.classList.remove('active'));
             document.getElementById('p-' + p).classList.add('active');
             if(p === 'shop') document.querySelectorAll('.nav-item')[0].classList.add('active');
             if(p === 'cart') { document.querySelectorAll('.nav-item')[1].classList.add('active'); renderCart(); }
-            if(p === 'profile') {
-                document.querySelectorAll('.nav-item')[2].classList.add('active');
-                document.getElementById('u-address').value = userAddress;
-            }
-            if(p === 'admin') renderAdminOrders();
+            if(p === 'profile') document.querySelectorAll('.nav-item')[2].classList.add('active');
             if(p === 'orders') renderOrders();
+            if(p === 'admin') renderAdminOrders();
             if(p === 'wishlist') renderWishlist();
             window.scrollTo(0, 0);
         }
 
-        // ADDRESS LOGIC
+        // Address Functions
+        function toggleAddressBox() {
+            const box = document.getElementById('address-box');
+            box.style.display = box.style.display === 'block' ? 'none' : 'block';
+            document.getElementById('address-input').value = localStorage.getItem('user_address') || "";
+        }
         function saveAddress() {
-            const addr = document.getElementById('u-address').value;
-            if(!addr) { tg.showAlert("Please enter an address!"); return; }
-            userAddress = addr;
-            localStorage.setItem('eshop_user_address', addr);
-            tg.showAlert("Address Saved Successfully!");
+            const addr = document.getElementById('address-input').value;
+            if(!addr) return tg.showAlert("Please enter address!");
+            localStorage.setItem('user_address', addr);
+            tg.showAlert("Address Saved!");
+            document.getElementById('address-box').style.display = 'none';
         }
 
-        // PRODUCT LOGIC
+        // Product Logic
         function openList(path, title) {
             const grid = document.getElementById('product-grid');
             grid.innerHTML = '';
@@ -263,59 +273,47 @@
             document.getElementById('m-img').src = img;
             document.getElementById('m-title').innerText = title;
             document.getElementById('modal').style.display = 'flex';
-            document.body.style.overflow = 'hidden';
         }
-
-        function closeModal() { document.getElementById('modal').style.display = 'none'; document.body.style.overflow = ''; }
+        function closeModal() { document.getElementById('modal').style.display = 'none'; }
         function setSize(el, s) { document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active')); el.classList.add('active'); currentItem.size = s; }
 
+        // Cart Logic
         function addToCart() {
             cart.push({...currentItem, cartId: Date.now()});
             localStorage.setItem('eshop_cart', JSON.stringify(cart));
             updateBadge(); tg.showAlert('Added to Cart!'); closeModal();
         }
-
         function updateBadge() {
-            const badge = document.getElementById('badge');
-            badge.innerText = cart.length;
-            badge.style.display = cart.length > 0 ? 'flex' : 'none';
+            const b = document.getElementById('badge');
+            b.innerText = cart.length; b.style.display = cart.length > 0 ? 'flex' : 'none';
         }
-
         function renderCart() {
             const container = document.getElementById('cart-items');
-            const summary = document.getElementById('cart-summary');
-            const empty = document.getElementById('empty-msg');
-            if(cart.length === 0) { container.innerHTML = ''; summary.style.display = 'none'; empty.style.display = 'block'; return; }
-            empty.style.display = 'none'; summary.style.display = 'block';
+            if(cart.length === 0) { container.innerHTML = ''; document.getElementById('cart-summary').style.display = 'none'; document.getElementById('empty-msg').style.display = 'block'; return; }
+            document.getElementById('empty-msg').style.display = 'none'; document.getElementById('cart-summary').style.display = 'block';
             container.innerHTML = cart.map((item, idx) => `
-                <div style="background:var(--card); padding:10px; border-radius:10px; margin-bottom:10px; display:flex; align-items:center; gap:10px; border:1px solid #334155;">
+                <div class="cart-item" style="background:var(--card); padding:10px; border-radius:10px; margin-bottom:10px; display:flex; align-items:center; gap:10px; border:1px solid #334155;">
                     <img src="${item.img}" style="width:50px; height:50px; object-fit:cover; border-radius:5px;">
                     <div style="flex:1;"><b>${item.title} (${item.size})</b><p style="color:var(--primary); margin:0;">$15</p></div>
-                    <i class="fas fa-trash-alt" style="color:var(--danger); cursor:pointer;" onclick="removeItem(${idx})"></i>
+                    <i class="fas fa-trash-alt" style="color:var(--danger);" onclick="removeItem(${idx})"></i>
                 </div>`).join('');
-            const sub = cart.length * 15;
-            document.getElementById('subtotal').innerText = '$' + sub;
-            document.getElementById('total-price').innerText = '$' + (sub + 2);
+            document.getElementById('subtotal').innerText = '$' + (cart.length * 15);
+            document.getElementById('total-price').innerText = '$' + (cart.length * 15 + 2);
         }
+        function removeItem(idx) { cart.splice(idx,1); localStorage.setItem('eshop_cart', JSON.stringify(cart)); renderCart(); updateBadge(); }
 
-        function removeItem(idx) { cart.splice(idx, 1); localStorage.setItem('eshop_cart', JSON.stringify(cart)); renderCart(); updateBadge(); }
-
-        // PLACE ORDER WITH ADDRESS
+        // Order Logic
         function placeOrder() {
-            if(cart.length === 0) return;
-            if(!userAddress) { tg.showAlert("Please save your address in Profile first!"); nav('profile'); return; }
-            
-            tg.showConfirm('Place order with Cash on Delivery?', (ok) => {
+            const addr = localStorage.getItem('user_address');
+            if(!addr) return tg.showAlert("Please add shipping address in Profile!");
+            tg.showConfirm('Place Order?', (ok) => {
                 if(ok) {
                     const orderId = 'ORD-' + Math.floor(1000 + Math.random() * 9000);
-                    const newOrder = {
-                        id: orderId, items: [...cart], total: cart.length * 15 + 2,
-                        status: 'Pending', address: userAddress, date: new Date().toLocaleDateString()
-                    };
+                    const newOrder = { id: orderId, items: [...cart], total: cart.length * 15 + 2, status: 'Pending', date: new Date().toLocaleDateString(), address: addr, userName: tg.initDataUnsafe.user?.first_name || "User" };
                     orders.unshift(newOrder);
                     localStorage.setItem('eshop_orders', JSON.stringify(orders));
                     cart = []; localStorage.removeItem('eshop_cart'); updateBadge();
-                    tg.showAlert('Order Placed! ID: ' + orderId);
+                    tg.showAlert('Order Placed: ' + orderId);
                     nav('orders');
                 }
             });
@@ -323,70 +321,71 @@
 
         function renderOrders() {
             const container = document.getElementById('order-list-container');
-            container.innerHTML = orders.map(order => `
+            if(orders.length === 0) { container.innerHTML = ''; document.getElementById('orders-empty').style.display = 'block'; return; }
+            document.getElementById('orders-empty').style.display = 'none';
+            container.innerHTML = orders.map(o => `
                 <div class="order-card">
-                    <div style="display:flex; justify-content:space-between;"><b>#${order.id}</b> <span>${order.date}</span></div>
-                    <div style="font-size:12px; margin-top:5px;">Items: ${order.items.map(i => i.title).join(', ')}</div>
-                    <div style="margin-top:10px; display:flex; justify-content:space-between;"><b>$${order.total}</b> <span class="status-tag" style="background:var(--warning)">${order.status}</span></div>
+                    <div style="display:flex; justify-content:space-between;"><b>#${o.id}</b> <span>${o.date}</span></div>
+                    <div style="font-size:12px; color:#94a3b8; margin:5px 0;">${o.items.map(i => i.title).join(', ')}</div>
+                    <div style="display:flex; justify-content:space-between; align-items:center;"><b>Total: $${o.total}</b> <span class="status-tag" style="background:var(--warning)">${o.status}</span></div>
                 </div>`).join('');
         }
 
-        // ADMIN PANEL SEARCH & FUNCTIONS
-        function promptAdminLogin() {
-            const name = prompt("Enter Admin Name:");
-            if (name === ADMIN_NAME) {
-                const code = prompt("Enter Admin Code:");
-                if (code === ADMIN_CODE) nav('admin');
-                else tg.showAlert("Wrong Code!");
-            }
-        }
-
-        function renderAdminOrders(filterText = "") {
+        // Admin Search & View
+        function renderAdminOrders() {
             const container = document.getElementById('admin-order-list');
-            const filtered = orders.filter(o => o.id.toLowerCase().includes(filterText.toLowerCase()) || 
-                                           o.items.some(i => i.title.toLowerCase().includes(filterText.toLowerCase())));
-            
-            container.innerHTML = filtered.map((order, idx) => `
-                <div class="order-card" style="border-left: 4px solid var(--primary)">
-                    <div style="display:flex; justify-content:space-between;"><b>ID: #${order.id}</b> <span>$${order.total}</span></div>
-                    <p style="font-size:12px; margin:5px 0;"><b>Address:</b> ${order.address}</p>
-                    <p style="font-size:12px;"><b>Items:</b> ${order.items.map(i => i.title).join(', ')}</p>
-                    <button onclick="deleteOrderAdmin(${idx})" style="background:none; border:none; color:var(--danger); font-size:11px; cursor:pointer;">Delete Order</button>
+            if(orders.length === 0) { container.innerHTML = '<p>No orders.</p>'; return; }
+            container.innerHTML = orders.map((o, idx) => `
+                <div class="order-card" style="border-left:4px solid var(--primary)">
+                    <b>ID: #${o.id} | By: ${o.userName}</b>
+                    <p style="font-size:11px; margin:5px 0;">Addr: ${o.address}</p>
+                    <p style="font-size:12px;">Items: ${o.items.map(i => i.title).join(', ')}</p>
+                    <button onclick="deleteOrderAdmin(${idx})" style="background:none; border:none; color:var(--danger); cursor:pointer;">Delete Order</button>
                 </div>`).join('');
         }
 
-        function filterAdminOrders() {
-            const val = document.getElementById('admin-search').value;
-            renderAdminOrders(val);
-        }
-
-        function deleteOrderAdmin(idx) {
-            tg.showConfirm("Delete this permanently?", (ok) => {
-                if(ok) { orders.splice(idx, 1); localStorage.setItem('eshop_orders', JSON.stringify(orders)); renderAdminOrders(); }
+        function searchOrders() {
+            let input = document.getElementById('adminSearchInput').value.toLowerCase();
+            let cards = document.querySelectorAll('#admin-order-list .order-card');
+            cards.forEach(card => {
+                let text = card.innerText.toLowerCase();
+                card.style.display = text.includes(input) ? "block" : "none";
             });
         }
 
-        // WISHLIST
+        function deleteOrderAdmin(idx) {
+            if(confirm("Delete this order?")) { orders.splice(idx,1); localStorage.setItem('eshop_orders', JSON.stringify(orders)); renderAdminOrders(); }
+        }
+
+        function promptAdminLogin() {
+            let n = prompt("Name:");
+            if(n === ADMIN_NAME) {
+                let c = prompt("Code:");
+                if(c === ADMIN_CODE) nav('admin');
+            }
+        }
+
         function toggleWishlist(id, img, title, e) {
             e.stopPropagation();
             const idx = wishlist.findIndex(w => w.id === id);
-            if(idx > -1) { wishlist.splice(idx, 1); } else { wishlist.push({id, img, title}); }
+            if(idx > -1) wishlist.splice(idx, 1); else wishlist.push({id, img, title});
             localStorage.setItem('eshop_wishlist', JSON.stringify(wishlist));
             e.currentTarget.classList.toggle('active');
-            const icon = e.currentTarget.querySelector('i');
-            icon.classList.toggle('fas'); icon.classList.toggle('far');
+            const i = e.currentTarget.querySelector('i');
+            i.classList.toggle('fas'); i.classList.toggle('far');
         }
 
         function renderWishlist() {
             const grid = document.getElementById('wishlist-grid');
+            if(wishlist.length === 0) { grid.innerHTML = '<p>Empty</p>'; return; }
             grid.innerHTML = wishlist.map(item => `
                 <div class="p-card">
                     <div class="p-img-box"><img src="${item.img}"></div>
-                    <div class="p-details"><div class="p-name">${item.title}</div><button class="btn-view-buy" onclick="openDetail('${item.img}', '${item.title}')">View</button></div>
+                    <div class="p-details"><b>${item.title}</b><button class="btn-view-buy" onclick="openDetail('${item.img}', '${item.title}')">View</button></div>
                 </div>`).join('');
         }
 
-        // INIT USER
+        // Init
         updateBadge();
         const user = tg.initDataUnsafe.user;
         if(user) {
