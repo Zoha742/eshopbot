@@ -7,45 +7,51 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --primary: #38bdf8; --bg: #0f172a; --card: #1e293b; --text: #f8fafc; }
-        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); margin:0; padding:0; }
+        :root { --primary: #38bdf8; --bg: #0f172a; --card: #1e293b; --text: #f8fafc; --danger: #ef4444; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); margin:0; padding:0; overflow-x: hidden; }
         .container { padding:15px; padding-bottom:100px; }
         .page { display:none; } .page.active { display:block; }
         
-        /* Category Grid */
-        .section-h { color:var(--primary); font-size:12px; font-weight:800; margin:20px 0 10px; border-left:3px solid var(--primary); padding-left:8px; text-transform:uppercase; }
+        /* Menu Layout */
+        .section-h { display:flex; align-items:center; gap:8px; color:var(--primary); font-size:12px; font-weight:800; margin:20px 0 10px; border-left:3px solid var(--primary); padding-left:8px; text-transform:uppercase; }
         .grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
         .btn-cat { background:var(--card); padding:12px; border-radius:10px; text-align:center; border:1px solid #334155; font-size:12px; font-weight:600; cursor:pointer; }
 
-        /* Premium Product View (White Card Style) */
-        .product-list-grid { display:grid; grid-template-columns: 1fr 1fr; gap:12px; padding:10px 0; }
-        .p-card-white { background: #ffffff; border-radius:12px; overflow:hidden; color: #333; position:relative; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        .p-img-box { width:100%; height:160px; background:#f3f4f6; display:flex; align-items:center; justify-content:center; }
-        .p-img-box img { max-width:100%; max-height:100%; object-fit: cover; }
+        /* White Product Card View */
+        .product-grid { display:grid; grid-template-columns: 1fr 1fr; gap:12px; }
+        .p-card { background: #ffffff; border-radius:12px; overflow:hidden; color: #333; position:relative; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .p-img-box { width:100%; height:160px; background:#f3f4f6; position:relative; }
+        .p-img-box img { width:100%; height:100%; object-fit: cover; }
+        
+        /* Favourite Icon */
+        .fav-btn { position:absolute; top:8px; right:8px; background:rgba(255,255,255,0.9); width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#94a3b8; font-size:14px; cursor:pointer; z-index:10; }
+        .fav-btn.active { color: var(--danger); }
+        
         .p-details { padding:10px; text-align:center; }
-        .p-name { font-size:13px; font-weight:700; margin:5px 0; color: #1e293b; }
-        .p-price { font-size:14px; font-weight:800; color: #f59e0b; margin-bottom:8px; }
-        .btn-view { background: var(--primary); color: white; border: none; width: 100%; padding: 8px; border-radius: 6px; font-size: 11px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px; }
+        .p-name { font-size:13px; font-weight:700; color: #1e293b; margin:2px 0; }
+        .p-price { font-size:14px; font-weight:800; color: var(--primary); margin-bottom:8px; }
+        .btn-view-buy { background: var(--primary); color: white; border: none; width: 100%; padding: 8px; border-radius: 6px; font-size: 11px; font-weight: bold; cursor: pointer; }
 
-        /* Detail Modal Styling */
+        /* Detail View Modal */
         #modal { position:fixed; inset:0; background:rgba(0,0,0,0.9); z-index:2000; display:none; flex-direction:column; }
         .modal-content { background: var(--card); margin-top: auto; padding: 25px; border-radius: 25px 25px 0 0; }
-        .status-tag { display:inline-block; padding:3px 10px; border-radius:20px; font-size:10px; font-weight:bold; margin-bottom:10px; }
+        .status-tag { display:inline-block; padding:4px 12px; border-radius:20px; font-size:10px; font-weight:bold; margin-bottom:10px; }
         .status-available { background: #22c55e; color: white; }
-        .status-sold { background: #ef4444; color: white; }
+        .status-sold { background: var(--danger); color: white; }
+        
         .size-box { display:flex; gap:10px; margin:15px 0; }
-        .size-btn { border: 1px solid #334155; padding: 8px 15px; border-radius: 8px; cursor: pointer; background: #0f172a; color: white; }
-        .size-btn.active { border-color: var(--primary); color: var(--primary); }
+        .size-btn { border: 1px solid #334155; padding: 8px 15px; border-radius: 8px; cursor: pointer; color: white; }
+        .size-btn.active { border-color: var(--primary); background: rgba(56, 189, 248, 0.1); color: var(--primary); }
 
-        /* Profile Style */
-        .profile-list { background:var(--card); border-radius:12px; margin-top:15px; }
-        .list-item { display:flex; align-items:center; padding:15px; border-bottom:1px solid #334155; gap:15px; cursor:pointer; }
-        .list-item i { width: 20px; color: #94a3b8; }
-
-        /* Nav */
+        /* Cart Badge */
         .bottom-nav { position:fixed; bottom:0; width:100%; background:#1e293b; display:flex; height:70px; border-top:1px solid #334155; z-index:1000; }
-        .nav-item { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; color:#94a3b8; font-size:11px; }
+        .nav-item { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; color:#94a3b8; font-size:11px; position:relative; }
         .nav-item.active { color:var(--primary); }
+        .badge { position:absolute; top:12px; right:25%; background:var(--danger); color:white; font-size:10px; min-width:16px; height:16px; border-radius:50%; display:none; align-items:center; justify-content:center; }
+
+        /* Cart Item Design */
+        .cart-item { background:var(--card); padding:10px; border-radius:10px; margin-bottom:10px; display:flex; gap:10px; align-items:center; }
+        .cart-img { width:50px; height:50px; border-radius:5px; object-fit:cover; }
     </style>
 </head>
 <body>
@@ -60,52 +66,85 @@
 
             <div class="section-h"><i class="fas fa-tshirt"></i> T-SHIRTS</div>
             <div class="grid">
-                <div class="btn-cat" onclick="openList('tshirts/printed/', 'Printed T-shirt')">Printed</div>
-                <div class="btn-cat" onclick="openList('tshirts/polo/', 'Polo T-shirt')">Polo</div>
+                <div class="btn-cat" onclick="openList('tshirts/printed/', 'Printed')">Printed</div>
+                <div class="btn-cat" onclick="openList('tshirts/polo/', 'Polo')">Polo</div>
+            </div>
+
+            <div class="section-h"><i class="fas fa-user-tie"></i> SHIRTS</div>
+            <div class="grid">
+                <div class="btn-cat" onclick="openList('shirt/formal/', 'Formal')">Formal</div>
+                <div class="btn-cat" onclick="openList('shirt/casual/', 'Casual')">Casual</div>
+                <div class="btn-cat" onclick="openList('shirt/half/', 'Half Shirt')">Half Shirt</div>
+            </div>
+
+            <div class="section-h"><i class="fas fa-vest"></i> PANTS</div>
+            <div class="grid">
+                <div class="btn-cat" onclick="openList('pants/jeans/', 'Jeans')">Jeans</div>
+                <div class="btn-cat" onclick="openList('pants/formal/', 'Formal')">Formal</div>
+            </div>
+            
+            <div class="section-h"><i class="fas fa-mosque"></i> PANJABI</div>
+            <div class="grid">
+                <div class="btn-cat" onclick="openList('panjabi/easy/', 'Easy')">Easy</div>
+                <div class="btn-cat" onclick="openList('panjabi/kabli/', 'Kabli')">Kabli</div>
             </div>
         </div>
 
         <div id="p-list" class="page">
             <div style="display:flex; align-items:center; gap:10px; margin-bottom:15px;">
                 <i class="fas fa-arrow-left" onclick="nav('shop')"></i>
-                <h3 id="list-title" style="margin:0; font-size:16px;">Collection</h3>
+                <h3 id="list-title" style="margin:0;">Products</h3>
             </div>
-            <div id="product-grid" class="product-list-grid"></div>
+            <div id="product-grid" class="product-grid"></div>
+        </div>
+
+        <div id="p-cart" class="page">
+            <div class="section-h"><i class="fas fa-shopping-basket"></i> YOUR CART</div>
+            <div id="cart-items"></div>
+            <div id="empty-msg" style="text-align:center; padding:50px; display:none;">Cart is empty</div>
+            <div id="cart-summary" style="background:var(--card); padding:15px; border-radius:12px; margin-top:15px;">
+                <div style="display:flex; justify-content:space-between;"><span>Subtotal:</span><b id="subtotal">$0</b></div>
+                <div style="display:flex; justify-content:space-between; margin-top:5px;"><span>Delivery:</span><b>$2</b></div>
+                <hr style="border:0.5px solid #334155;">
+                <div style="display:flex; justify-content:space-between; font-size:18px; color:var(--primary);">
+                    <b>Total:</b><b id="total-price">$0</b>
+                </div>
+                <button class="btn-view-buy" style="height:45px; margin-top:15px;" onclick="tg.showAlert('Order Placed Successfully!')">CHECKOUT</button>
+            </div>
         </div>
 
         <div id="p-profile" class="page">
             <div style="text-align:center; padding:20px;">
-                <div style="width:70px; height:70px; background:var(--primary); border-radius:50%; margin:0 auto 10px; display:flex; align-items:center; justify-content:center; font-size:24px; font-weight:bold;" id="u-pic">?</div>
+                <div style="width:65px; height:65px; background:var(--primary); border-radius:50%; margin:0 auto 10px; display:flex; align-items:center; justify-content:center; font-weight:bold; font-size:22px;" id="u-pic">?</div>
                 <h3 id="u-name" style="margin:0;">User</h3>
                 <p id="u-id" style="font-size:12px; color:var(--primary);">#ID</p>
             </div>
-            <div class="profile-list">
-                <div class="list-item"><i class="fas fa-box"></i> <span>My Orders</span></div>
-                <div class="list-item"><i class="fas fa-heart"></i> <span>Wishlist</span></div>
-                <div class="list-item"><i class="fas fa-shield-alt"></i> <span>Policies</span></div>
-                <div class="list-item"><i class="fas fa-headset"></i> <span>Chat with us</span></div>
+            <div style="background:var(--card); border-radius:12px;">
+                <div style="padding:15px; border-bottom:1px solid #334155;"><i class="fas fa-box"></i> My Orders</div>
+                <div style="padding:15px; border-bottom:1px solid #334155;"><i class="fas fa-heart"></i> Wishlist</div>
+                <div style="padding:15px;" onclick="tg.openLink('https://t.me/your_support')"><i class="fas fa-headset"></i> Support</div>
             </div>
         </div>
     </div>
 
     <div id="modal">
         <div style="flex:1; display:flex; align-items:center; justify-content:center; position:relative;">
-            <i class="fas fa-times" onclick="closeModal()" style="position:absolute; top:20px; right:20px; font-size:24px; color:white; background:rgba(0,0,0,0.5); padding:10px; border-radius:50%;"></i>
+            <i class="fas fa-times" onclick="closeModal()" style="position:absolute; top:20px; right:20px; font-size:24px; color:white; background:rgba(0,0,0,0.5); padding:8px; border-radius:50%;"></i>
             <img id="m-img" src="" style="max-width:100%; max-height:80%; object-fit:contain;">
         </div>
         <div class="modal-content">
             <div id="m-status" class="status-tag status-available">Available</div>
             <h2 id="m-title" style="margin:0; color:white;">Product Title</h2>
-            <p id="m-price" style="color:var(--primary); font-size:22px; font-weight:800; margin:10px 0;">$15.00</p>
+            <p id="m-price" style="color:var(--primary); font-size:22px; font-weight:800; margin:8px 0;">$15.00</p>
             
-            <p style="font-size:12px; color:#94a3b8; margin:0;">Select Size:</p>
+            <p style="font-size:11px; color:#94a3b8; margin:0;">Select Size:</p>
             <div class="size-box">
                 <div class="size-btn" onclick="setSize(this, 'M')">M</div>
                 <div class="size-btn active" onclick="setSize(this, 'L')">L</div>
                 <div class="size-btn" onclick="setSize(this, 'XL')">XL</div>
             </div>
 
-            <button class="btn-buy" onclick="addToCart()" style="width:100%; padding:15px; background:var(--primary); color:white; border:none; border-radius:12px; font-weight:bold; font-size:16px;">
+            <button class="btn-view-buy" onclick="addToCart()" style="height:50px; font-size:16px;">
                 <i class="fas fa-cart-plus"></i> ADD TO CART
             </button>
         </div>
@@ -113,7 +152,10 @@
 
     <div class="bottom-nav">
         <div class="nav-item active" onclick="nav('shop')"><i class="fas fa-th-large"></i>Menu</div>
-        <div class="nav-item" onclick="tg.showAlert('Cart is empty')"><i class="fas fa-shopping-basket"></i>Cart</div>
+        <div class="nav-item" onclick="nav('cart')">
+            <i class="fas fa-shopping-basket"></i>Cart
+            <span class="badge" id="badge">0</span>
+        </div>
         <div class="nav-item" onclick="nav('profile')"><i class="fas fa-user-circle"></i>Profile</div>
     </div>
 
@@ -121,49 +163,51 @@
         const tg = window.Telegram.WebApp;
         tg.expand();
         const BASE_IMG = "https://raw.githubusercontent.com/Zoha742/eshopbot/main/products/";
-        let currentProduct = {};
+        let cart = JSON.parse(localStorage.getItem('eshop_cart')) || [];
+        let currentItem = {};
 
         function nav(p) {
             document.querySelectorAll('.page').forEach(pg => pg.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(ni => ni.classList.remove('active'));
             document.getElementById('p-' + p).classList.add('active');
             if(p === 'shop') document.querySelectorAll('.nav-item')[0].classList.add('active');
+            if(p === 'cart') {
+                document.querySelectorAll('.nav-item')[1].classList.add('active');
+                renderCart();
+            }
             if(p === 'profile') document.querySelectorAll('.nav-item')[2].classList.add('active');
         }
 
-        // প্রোডাক্ট লিস্ট গ্রিড ভিউ
+        // ফেভারিট আইকনসহ লিস্ট ওপেন
         function openList(path, title) {
             const grid = document.getElementById('product-grid');
             grid.innerHTML = '';
             document.getElementById('list-title').innerText = title;
-            
             for(let i=1; i<=6; i++) {
-                const imgUrl = BASE_IMG + path + i + '.jpg';
+                const img = BASE_IMG + path + i + '.jpg';
                 grid.innerHTML += `
-                    <div class="p-card-white">
+                    <div class="p-card">
                         <div class="p-img-box">
-                            <img src="${imgUrl}" onerror="this.parentElement.parentElement.style.display='none'">
+                            <div class="fav-btn" onclick="this.classList.toggle('active')"><i class="fas fa-heart"></i></div>
+                            <img src="${img}" onerror="this.parentElement.parentElement.style.display='none'">
                         </div>
                         <div class="p-details">
                             <div class="p-name">${title} #${i}</div>
                             <div class="p-price">৳৮৮০</div>
-                            <button class="btn-view" onclick="openDetail('${imgUrl}', '${title} #${i}')">
-                                <i class="fas fa-search"></i> View & Buy
-                            </button>
+                            <button class="btn-view-buy" onclick="openDetail('${img}', '${title} #${i}')">View & Buy</button>
                         </div>
                     </div>`;
             }
             nav('list');
         }
 
-        // ডিটেইল ভিউ (Size, Available/Sold)
         function openDetail(img, title) {
-            currentProduct = { img, title, size: 'L' };
+            currentItem = { img, title, size: 'L', price: 15 };
             document.getElementById('m-img').src = img;
             document.getElementById('m-title').innerText = title;
             document.getElementById('modal').style.display = 'flex';
             
-            // Random Availability Demo
+            // Random Status
             const isSold = Math.random() > 0.8;
             const status = document.getElementById('m-status');
             status.innerText = isSold ? "Sold Out" : "Available";
@@ -175,14 +219,57 @@
         function setSize(el, s) {
             document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
             el.classList.add('active');
-            currentProduct.size = s;
+            currentItem.size = s;
         }
 
+        // কার্টে অ্যাড করার ফিক্স
         function addToCart() {
-            tg.showPopup({ message: `${currentProduct.title} (Size: ${currentProduct.size}) added to cart!` });
+            cart.push({...currentItem, id: Date.now()});
+            localStorage.setItem('eshop_cart', JSON.stringify(cart));
+            updateBadge();
+            tg.showPopup({ message: "Added to Cart!" });
             closeModal();
         }
 
+        function updateBadge() {
+            const badge = document.getElementById('badge');
+            badge.innerText = cart.length;
+            badge.style.display = cart.length > 0 ? 'flex' : 'none';
+        }
+
+        function renderCart() {
+            const container = document.getElementById('cart-items');
+            const summary = document.getElementById('cart-summary');
+            const empty = document.getElementById('empty-msg');
+            
+            if(cart.length === 0) {
+                container.innerHTML = ''; summary.style.display = 'none'; empty.style.display = 'block'; return;
+            }
+            empty.style.display = 'none'; summary.style.display = 'block';
+            container.innerHTML = cart.map((item, index) => `
+                <div class="cart-item">
+                    <img src="${item.img}" class="cart-img">
+                    <div style="flex:1;">
+                        <b style="font-size:12px; color:white;">${item.title} (${item.size})</b>
+                        <p style="color:var(--primary); margin:0; font-size:12px;">$${item.price}</p>
+                    </div>
+                    <i class="fas fa-trash-alt" style="color:var(--danger);" onclick="removeItem(${index})"></i>
+                </div>
+            `).join('');
+            
+            const sub = cart.reduce((a, b) => a + b.price, 0);
+            document.getElementById('subtotal').innerText = '$' + sub;
+            document.getElementById('total-price').innerText = '$' + (sub + 2);
+        }
+
+        function removeItem(index) {
+            cart.splice(index, 1);
+            localStorage.setItem('eshop_cart', JSON.stringify(cart));
+            renderCart();
+            updateBadge();
+        }
+
+        updateBadge();
         const user = tg.initDataUnsafe.user;
         if(user) {
             document.getElementById('u-name').innerText = user.first_name;
